@@ -5,88 +5,122 @@
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
-<h1 class="page-header">Manage your account</h1>
-<p class="text-muted mb-4">Change your account settings</p>
-
-<div class="row">
-    <div class="col-md-3">
-        <partial name="_ManageNav" />
-    </div>
-    <div class="col-md-9">
-        <div class="card">
-            <div class="card-header" style="background-color: #8E44AD; color: white;">
-                <h4 class="mb-0">@ViewData["Title"]</h4>
-            </div>
-            <div class="card-body">
-                <div class="d-flex align-items-center mb-4">
+<div class="container profile-container my-5">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card profile-sidebar">
+                <div class="card-body text-center p-4">
                     @if (string.IsNullOrEmpty(Model.ProfilePictureUrl))
                     {
-                        <div style="width: 80px; height: 80px; border-radius: 50%; background-color: #8E44AD; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
-                            <span style="color: white; font-size: 28px;">@(string.IsNullOrEmpty(Model.Input.FirstName) ? "U" : Model.Input.FirstName.Substring(0, 1))@(string.IsNullOrEmpty(Model.Input.LastName) ? "" : Model.Input.LastName.Substring(0, 1))</span>
+                        <div class="profile-avatar-large mb-3">
+                            <span>@(string.IsNullOrEmpty(Model.Input.FirstName) ? "U" : Model.Input.FirstName.Substring(0, 1))@(string.IsNullOrEmpty(Model.Input.LastName) ? "" : Model.Input.LastName.Substring(0, 1))</span>
                         </div>
                     }
                     else
                     {
-                        <img src="@Model.ProfilePictureUrl" alt="Profile Picture" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-right: 20px;" />
+                        <img src="@Model.ProfilePictureUrl" alt="Profile Picture" class="profile-picture mb-3" />
                     }
-                    <div>
-                        <h4>@Model.Username</h4>
-                        <p class="text-muted mb-0">@Model.Input.Email</p>
+
+                    <h5 class="mb-1">@Model.Username</h5>
+                    <p class="text-muted mb-3">@Model.Input.Email</p>
+
+                    <hr class="my-3">
+
+                    <div class="nav flex-column nav-pills">
+                        <a class="nav-link active" asp-page="./Index">
+                            <i class="fas fa-user mr-2"></i> Profile
+                        </a>
+                        <a class="nav-link" asp-page="./Email">
+                            <i class="fas fa-envelope mr-2"></i> Email
+                        </a>
+                        <a class="nav-link" asp-page="./ChangePassword">
+                            <i class="fas fa-lock mr-2"></i> Password
+                        </a>
+                        <a class="nav-link" asp-page="./PersonalData">
+                            <i class="fas fa-database mr-2"></i> Personal Data
+                        </a>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <partial name="_StatusMessage" for="StatusMessage" />
-                <form id="profile-form" method="post" enctype="multipart/form-data">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-user-edit mr-2"></i>Edit Profile</h4>
+                </div>
+                <div class="card-body p-4">
+                    <partial name="_StatusMessage" for="StatusMessage" />
 
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label asp-for="Input.FirstName">First Name</label>
-                            <input asp-for="Input.FirstName" class="form-control" />
-                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label asp-for="Input.LastName">Last Name</label>
-                            <input asp-for="Input.LastName" class="form-control" />
-                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
-                        </div>
-                    </div>
+                    <form id="profile-form" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                    <div class="form-group">
-                        <label asp-for="Username"></label>
-                        <input asp-for="Username" class="form-control" disabled />
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="Input.Email"></label>
-                        <div class="input-group">
-                            <input asp-for="Input.Email" class="form-control" />
-                            <div class="input-group-append">
-                                @if (Model.IsEmailConfirmed)
-                                {
-                                    <span class="input-group-text text-success font-weight-bold">✓</span>
-                                }
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Input.FirstName" class="profile-label">First Name</label>
+                                    <input asp-for="Input.FirstName" class="form-control" />
+                                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Input.LastName" class="profile-label">Last Name</label>
+                                    <input asp-for="Input.LastName" class="form-control" />
+                                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                                </div>
                             </div>
                         </div>
-                        <span asp-validation-for="Input.Email" class="text-danger"></span>
-                    </div>
 
-                    <div class="form-group">
-                        <label asp-for="Input.PhoneNumber"></label>
-                        <input asp-for="Input.PhoneNumber" class="form-control" />
-                        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Profile Picture</label>
-                        <div class="custom-file">
-                            <input type="file" asp-for="Input.ProfilePicture" class="custom-file-input" id="customFile" accept=".jpg,.jpeg,.png">
-                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        <div class="form-group">
+                            <label asp-for="Username" class="profile-label">Username</label>
+                            <input asp-for="Username" class="form-control" disabled />
                         </div>
-                    </div>
 
-                    <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
-                </form>
+                        <div class="form-group">
+                            <label asp-for="Input.Email" class="profile-label">Email</label>
+                            <div class="input-group">
+                                <input asp-for="Input.Email" class="form-control" />
+                                <div class="input-group-append">
+                                    @if (Model.IsEmailConfirmed)
+                                    {
+                                        <span class="input-group-text text-success"><i class="fas fa-check-circle"></i></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="input-group-text text-warning"><i class="fas fa-exclamation-circle"></i></span>
+                                    }
+                                </div>
+                            </div>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            @if (!Model.IsEmailConfirmed)
+                            {
+                                <button type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link text-primary px-0 mt-2">
+                                    <i class="fas fa-envelope mr-1"></i> Send verification email
+                                </button>
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Input.PhoneNumber" class="profile-label">Phone Number</label>
+                            <input asp-for="Input.PhoneNumber" class="form-control" />
+                            <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="profile-label">Profile Picture</label>
+                            <div class="custom-file">
+                                <input type="file" asp-for="Input.ProfilePicture" class="custom-file-input" id="customFile" accept=".jpg,.jpeg,.png">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                            <small class="form-text text-muted">Recommended size: 300 x 300 pixels. Max file size: 2MB.</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary mt-3">
+                            <i class="fas fa-save mr-2"></i> Save Changes
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -101,4 +135,128 @@
             $(this).next('.custom-file-label').addClass("selected").html(fileName);
         });
     </script>
+}
+
+@section Styles {
+    <style>
+        /* Profile Page Styling */
+        .profile-container {
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .profile-sidebar {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #8E44AD;
+            color: white;
+            font-size: 48px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 5px 15px rgba(142, 68, 173, 0.3);
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 3px solid white;
+        }
+
+        .card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: none;
+        }
+
+        .card-header {
+            background-color: #8E44AD;
+            color: white;
+            padding: 1rem 1.25rem;
+            border-bottom: none;
+        }
+
+        .profile-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #2C3E50;
+        }
+
+        .nav-pills .nav-link {
+            color: #2C3E50;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+            .nav-pills .nav-link:hover {
+                background-color: rgba(142, 68, 173, 0.1);
+                color: #8E44AD;
+            }
+
+            .nav-pills .nav-link.active {
+                background-color: #8E44AD;
+                color: white;
+            }
+
+        .form-control {
+            border-radius: 6px;
+            padding: 0.6rem 1rem;
+        }
+
+            .form-control:focus {
+                border-color: #8E44AD;
+                box-shadow: 0 0 0 0.2rem rgba(142, 68, 173, 0.25);
+            }
+
+        .input-group-text {
+            border-radius: 0 6px 6px 0;
+        }
+
+        .btn-primary {
+            background-color: #8E44AD;
+            border-color: #8E44AD;
+            border-radius: 6px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+            .btn-primary:hover {
+                background-color: #703688;
+                border-color: #703688;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(142, 68, 173, 0.3);
+            }
+
+        .custom-file-label {
+            border-radius: 6px;
+            padding: 0.6rem 1rem;
+            height: auto;
+        }
+
+            .custom-file-label::after {
+                height: auto;
+                padding: 0.6rem 1rem;
+                background-color: #f8f9fa;
+                color: #2C3E50;
+            }
+    </style>
 }

@@ -1,0 +1,159 @@
+﻿/* Updated Color Scheme for Charity Event Organizer */
+
+:root {
+    /* Main color palette */
+    --primary: #8E44AD; /* Purple */
+    --primary-light: #9B59B6;
+    --primary-dark: #703688;
+    --secondary: #E8DAEF; /* Light Purple */
+    /* Accent colors */
+    --accent: #F39C12; /* Amber */
+    --accent-secondary: #2ECC71; /* Green */
+    --accent-tertiary: #3498DB; /* Blue */
+    /* Text colors - MODIFIED */
+    --text-primary: #4A4A4A; /* Darker gray instead of dark slate */
+    --text-secondary: #7F8C8D; /* Medium gray */
+    --text-light: #A9A9A9; /* Light gray */
+    --text-white: #FFFFFF; /* White text */
+    /* Background colors */
+    --background: #F9F4FF; /* Light lavender background */
+    --card-bg: #ffffff;
+    --border-color: #E0E0E0;
+    /* Status colors */
+    --success: #27AE60;
+    --warning: #F39C12;
+    --danger: #E74C3C;
+    --info: #3498DB;
+    /* Shadows for depth */
+    --shadow-sm: 0 2px 8px rgba(142, 68, 173, 0.1);
+    --shadow-md: 0 4px 12px rgba(142, 68, 173, 0.15);
+    --shadow-lg: 0 8px 24px rgba(142, 68, 173, 0.2);
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-light));
+    --gradient-accent: linear-gradient(135deg, var(--accent), #E67E22);
+    --gradient-success: linear-gradient(135deg, var(--success), #2ECC71);
+    --gradient-info: linear-gradient(135deg, var(--info), #2980B9);
+    --gradient-warning: linear-gradient(135deg, var(--warning), #E67E22);
+    --gradient-danger: linear-gradient(135deg, var(--danger), #C0392B);
+    --gradient-card: linear-gradient(to bottom right, rgba(142, 68, 173, 0.05), rgba(155, 89, 182, 0.1));
+    /* Border radius */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-full: 999px;
+}
+
+/* Apply updated text colors site-wide */
+body {
+    color: var(--text-primary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+}
+
+p {
+    color: var(--text-primary);
+}
+
+/* Fix header contrast issues */
+.card-header {
+    color: var(--text-white);
+}
+
+/* Footer adjustments */
+.footer {
+    background-color: #414A53; /* Slightly lighter than dark slate */
+    color: var(--text-white);
+}
+
+/* Override dashboard and card text colors */
+.dashboard-card .card-body,
+.submission-card .card-body,
+.event-card .card-body {
+    color: var(--text-primary);
+}
+
+/* Improve contrast in dark sections */
+.impact-section {
+    background: linear-gradient(135deg, #414A53, #596674);
+}
+
+    .impact-section h2,
+    .impact-section p {
+        color: var(--text-white);
+    }
+
+/* Override admin dashboard and review page components */
+.admin-section-header,
+.review-guidelines-card .card-header,
+.submission-summary-card .card-header {
+    color: var(--text-white);
+}
+
+.admin-content-box,
+.review-guidelines-card .card-body,
+.submission-summary-card .card-body {
+    color: var(--text-primary);
+}
+
+.summary-label {
+    color: var(--text-secondary);
+}
+
+.summary-value {
+    color: var(--text-primary);
+}
+
+/* Event card adjustments */
+.event-title {
+    color: var(--text-primary);
+}
+
+.event-description {
+    color: var(--text-secondary);
+}
+
+/* Process cards text colors */
+.process-card h4 {
+    color: var(--text-primary);
+}
+
+.process-card p {
+    color: var(--text-secondary);
+}
+
+/* Form label colors */
+label, .form-label {
+    color: var(--text-primary);
+}
+
+.text-muted {
+    color: var(--text-secondary) !important;
+}
+
+/* Fix specific components that had dark slate text */
+.navbar-light .navbar-nav .nav-link {
+    color: var(--text-white) !important;
+}
+
+.approval-badge {
+    color: var(--text-white);
+    background-color: var(--success);
+}
+
+.rejection-badge {
+    color: var(--text-white);
+    background-color: var(--danger);
+}
+
+/* Fix login and register page text colors */
+.login-title,
+.register-title {
+    color: var(--text-primary);
+}
+
+.login-subtitle,
+.register-subtitle {
+    color: var(--text-secondary);
+}

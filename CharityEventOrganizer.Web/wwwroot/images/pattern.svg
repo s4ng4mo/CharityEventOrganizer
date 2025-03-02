@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+  <defs>
+    <pattern id="charityPattern" patternUnits="userSpaceOnUse" width="100" height="100">
+      <rect width="100" height="100" fill="none"/>
+      <!-- Heart shapes -->
+      <path d="M20,15 C17,12 12,12 9,15 C6,18 6,23 9,26 L20,37 L31,26 C34,23 34,18 31,15 C28,12 23,12 20,15 Z" fill="#ffffff" opacity="0.1"/>
+      <path d="M70,55 C67,52 62,52 59,55 C56,58 56,63 59,66 L70,77 L81,66 C84,63 84,58 81,55 C78,52 73,52 70,55 Z" fill="#ffffff" opacity="0.1"/>
+      <path d="M30,65 C27,62 22,62 19,65 C16,68 16,73 19,76 L30,87 L41,76 C44,73 44,68 41,65 C38,62 33,62 30,65 Z" fill="#ffffff" opacity="0.1"/>
+      
+      <!-- Calendar icons -->
+      <rect x="10" y="45" width="14" height="16" rx="2" fill="#ffffff" opacity="0.1"/>
+      <rect x="10" y="45" width="14" height="4" rx="2" fill="#ffffff" opacity="0.15"/>
+      <line x1="13" y1="53" x2="21" y2="53" stroke="#ffffff" stroke-width="1" opacity="0.15"/>
+      <line x1="13" y1="57" x2="21" y2="57" stroke="#ffffff" stroke-width="1" opacity="0.15"/>
+      
+      <rect x="80" y="25" width="14" height="16" rx="2" fill="#ffffff" opacity="0.1"/>
+      <rect x="80" y="25" width="14" height="4" rx="2" fill="#ffffff" opacity="0.15"/>
+      <line x1="83" y1="33" x2="91" y2="33" stroke="#ffffff" stroke-width="1" opacity="0.15"/>
+      <line x1="83" y1="37" x2="91" y2="37" stroke="#ffffff" stroke-width="1" opacity="0.15"/>
+      
+      <!-- Hand icons -->
+      <circle cx="45" cy="85" r="6" fill="#ffffff" opacity="0.1"/>
+      <path d="M45,82 L45,88 M42,85 L48,85" stroke="#ffffff" stroke-width="1" opacity="0.15"/>
+      
+      <circle cx="65" cy="15" r="6" fill="#ffffff" opacity="0.1"/>
+      <path d="M65,12 L65,18 M62,15 L68,15" stroke="#ffffff" stroke-width="1" opacity="0.15"/>
+      
+      <!-- Dots pattern -->
+      <circle cx="15" cy="15" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="35" cy="15" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="55" cy="15" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="75" cy="15" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="95" cy="15" r="1.5" fill="#ffffff" opacity="0.2"/>
+      
+      <circle cx="15" cy="35" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="35" cy="35" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="55" cy="35" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="75" cy="35" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="95" cy="35" r="1.5" fill="#ffffff" opacity="0.2"/>
+      
+      <circle cx="15" cy="55" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="35" cy="55" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="55" cy="55" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="75" cy="55" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="95" cy="55" r="1.5" fill="#ffffff" opacity="0.2"/>
+      
+      <circle cx="15" cy="75" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="35" cy="75" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="55" cy="75" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="75" cy="75" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="95" cy="75" r="1.5" fill="#ffffff" opacity="0.2"/>
+      
+      <circle cx="15" cy="95" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="35" cy="95" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="55" cy="95" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="75" cy="95" r="1.5" fill="#ffffff" opacity="0.2"/>
+      <circle cx="95" cy="95" r="1.5" fill="#ffffff" opacity="0.2"/>
+    </pattern>
+  </defs>
+  
+  <!-- Apply the pattern to a rectangle -->
+  <rect width="100" height="100" fill="url(#charityPattern)"/>
+</svg>

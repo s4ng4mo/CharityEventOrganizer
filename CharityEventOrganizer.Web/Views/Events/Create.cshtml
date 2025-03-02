@@ -4,69 +4,111 @@
     ViewData["Title"] = "Create Event";
 }
 
-<h1>Create New Charity Event</h1>
-
-<hr />
-
-<div class="row">
-    <div class="col-md-8">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" rows="5"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="EventDate" class="control-label"></label>
-                <input asp-for="EventDate" class="form-control" />
-                <span asp-validation-for="EventDate" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="ImageFile" class="control-label"></label>
-                <div class="custom-file">
-                    <input asp-for="ImageFile" class="custom-file-input" id="customFile">
-                    <label class="custom-file-label" for="customFile">Choose file</label>
-                </div>
-                <span asp-validation-for="ImageFile" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-            </div>
-        </form>
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="page-header">Create New Charity Event</h1>
+            <p class="text-muted">Fill in the details below to submit your charity event for approval</p>
+        </div>
     </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header bg-info text-white">
-                Submission Process
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card create-event-card">
+                <div class="card-body p-4">
+                    <form asp-action="Create" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="form-group">
+                            <label asp-for="Title" class="control-label">Event Title <span class="text-danger">*</span></label>
+                            <input asp-for="Title" class="form-control" placeholder="Enter a clear, descriptive title" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label">Description <span class="text-danger">*</span></label>
+                            <textarea asp-for="Description" class="form-control" rows="5" placeholder="Provide details about your event, its purpose, and what attendees can expect"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="EventDate" class="control-label">Event Date <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                        </div>
+                                        <input asp-for="EventDate" class="form-control datepicker" />
+                                    </div>
+                                    <span asp-validation-for="EventDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Location" class="control-label">Location <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                        </div>
+                                        <input asp-for="Location" class="form-control" placeholder="City, venue, or address" />
+                                    </div>
+                                    <span asp-validation-for="Location" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="ImageFile" class="control-label">Event Image</label>
+                            <div class="custom-file">
+                                <input type="file" asp-for="ImageFile" class="custom-file-input" id="customFile" accept="image/*">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                            <small class="form-text text-muted">Upload an image to represent your event. Recommended size: 1200 x 630 pixels.</small>
+                            <span asp-validation-for="ImageFile" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-0 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane mr-2"></i> Submit Event
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary ml-2">Cancel</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="card-body">
-                <ol>
-                    <li>Submit your event details</li>
-                    <li>Wait for administrator approval</li>
-                    <li>Connect with sponsors</li>
-                    <li>Finalize and publish your event</li>
-                </ol>
-                <p class="card-text">
-                    After submission, you can track the status of your event in your dashboard.
-                </p>
+        </div>
+
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card submission-guide">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle mr-2"></i>Submission Process</h5>
+                </div>
+                <div class="card-body">
+                    <ol class="process-steps">
+                        <li class="process-step active">
+                            <h6>Submit Details</h6>
+                            <p class="small text-muted">Complete the form with all required information</p>
+                        </li>
+                        <li class="process-step">
+                            <h6>Administrator Review</h6>
+                            <p class="small text-muted">Our team will review your submission</p>
+                        </li>
+                        <li class="process-step">
+                            <h6>Connect with Sponsors</h6>
+                            <p class="small text-muted">Find sponsors to support your event</p>
+                        </li>
+                        <li class="process-step">
+                            <h6>Publish Your Event</h6>
+                            <p class="small text-muted">Once approved, your event goes live</p>
+                        </li>
+                    </ol>
+
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-lightbulb mr-2"></i>
+                        <strong>Tip:</strong> Provide as much detail as possible to increase your chances of approval.
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -76,10 +118,148 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
-        // Show file name in custom file input
-        $(".custom-file-input").on("change", function() {
-            var fileName = $(this).val().split("\\").pop();
-            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        $(document).ready(function () {
+            // Show file name in custom file input
+            $(".custom-file-input").on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            });
+
+            // Initialize datepicker if you're using one
+            if ($.fn.datepicker) {
+                $('.datepicker').datepicker({
+                    format: 'mm/dd/yyyy',
+                    startDate: new Date(),
+                    autoclose: true
+                });
+            }
         });
     </script>
+}
+
+@section Styles {
+    <style>
+        /* Create Event Form Styling */
+        .create-event-card {
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            border: none;
+        }
+
+        .form-control {
+            border-radius: 6px;
+            padding: 0.6rem 1rem;
+        }
+
+            .form-control:focus {
+                border-color: #8E44AD;
+                box-shadow: 0 0 0 0.2rem rgba(142, 68, 173, 0.25);
+            }
+
+        .input-group-text {
+            background-color: #f8f9fa;
+            border-right: none;
+        }
+
+        /* Submission Process Steps */
+        .submission-guide {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            border: none;
+        }
+
+            .submission-guide .card-header {
+                background-color: #8E44AD;
+                color: white;
+                padding: 1rem 1.25rem;
+            }
+
+        .process-steps {
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .process-step {
+            position: relative;
+            padding-bottom: 1.5rem;
+            padding-left: 0.5rem;
+        }
+
+            .process-step:last-child {
+                padding-bottom: 0;
+            }
+
+            .process-step::before {
+                content: '';
+                position: absolute;
+                left: -20px;
+                top: 6px;
+                width: 15px;
+                height: 15px;
+                border-radius: 50%;
+                background-color: #e9ecef;
+                z-index: 1;
+            }
+
+            .process-step::after {
+                content: '';
+                position: absolute;
+                left: -13px;
+                top: 21px;
+                width: 2px;
+                height: calc(100% - 21px);
+                background-color: #e9ecef;
+            }
+
+            .process-step:last-child::after {
+                display: none;
+            }
+
+            .process-step.active::before {
+                background-color: #8E44AD;
+            }
+
+            .process-step h6 {
+                margin-bottom: 0.25rem;
+                font-weight: 600;
+                color: #2C3E50;
+            }
+
+            .process-step.active h6 {
+                color: #8E44AD;
+            }
+
+            .process-step p {
+                margin-bottom: 0;
+            }
+
+        /* Button styling */
+        .btn-primary {
+            background-color: #8E44AD;
+            border-color: #8E44AD;
+            border-radius: 6px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+            .btn-primary:hover {
+                background-color: #703688;
+                border-color: #703688;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(142, 68, 173, 0.3);
+            }
+
+        .btn-outline-secondary {
+            border-radius: 6px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+            .btn-outline-secondary:hover {
+                transform: translateY(-2px);
+            }
+    </style>
 }

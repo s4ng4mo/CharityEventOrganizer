@@ -4,25 +4,97 @@
     ViewData["Title"] = "Events";
 }
 
-<h1>Charity Events</h1>
+<!-- Events Header -->
+<div class="events-header mb-5">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h1 class="page-header mb-2">Charity Events</h1>
+            <p class="text-muted">Browse all upcoming charity events and find ways to contribute</p>
+        </div>
+        <div class="col-md-6 text-md-right">
+            <a asp-action="Create" class="btn btn-create-event">
+                <i class="fas fa-plus-circle"></i> Create New Event
+            </a>
+        </div>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Event</a>
-</p>
+<!-- Filter Bar -->
+<div class="card mb-4 filter-card">
+    <div class="card-body py-3">
+        <form class="row align-items-center" id="filterForm">
+            <div class="col-md-3">
+                <div class="form-group mb-md-0">
+                    <label for="searchInput" class="sr-only">Search</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        </div>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search events...">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group mb-md-0">
+                    <label for="categorySelect" class="sr-only">Category</label>
+                    <select class="form-control" id="categorySelect">
+                        <option value="">All Categories</option>
+                        <option>Education</option>
+                        <option>Health</option>
+                        <option>Environment</option>
+                        <option>Poverty Relief</option>
+                        <option>Animal Welfare</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group mb-md-0">
+                    <label for="dateSelect" class="sr-only">Date</label>
+                    <select class="form-control" id="dateSelect">
+                        <option value="">All Dates</option>
+                        <option>Today</option>
+                        <option>This Week</option>
+                        <option>This Month</option>
+                        <option>Next Month</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3 text-md-right">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-filter mr-1"></i> Filter
+                </button>
+                <button type="reset" class="btn btn-outline-secondary ml-2">
+                    <i class="fas fa-sync-alt mr-1"></i> Reset
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">
-        There are no published events yet. Be the first to create one!
+    <div class="alert alert-info d-flex align-items-center">
+        <i class="fas fa-info-circle fa-2x mr-3"></i>
+        <div>
+            <h5 class="mb-1">No events found</h5>
+            <p class="mb-0">There are no published events yet. Be the first to create one!</p>
+        </div>
     </div>
 }
 else
 {
-    <div class="row">
+    <div class="row" id="eventsContainer">
         @foreach (var item in Model)
         {
             <div class="col-md-4 mb-4">
-                <div class="card h-100">
+                <div class="card event-card animate-on-scroll">
+                    <div class="card-img-overlay-top">
+                        <div class="event-date-badge">
+                            <span class="month">@item.EventDate.ToString("MMM")</span>
+                            <span class="day">@item.EventDate.Day</span>
+                        </div>
+                    </div>
+
                     @if (!string.IsNullOrEmpty(item.ImageUrl))
                     {
                         <img src="@item.ImageUrl" class="card-img-top" alt="@item.Title">
@@ -31,21 +103,298 @@ else
                     {
                         <img src="/images/default-event.jpg" class="card-img-top" alt="Default Event Image">
                     }
+
                     <div class="card-body">
+                        <div class="event-location mb-2">
+                            <i class="fas fa-map-marker-alt mr-1"></i> @item.Location
+                        </div>
                         <h5 class="card-title">@item.Title</h5>
                         <p class="card-text">@item.Description.Substring(0, Math.Min(100, item.Description.Length))...</p>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                <i class="far fa-calendar"></i> @item.EventDate.ToShortDateString()<br>
-                                <i class="fas fa-map-marker-alt"></i> @item.Location
-                            </small>
-                        </p>
                     </div>
-                    <div class="card-footer">
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm">View Details</a>
+
+                    <div class="card-footer bg-white">
+                        <div class="row align-items-center">
+                            <div class="col-7">
+                                <div class="event-organizer">
+                                    @if (string.IsNullOrEmpty(item.Organizer?.ProfilePictureUrl))
+                                    {
+                                        <div class="organizer-avatar">
+                                            @(string.IsNullOrEmpty(item.Organizer?.FirstName) ? "U" : item.Organizer.FirstName.Substring(0, 1))
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <img src="@item.Organizer.ProfilePictureUrl" alt="@item.Organizer.FirstName" class="organizer-img">
+                                    }
+                                    <span class="organizer-name">@(string.IsNullOrEmpty(item.Organizer?.FirstName) ? "User" : item.Organizer.FirstName)</span>
+                                </div>
+                            </div>
+                            <div class="col-5 text-right">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary">View Details</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         }
     </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation" class="mt-5">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+}
+
+@section Styles {
+    <style>
+        /* Event card styling */
+        .event-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+        }
+
+            .event-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            }
+
+        .card-img-overlay-top {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 10;
+            padding: 15px;
+        }
+
+        .event-date-badge {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 8px;
+            padding: 5px 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            min-width: 60px;
+        }
+
+            .event-date-badge .month {
+                font-size: 14px;
+                text-transform: uppercase;
+                font-weight: 700;
+            }
+
+            .event-date-badge .day {
+                font-size: 22px;
+                font-weight: 700;
+                line-height: 1;
+            }
+
+        .event-location {
+            display: inline-block;
+            background-color: rgba(142, 68, 173, 0.1);
+            color: var(--primary);
+            border-radius: 50px;
+            padding: 5px 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .event-organizer {
+            display: flex;
+            align-items: center;
+        }
+
+        .organizer-avatar,
+        .organizer-img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 8px;
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .organizer-img {
+            object-fit: cover;
+        }
+
+        .organizer-name {
+            font-size: 14px;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* Filter bar */
+        .filter-card {
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        /* Create event button */
+        .btn-create-event {
+            background: var(--gradient-accent);
+            color: white;
+            border-radius: var(--radius-full);
+            padding: 0.75rem 1.75rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+            .btn-create-event:hover {
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-lg);
+                color: white;
+            }
+
+            .btn-create-event i {
+                margin-right: 8px;
+            }
+
+        /* Animation */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+            .animate-on-scroll.animated {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        /* Pagination styling */
+        .pagination .page-link {
+            color: var(--primary);
+            border-radius: 5px;
+            margin: 0 3px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .pagination .page-item:first-child .page-link,
+        .pagination .page-item:last-child .page-link {
+            border-radius: 5px;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        // Animation for cards on scroll
+        $(document).ready(function() {
+            // Initialize animation for initial elements
+            animateElements();
+
+            // Check for new elements on scroll
+            $(window).scroll(function() {
+                animateElements();
+            });
+
+            function animateElements() {
+                $('.animate-on-scroll:not(.animated)').each(function() {
+                    var elementTop = $(this).offset().top;
+                    var elementBottom = elementTop + $(this).outerHeight();
+                    var viewportTop = $(window).scrollTop();
+                    var viewportBottom = viewportTop + $(window).height();
+
+                    if (elementBottom > viewportTop && elementTop < viewportBottom) {
+                        $(this).addClass('animated');
+                    }
+                });
+            }
+
+            // Filter functionality
+            $('#searchInput').on('keyup', function() {
+                var value = $(this).val().toLowerCase();
+                $("#eventsContainer .event-card").filter(function() {
+                    $(this).parent().toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+
+            $('#filterForm').on('submit', function(e) {
+                e.preventDefault();
+                // Implement advanced filtering here in a real application
+
+                // For demo purposes, just show a toast notification
+                showToast('Filters applied successfully!');
+            });
+
+            $('#filterForm').on('reset', function() {
+                setTimeout(function() {
+                    $("#eventsContainer .event-card").parent().show();
+                    showToast('Filters reset successfully!');
+                }, 10);
+            });
+
+            function showToast(message) {
+                // Create toast notification
+                var toast = $('<div class="toast-notification">' + message + '</div>');
+                $('body').append(toast);
+
+                // Show and then fade out
+                setTimeout(function() {
+                    toast.addClass('show');
+
+                    setTimeout(function() {
+                        toast.removeClass('show');
+                        setTimeout(function() {
+                            toast.remove();
+                        }, 500);
+                    }, 3000);
+                }, 100);
+            }
+        });
+    </script>
+
+    <style>
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+            .toast-notification.show {
+                transform: translateY(0);
+                opacity: 1;
+            }
+    </style>
 }

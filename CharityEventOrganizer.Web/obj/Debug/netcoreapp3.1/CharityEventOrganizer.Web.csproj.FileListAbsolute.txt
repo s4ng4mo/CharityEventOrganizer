@@ -189,3 +189,5 @@ C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Web\obj\D
 C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Web\obj\Debug\netcoreapp3.1\Razor\Views\Events\MySubmissions.cshtml.g.cs
 C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Web\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\Email.cshtml.g.cs
 C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Web\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\PersonalData.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Web\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\Index1.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Web\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Manage\_ManageLayout.cshtml.g.cs

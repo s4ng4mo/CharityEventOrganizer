@@ -5,44 +5,295 @@
     ViewData["Title"] = "Log in";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="text-center mb-0">@ViewData["Title"]</h2>
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-card-left">
+            <div class="welcome-content">
+                <h2>Welcome Back!</h2>
+                <p>Connect with causes that matter and make a difference today.</p>
             </div>
-            <div class="card-body">
-                <form id="account" method="post">
-                    <div asp-validation-summary="All" class="text-danger"></div>
+        </div>
+        <div class="login-card-right">
+            <div class="login-form-container">
+                <h2 class="login-title">Sign In</h2>
+                <p class="login-subtitle">Sign in to your account to continue</p>
+
+                <form id="account" method="post" class="login-form">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
                     <div class="form-group">
-                        <label asp-for="Input.Email"></label>
-                        <input asp-for="Input.Email" class="form-control" />
+                        <label asp-for="Input.Email">Email address</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            </div>
+                            <input asp-for="Input.Email" class="form-control" placeholder="name@example.com" />
+                        </div>
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
+
                     <div class="form-group">
-                        <label asp-for="Input.Password"></label>
-                        <input asp-for="Input.Password" class="form-control" />
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label asp-for="Input.Password">Password</label>
+                            <a asp-page="./ForgotPassword" class="forgot-password">Forgot password?</a>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            </div>
+                            <input asp-for="Input.Password" class="form-control" placeholder="Enter your password" />
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary password-toggle" tabindex="-1">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
                         <span asp-validation-for="Input.Password" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group remember-me">
                         <div class="custom-control custom-checkbox">
-                            <input asp-for="Input.RememberMe" class="custom-control-input" />
-                            <label asp-for="Input.RememberMe" class="custom-control-label"></label>
+                            <input asp-for="Input.RememberMe" class="custom-control-input" id="remember-me" />
+                            <label asp-for="Input.RememberMe" class="custom-control-label" for="remember-me">Remember me</label>
                         </div>
                     </div>
+
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block">Log in</button>
+                        <button type="submit" class="btn btn-primary btn-block sign-in-btn">
+                            <i class="fas fa-sign-in-alt mr-2"></i> Sign in
+                        </button>
                     </div>
-                    <div class="text-center">
-                        <p>
-                            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                        </p>
-                        <p>
-                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                        </p>
+
+                    <div class="register-link">
+                        Don't have an account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            // Toggle password visibility
+            $('.password-toggle').on('click', function () {
+                var passwordInput = $(this).closest('.input-group').find('input');
+                var icon = $(this).find('i');
+
+                if (passwordInput.attr('type') === 'password') {
+                    passwordInput.attr('type', 'text');
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordInput.attr('type', 'password');
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+        });
+    </script>
+}
+
+@section Styles {
+    <style>
+        body {
+            background-color: #F9F4FF;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 200px);
+            padding: 2rem 1rem;
+        }
+
+        .login-card {
+            display: flex;
+            max-width: 900px;
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+
+        .login-card-left {
+            flex: 0 0 40%;
+            background: linear-gradient(135deg, #8E44AD, #9B59B6);
+            color: white;
+            padding: 3rem 2rem;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card-left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/images/pattern.svg');
+            background-size: cover;
+            opacity: 0.05;
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-content h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .welcome-content p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .login-card-right {
+            flex: 0 0 60%;
+            padding: 3rem;
+        }
+
+        .login-form-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .login-title {
+            color: #2C3E50;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .login-subtitle {
+            color: #7F8C8D;
+            margin-bottom: 2rem;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .login-form label {
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .login-form .input-group {
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .login-form .input-group-text {
+            background-color: white;
+            border-right: none;
+            color: #8E44AD;
+            padding-left: 1.2rem;
+            padding-right: 1.2rem;
+        }
+
+        .login-form .form-control {
+            border-left: none;
+            padding: 0.75rem 1rem;
+            color: #2C3E50;
+            height: auto;
+        }
+
+        .login-form .form-control:focus {
+            box-shadow: none;
+            border-color: #ced4da;
+        }
+
+        .login-form .password-toggle {
+            border-left: none;
+            background-color: white;
+            color: #8E44AD;
+        }
+
+        .login-form .password-toggle:focus {
+            box-shadow: none;
+        }
+
+        .forgot-password {
+            color: #8E44AD;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember-me .custom-control-label {
+            font-weight: 500;
+            color: #7F8C8D;
+        }
+
+        .custom-control-input:checked ~ .custom-control-label::before {
+            background-color: #8E44AD;
+            border-color: #8E44AD;
+        }
+
+        .sign-in-btn {
+            background: linear-gradient(135deg, #8E44AD, #9B59B6);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .sign-in-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(142, 68, 173, 0.3);
+            background: linear-gradient(135deg, #7D3C98, #8E44AD);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #7F8C8D;
+        }
+
+        .register-link a {
+            color: #8E44AD;
+            font-weight: 600;
+        }
+
+        /* Responsive adjustments */
+        @@media (max-width: 768px) {
+            .login-card {
+                flex-direction: column;
+            }
+
+            .login-card-left,
+            .login-card-right {
+                flex: 0 0 100%;
+            }
+
+            .login-card-left {
+                padding: 2rem;
+                text-align: center;
+            }
+
+            .login-card-right {
+                padding: 2rem;
+            }
+        }
+    </style>
+}
