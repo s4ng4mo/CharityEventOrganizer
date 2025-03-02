@@ -1,0 +1,15 @@
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\bin\Debug\netcoreapp3.1\CharityEventOrganizer.Tests.deps.json
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\bin\Debug\netcoreapp3.1\CharityEventOrganizer.Tests.dll
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\bin\Debug\netcoreapp3.1\CharityEventOrganizer.Tests.pdb
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\bin\Debug\netcoreapp3.1\CharityEventOrganizer.Core.dll
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\bin\Debug\netcoreapp3.1\CharityEventOrganizer.Infrastructure.dll
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\bin\Debug\netcoreapp3.1\CharityEventOrganizer.Core.pdb
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\bin\Debug\netcoreapp3.1\CharityEventOrganizer.Infrastructure.pdb
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Tests.csproj.AssemblyReference.cache
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Tests.AssemblyInfoInputs.cache
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Tests.AssemblyInfo.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Tests.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Tests.csproj.CopyComplete
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Tests.dll
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Tests\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Tests.pdb

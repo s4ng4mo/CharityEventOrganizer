@@ -1,0 +1,10 @@
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Core\bin\Debug\netcoreapp3.1\CharityEventOrganizer.Core.deps.json
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Core\bin\Debug\netcoreapp3.1\CharityEventOrganizer.Core.dll
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Core\bin\Debug\netcoreapp3.1\CharityEventOrganizer.Core.pdb
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Core\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Core.csproj.AssemblyReference.cache
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Core\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Core\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Core.AssemblyInfoInputs.cache
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Core\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Core.AssemblyInfo.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Core\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Core.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Core\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Core.dll
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer.Core\obj\Debug\netcoreapp3.1\CharityEventOrganizer.Core.pdb

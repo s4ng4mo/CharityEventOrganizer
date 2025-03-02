@@ -1,0 +1,325 @@
+﻿/* wwwroot/css/custom.css */
+
+:root {
+    --primary: #8E44AD; /* Plum Purple */
+    --primary-light: #9B59B6; /* Lighter Purple */
+    --primary-dark: #703688; /* Darker Purple */
+    --secondary: #E8DAEF; /* Lavender */
+    --accent: #F39C12; /* Amber */
+    --text: #2C3E50; /* Dark Slate */
+    --background: #FFFAF0; /* Light Cream background */
+    --card-bg: #ffffff; /* White for cards */
+    --border-color: #D5D8DC; /* Light gray for borders */
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: var(--primary) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.navbar-light .navbar-brand,
+.navbar-light .navbar-nav .nav-link {
+    color: white !important;
+}
+
+/* Carousel/Slideshow fixes */
+.carousel-item {
+    height: 300px;
+    overflow: hidden;
+}
+
+    .carousel-item img {
+        object-fit: cover;
+        width: 100%;
+    }
+
+.carousel-caption {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+/* Page headers */
+.page-header {
+    margin-bottom: 1.5rem;
+    color: var(--primary);
+    border-bottom: 2px solid var(--secondary);
+    padding-bottom: 0.5rem;
+}
+
+/* Button styling */
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+    .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+    }
+
+.btn-accent {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+
+    .btn-accent:hover {
+        background-color: #E67E22;
+        border-color: #E67E22;
+    }
+
+/* Card styling */
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+}
+
+.card-header {
+    background-color: var(--primary);
+    color: white;
+    font-weight: 600;
+    padding: 1rem;
+}
+
+    .card-header.secondary {
+        background-color: var(--secondary);
+        color: var(--primary-dark);
+    }
+
+/* Get Involved section styling */
+.get-involved-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+}
+
+    .get-involved-card .card-header {
+        background-color: var(--primary);
+        color: white;
+        font-size: 1.25rem;
+    }
+
+/* Admin Dashboard Stats */
+.stat-card {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border: none;
+    transition: transform 0.2s;
+}
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-card .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card .stat-label {
+        color: var(--text);
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+.stat-pending .stat-number {
+    color: #E74C3C;
+}
+/* Red for pending */
+.stat-approved .stat-number {
+    color: #27AE60;
+}
+/* Green for approved/published */
+.stat-recent .stat-number {
+    color: var(--accent);
+}
+/* Amber for recent */
+
+/* Admin section headers */
+.admin-section-header {
+    background-color: var(--primary);
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.admin-content-box {
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 1rem;
+    background-color: var(--card-bg);
+    margin-bottom: 2rem;
+}
+
+/* Activity feed */
+.activity-item {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--secondary);
+}
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+.activity-date {
+    color: #7F8C8D;
+    font-size: 0.9rem;
+}
+
+.activity-text {
+    margin-bottom: 0;
+}
+
+/* Alert styling */
+.alert-info {
+    background-color: var(--secondary);
+    border-color: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+/* Fix empty space and layout */
+.main-content {
+    min-height: calc(100vh - 200px);
+}
+
+/* Fix text contrast issues */
+.text-contrast {
+    color: var(--text) !important;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+/* My Submissions page styling */
+.badge-success {
+    background-color: #27AE60;
+}
+
+.badge-danger {
+    background-color: #E74C3C;
+}
+
+.badge-warning {
+    background-color: #F39C12;
+    color: #2C3E50;
+}
+
+.badge-info {
+    background-color: #3498DB;
+}
+
+.badge-primary {
+    background-color: var(--primary);
+}
+
+.badge-secondary {
+    background-color: #95A5A6;
+}
+
+.page-header {
+    color: var(--primary);
+    border-bottom: 2px solid var(--secondary);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Tooltip styling */
+.tooltip-inner {
+    max-width: 300px;
+    padding: 10px;
+    background-color: var(--primary-dark);
+}
+
+/* Account management styling */
+.list-group-item.active {
+    background-color: var(--secondary);
+    color: var(--primary-dark);
+    border-color: var(--secondary);
+}
+
+.page-header {
+    color: var(--primary);
+    border-bottom: 2px solid var(--secondary);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* For Password visibility toggle */
+.password-toggle {
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: var(--primary);
+}
+
+.form-control:focus {
+    border-color: #8E44AD;
+    box-shadow: 0 0 0 0.2rem rgba(142, 68, 173, 0.25);
+}
+
+.btn-primary {
+    background-color: #8E44AD;
+    border-color: #8E44AD;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #703688;
+    border-color: #703688;
+}
+
+.btn-outline-primary {
+    color: #8E44AD;
+    border-color: #8E44AD;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #8E44AD;
+        border-color: #8E44AD;
+    }
+
+.page-link {
+    color: #8E44AD;
+}
+
+.page-item.active .page-link {
+    background-color: #8E44AD;
+    border-color: #8E44AD;
+}
+
+/* For the manage page sidebar */
+.list-group-item.active,
+.list-group-item.active:hover {
+    background-color: #E8DAEF;
+    border-color: #8E44AD;
+    color: #8E44AD;
+}
+
+/* Links */
+a {
+    color: #8E44AD;
+}
+
+    a:hover {
+        color: #703688;
+    }

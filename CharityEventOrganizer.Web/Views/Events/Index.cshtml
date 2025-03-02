@@ -1,0 +1,51 @@
+﻿@model IEnumerable<CharityEventOrganizer.Core.Entities.Event>
+
+@{
+    ViewData["Title"] = "Events";
+}
+
+<h1>Charity Events</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Event</a>
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        There are no published events yet. Be the first to create one!
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" class="card-img-top" alt="@item.Title">
+                    }
+                    else
+                    {
+                        <img src="/images/default-event.jpg" class="card-img-top" alt="Default Event Image">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Title</h5>
+                        <p class="card-text">@item.Description.Substring(0, Math.Min(100, item.Description.Length))...</p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="far fa-calendar"></i> @item.EventDate.ToShortDateString()<br>
+                                <i class="fas fa-map-marker-alt"></i> @item.Location
+                            </small>
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

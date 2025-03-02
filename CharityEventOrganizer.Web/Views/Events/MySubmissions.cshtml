@@ -1,0 +1,131 @@
+﻿@model IEnumerable<CharityEventOrganizer.Core.Entities.EventSubmission>
+
+@{
+    ViewData["Title"] = "My Submissions";
+}
+
+<div class="container">
+    <h1 class="page-header mb-4">My Submissions</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <a asp-controller="Events" asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Submit New Event
+            </a>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            You haven't submitted any events yet. Create your first event to get started!
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var submission in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">@submission.Event.Title</h5>
+                            @{
+                                string badgeClass = "badge-secondary";
+
+                                switch (submission.Status)
+                                {
+                                    case CharityEventOrganizer.Core.Entities.SubmissionStatus.Approved:
+                                        badgeClass = "badge-success";
+                                        break;
+                                    case CharityEventOrganizer.Core.Entities.SubmissionStatus.Rejected:
+                                        badgeClass = "badge-danger";
+                                        break;
+                                    case CharityEventOrganizer.Core.Entities.SubmissionStatus.SponsorApproved:
+                                        badgeClass = "badge-primary";
+                                        break;
+                                    case CharityEventOrganizer.Core.Entities.SubmissionStatus.SponsorReview:
+                                        badgeClass = "badge-info";
+                                        break;
+                                    case CharityEventOrganizer.Core.Entities.SubmissionStatus.Pending:
+                                        badgeClass = "badge-warning";
+                                        break;
+                                }
+                            }
+                            <span class="badge @badgeClass">@submission.Status</span>
+                        </div>
+                        <div class="card-body">
+                            @if (!string.IsNullOrEmpty(submission.Event.ImageUrl))
+                            {
+                                <img src="@submission.Event.ImageUrl" class="card-img-top mb-3" alt="@submission.Event.Title" style="height: 150px; object-fit: cover;">
+                            }
+                            <p class="card-text">@submission.Event.Description.Substring(0, Math.Min(100, submission.Event.Description.Length))...</p>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted">
+                                    <i class="far fa-calendar"></i> @submission.Event.EventDate.ToString("MMM dd, yyyy")
+                                </small>
+                                <small class="text-muted">
+                                    <i class="fas fa-map-marker-alt"></i> @submission.Event.Location
+                                </small>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Submitted on @submission.SubmittedAt.ToString("MMM dd, yyyy")</small>
+                            <div class="mt-2">
+                                <a asp-controller="Events" asp-action="Details" asp-route-id="@submission.EventId" class="btn btn-sm btn-outline-primary">
+                                    View Details
+                                </a>
+                                @if (submission.Status == CharityEventOrganizer.Core.Entities.SubmissionStatus.Rejected)
+                                {
+                                    <span class="text-danger ml-3" data-toggle="tooltip" data-placement="top" title="@submission.RejectionReason">
+                                        <i class="fas fa-exclamation-circle"></i> See rejection reason
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Submission Process Guide -->
+    <div class="card mt-5">
+        <div class="card-header bg-secondary text-white">
+            <h4 class="mb-0">Event Submission Process</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 text-center mb-3">
+                    <div class="p-3 rounded-circle bg-light d-inline-block mb-2" style="width: 60px; height: 60px;">
+                        <h3 class="m-0">1</h3>
+                    </div>
+                    <h5>Submit Event</h5>
+                    <p class="text-muted">Fill in the event details and submit for review.</p>
+                </div>
+                <div class="col-md-4 text-center mb-3">
+                    <div class="p-3 rounded-circle bg-light d-inline-block mb-2" style="width: 60px; height: 60px;">
+                        <h3 class="m-0">2</h3>
+                    </div>
+                    <h5>Admin Approval</h5>
+                    <p class="text-muted">Administrators review your submission.</p>
+                </div>
+                <div class="col-md-4 text-center mb-3">
+                    <div class="p-3 rounded-circle bg-light d-inline-block mb-2" style="width: 60px; height: 60px;">
+                        <h3 class="m-0">3</h3>
+                    </div>
+                    <h5>Publication</h5>
+                    <p class="text-muted">Approved events are published to the public.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

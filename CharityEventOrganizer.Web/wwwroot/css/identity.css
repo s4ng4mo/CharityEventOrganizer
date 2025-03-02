@@ -1,0 +1,28 @@
+﻿/* Override Bootstrap's default blue with our purple */
+.list-group-item.active,
+.list-group-item.active:hover,
+.list-group-item.active:focus {
+    background-color: #E8DAEF !important;
+    border-color: #E8DAEF !important;
+    color: #8E44AD !important;
+}
+
+/* Override focus styles */
+.form-control:focus,
+.btn:focus,
+.page-link:focus,
+.list-group-item:focus {
+    border-color: #8E44AD !important;
+    box-shadow: 0 0 0 0.2rem rgba(142, 68, 173, 0.25) !important;
+}
+
+/* Fix duplicate UI elements */
+.row > .col-md-3:not(:first-child) .card:has(.list-group-item) {
+    display: none !important;
+}
+
+/* Stronger header styling */
+.card-header {
+    background-color: #8E44AD !important;
+    color: white !important;
+}

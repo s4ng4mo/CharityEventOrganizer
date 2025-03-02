@@ -1,0 +1,113 @@
+﻿@model IEnumerable<CharityEventOrganizer.Core.Entities.Event>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to Charity Event Organizer</h1>
+    <p class="lead">Connect with causes that matter and make a difference in your community.</p>
+</div>
+
+<!-- Charity Slideshow -->
+<div id="charityCarousel" class="carousel slide mb-5" data-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-target="#charityCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#charityCarousel" data-slide-to="1"></li>
+        <li data-target="#charityCarousel" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="/images/charity1.jpg" class="d-block w-100" alt="Charity Event 1">
+            <div class="carousel-caption">
+                <h2>Make a Difference Today</h2>
+                <p>Join our community of changemakers</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="/images/charity2.jpg" class="d-block w-100" alt="Charity Event 2">
+            <div class="carousel-caption">
+                <h2>Supporting Local Causes</h2>
+                <p>Building a better future together</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="/images/charity3.jpg" class="d-block w-100" alt="Charity Event 3">
+            <div class="carousel-caption">
+                <h2>Volunteer Opportunities</h2>
+                <p>Lend a helping hand to those in need</p>
+            </div>
+        </div>
+    </div>
+    <a class="carousel-control-prev" href="#charityCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#charityCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+<div class="row mt-4">
+    <!-- Featured Events -->
+    <div class="col-md-8">
+        <h2 class="mb-4">Featured Events</h2>
+
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">
+                There are no published events yet. Be the first to create one!
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Title">
+                            }
+                            else
+                            {
+                                <img src="/images/default-event.jpg" class="card-img-top" alt="Default Event Image">
+                            }
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Title</h5>
+                                <p class="card-text">@item.Description.Substring(0, Math.Min(100, item.Description.Length))...</p>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">@item.EventDate.ToShortDateString() | @item.Location</small>
+                                <a asp-controller="Events" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm float-right">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Get Involved section for the homepage -->
+    <div class="col-md-4">
+        <div class="card get-involved-card">
+            <div class="card-header">Get Involved</div>
+            <div class="card-body">
+                <p>Want to organize a charity event? It's easy to get started!</p>
+                <a asp-controller="Events" asp-action="Create" class="btn btn-primary btn-block mb-3">Create Event</a>
+
+                <hr />
+
+                <p>Browse all our upcoming events:</p>
+                <a asp-controller="Events" asp-action="Index" class="btn btn-accent btn-block mb-3">View Events</a>
+
+                <hr />
+
+                <p>Become a sponsor and support great causes:</p>
+                <a asp-controller="Home" asp-action="Sponsors" class="btn btn-outline-primary btn-block">Sponsor Info</a>
+            </div>
+        </div>
+    </div>
+</div>

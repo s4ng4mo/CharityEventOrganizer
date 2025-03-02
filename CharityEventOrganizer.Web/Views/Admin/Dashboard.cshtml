@@ -1,0 +1,122 @@
+﻿@model IEnumerable<CharityEventOrganizer.Core.Entities.EventSubmission>
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    var pendingCount = ViewBag.PendingCount ?? 0;
+    var publishedCount = ViewBag.PublishedCount ?? 0;
+    var recentApprovalCount = ViewBag.RecentApprovalCount ?? 0;
+}
+
+<h1 class="page-header">Admin Dashboard</h1>
+
+<!-- Stats Row -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="stat-card stat-pending">
+            <div class="stat-number">@pendingCount</div>
+            <div class="stat-label">Pending Submissions</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card stat-approved">
+            <div class="stat-number">@publishedCount</div>
+            <div class="stat-label">Published Events</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card stat-recent">
+            <div class="stat-number">@recentApprovalCount</div>
+            <div class="stat-label">Recent Approvals</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Pending Submissions Column -->
+    <div class="col-lg-8">
+        <h3 class="admin-section-header">
+            Pending Event Submissions
+            <span class="badge badge-light float-right">@pendingCount</span>
+        </h3>
+        <div class="admin-content-box">
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info">
+                    There are no pending submissions at this time.
+                </div>
+            }
+            else
+            {
+                <div class="list-group">
+                    @foreach (var submission in Model)
+                    {
+                        <a asp-action="ReviewSubmission" asp-route-id="@submission.Id" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">@submission.Event.Title</h5>
+                                <small>@submission.SubmittedAt.ToString("MMM dd, yyyy")</small>
+                            </div>
+                            <p class="mb-1">@submission.Event.Description.Substring(0, Math.Min(100, submission.Event.Description.Length))...</p>
+                            <div class="d-flex justify-content-between">
+                                <small>Submitted by: @submission.Submitter.Email</small>
+                                <span class="badge badge-primary">@submission.Status</span>
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Activity Column -->
+    <div class="col-lg-4">
+        <h3 class="admin-section-header">Recent Activity</h3>
+        <div class="admin-content-box">
+            @if (ViewBag.RecentApprovals == null || !(ViewBag.RecentApprovals as IEnumerable<dynamic>).Any())
+            {
+                <div class="alert alert-info">
+                    No recent activity to display.
+                </div>
+            }
+            else
+            {
+                @foreach (var approval in ViewBag.RecentApprovals)
+                {
+                    <div class="activity-item">
+                        <div class="activity-date">@(approval.ReviewedAt?.ToString("MMM dd, yyyy"))</div>
+                        <p class="activity-text">
+                            <strong>Event Approved:</strong> @approval.Event.Title
+                        </p>
+                    </div>
+                }
+            }
+
+            <!-- Sample Recent User Activity -->
+            <div class="activity-item">
+                <div class="activity-date">@DateTime.Now.AddDays(-1).ToString("MMM dd, yyyy")</div>
+                <p class="activity-text">
+                    <strong>New User:</strong> john.doe@example.com registered
+                </p>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-date">@DateTime.Now.AddDays(-2).ToString("MMM dd, yyyy")</div>
+                <p class="activity-text">
+                    <strong>New Sponsor:</strong> Local Business Association
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Published Events Section -->
+<div class="row mt-3">
+    <div class="col-12">
+        <h3 class="admin-section-header">Recently Published Events</h3>
+        <div class="admin-content-box">
+            <div class="alert alert-info">
+                No events have been published yet.
+            </div>
+            <!-- This would be populated with actual published events -->
+        </div>
+    </div>
+</div>
