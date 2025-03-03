@@ -10,13 +10,13 @@
     --accent: #F39C12; /* Amber */
     --accent-secondary: #2ECC71; /* Green */
     --accent-tertiary: #3498DB; /* Blue */
-    /* Text colors - MODIFIED */
+    /* Text colors - UPDATED */
     --text-primary: #4A4A4A; /* Darker gray instead of dark slate */
     --text-secondary: #7F8C8D; /* Medium gray */
     --text-light: #A9A9A9; /* Light gray */
     --text-white: #FFFFFF; /* White text */
     /* Background colors */
-    --background: #F9F4FF; /* Light lavender background */
+    --background: #FCF8E8; /* Cream background instead of lavender */
     --card-bg: #ffffff;
     --border-color: #E0E0E0;
     /* Status colors */
@@ -45,6 +45,7 @@
 
 /* Apply updated text colors site-wide */
 body {
+    background-color: var(--background);
     color: var(--text-primary);
 }
 
@@ -58,6 +59,7 @@ p {
 
 /* Fix header contrast issues */
 .card-header {
+    background: linear-gradient(135deg, #8E44AD, #9B59B6);
     color: var(--text-white);
 }
 
@@ -156,4 +158,12 @@ label, .form-label {
 .login-subtitle,
 .register-subtitle {
     color: var(--text-secondary);
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: var(--text-white);
+}
+
+.btn-primary, .btn-success, .btn-warning, .btn-danger {
+    color: var(--text-white);
 }
