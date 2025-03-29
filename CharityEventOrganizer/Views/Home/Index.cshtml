@@ -1,0 +1,211 @@
+﻿@model CharityEventOrganizer.Models.ViewModels.HomeViewModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Hero Section - Expressive and Warm -->
+<section class="hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="animate fade-in">Creating <span class="text-highlight">Meaningful</span> Connections</h1>
+                    <p class="hero-subtitle animate fade-in">We bring passionate people together with caring sponsors to create events that make our world a little brighter.</p>
+                    <div class="d-flex flex-wrap animate fade-in">
+                        <a asp-controller="Events" asp-action="Create" class="btn btn-primary btn-rounded mr-3 mb-3">
+                            <i class="fas fa-heart mr-2"></i>Start Your Event
+                        </a>
+                        <a asp-controller="Events" asp-action="Index" class="btn btn-outline btn-outline-primary btn-rounded mb-3">
+                            <i class="fas fa-search mr-2"></i>Discover Events
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-image-container animate fade-in-right">
+                    <div class="hero-image">
+                        <img src="https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="People volunteering at community event">
+                    </div>
+                    <div class="hero-badges">
+                        <span class="badge-floating"><i class="fas fa-star mr-1"></i> Make a Difference</span>
+                        <span class="badge-floating badge-magenta"><i class="fas fa-heart mr-1"></i> Feel Good</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Wave Divider -->
+<div class="wave-divider parchment"></div>
+
+<!-- Featured Events Section - Playful and Vibrant -->
+<section class="section section-parchment">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="animate fade-in">Featured Events</h2>
+        </div>
+
+        @if (Model.FeaturedEvents != null && Model.FeaturedEvents.Any())
+        {
+            <div class="row mt-5">
+                @foreach (var item in Model.FeaturedEvents)
+                {
+                    <div class="col-lg-4 col-md-6">
+                        <div class="event-card animate fade-in">
+                            <div class="event-card-image">
+                                <img src="https://source.unsplash.com/random/600x400/?@item.Cause.Name.ToLower()" alt="@item.Title">
+                                <div class="event-date">
+                                    <span class="event-date-day">@item.EventDate.Day</span>
+                                    <span class="event-date-month">@item.EventDate.ToString("MMM")</span>
+                                </div>
+                                <div class="event-category category-@item.Cause.Name.ToLower().Replace(" ", "")">
+                                    @item.Cause.Name
+                                </div>
+                            </div>
+                            <div class="event-card-content">
+                                <h4 class="event-card-title">@item.Title</h4>
+                                <div class="event-card-location">
+                                    <i class="fas fa-map-marker-alt"></i> @item.Location
+                                </div>
+                                <p class="event-card-description">@(item.Description.Length > 100 ? item.Description.Substring(0, 100) + "..." : item.Description)</p>
+                            </div>
+                            <div class="event-card-footer">
+                                <a asp-controller="Events" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm btn-rounded">
+                                    Learn More
+                                </a>
+                                <span class="event-card-organizer">By @item.Organizer.UserName</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="text-center mt-5">
+                <a asp-controller="Events" asp-action="Index" class="btn btn-secondary btn-rounded animate fade-in">
+                    <i class="fas fa-calendar-alt mr-2"></i>Browse All Events
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state animate fade-in">
+                <div class="empty-state-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h3 class="empty-state-title">No Events Yet!</h3>
+                <p class="empty-state-message">Be the first to create a charity event and start making a difference in your community.</p>
+                <a asp-controller="Events" asp-action="Create" class="btn btn-primary btn-rounded">
+                    <i class="fas fa-plus-circle mr-2"></i>Create First Event
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Wave Divider -->
+<div class="wave-divider"></div>
+
+<!-- How It Works Section - Fun and Engaging -->
+<section class="section">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="animate fade-in">How It <span class="text-highlight ocean">Works</span></h2>
+        </div>
+
+        <div class="process-container mt-5">
+            <div class="process-connection"></div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="step-card animate fade-in">
+                        <div class="step-number">1</div>
+                        <h4 class="step-card-title">Share Your Vision</h4>
+                        <p class="step-card-description">Tell us about your charity event idea - what cause you're supporting and how you want to make an impact.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="step-card animate fade-in">
+                        <div class="step-number">2</div>
+                        <h4 class="step-card-title">Get Approved</h4>
+                        <p class="step-card-description">Our team reviews your event to ensure it aligns with our community values and has potential for positive change.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="step-card animate fade-in">
+                        <div class="step-number">3</div>
+                        <h4 class="step-card-title">Connect with Sponsors</h4>
+                        <p class="step-card-description">Approved events are matched with sponsors who are passionate about your cause and ready to support.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Wave Divider -->
+<div class="wave-divider parchment"></div>
+
+<!-- Causes We Support - Playful and Colorful -->
+<section class="section section-parchment">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="animate fade-in">Causes We <span class="text-highlight">Support</span></h2>
+        </div>
+
+        <div class="row mt-5">
+            @foreach (var cause in Model.Causes)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="cause-card animate fade-in">
+                        <div class="cause-card-icon">
+                            <i class="@GetCauseIcon(cause.Name)"></i>
+                        </div>
+                        <div class="cause-card-body">
+                            <h4 class="cause-card-title">@cause.Name</h4>
+                            <p class="cause-card-description">@cause.Description</p>
+                            <a href="#" class="btn btn-outline btn-sm btn-rounded">
+                                Explore Events
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Wave Divider -->
+<div class="wave-divider"></div>
+
+<!-- Call to Action Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content">
+            <h2 class="cta-title animate fade-in">Ready to Make a <span class="text-highlight">Difference</span>?</h2>
+            <p class="cta-subtitle animate fade-in">Join our community of change-makers and start creating events that transform lives.</p>
+            <div class="animate fade-in">
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary btn-lg btn-rounded">
+                    <i class="fas fa-heart mr-2"></i>Join Our Community
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+@functions {
+    public string GetCauseIcon(string causeName)
+    {
+        return causeName.ToLower() switch
+        {
+            "education" => "fas fa-graduation-cap",
+            "healthcare" => "fas fa-heartbeat",
+            "environment" => "fas fa-leaf",
+            "poverty" => "fas fa-home",
+            "animal welfare" => "fas fa-paw",
+            "disaster relief" => "fas fa-hands-helping",
+            _ => "fas fa-heart"
+        };
+    }
+}

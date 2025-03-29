@@ -1,0 +1,229 @@
+﻿@model CharityEventOrganizer.Models.Entities.Event
+
+@{
+    ViewData["Title"] = "Event Details";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <nav aria-label="breadcrumb" class="animate-on-scroll">
+            <ol class="breadcrumb bg-light">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Events" asp-action="Index">Events</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4 animate-on-scroll @GetCardClass(Model.Cause.Name)">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="cause-icon">
+                        <i class="@GetCauseIcon(Model.Cause.Name)"></i>
+                    </div>
+                    <div>
+                        <h1 class="card-title h3 mb-0">@Model.Title</h1>
+                        <p class="text-muted mb-0">@Model.Cause.Name</p>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <span class="badge badge-light mr-2"><i class="far fa-calendar-alt mr-1"></i>@Model.EventDate.ToString("MMMM dd, yyyy")</span>
+                    <span class="badge badge-light mr-2"><i class="fas fa-map-marker-alt mr-1"></i>@Model.Location</span>
+                    <span class="badge badge-light mr-2"><i class="fas fa-user mr-1"></i>Organized by @Model.Organizer.UserName</span>
+                    @if (Model.Sponsor != null)
+                    {
+                        <span class="badge badge-warning"><i class="fas fa-hand-holding-usd mr-1"></i>Sponsored by @Model.Sponsor.Name</span>
+                    }
+                </div>
+
+                <h5 class="mb-3">About This Event</h5>
+                <p class="card-text">@Model.Description</p>
+
+                <hr />
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Event Date</h5>
+                        <p><i class="far fa-calendar-alt mr-2 text-purple-primary"></i>@Model.EventDate.ToLongDateString()</p>
+                        <p><i class="far fa-clock mr-2 text-purple-primary"></i>@Model.EventDate.ToString("h:mm tt")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Location</h5>
+                        <p><i class="fas fa-map-marker-alt mr-2 text-purple-primary"></i>@Model.Location</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="far fa-comments mr-2"></i>Comments</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.Comments != null && Model.Comments.Any())
+                {
+                    @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreatedDate))
+                    {
+                        <div class="media mb-4 comment">
+                            <div class="mr-3">
+                                <div class="d-flex align-items-center justify-content-center bg-purple-light text-white rounded-circle" style="width: 50px; height: 50px; font-weight: bold;">
+                                    @comment.User.UserName.Substring(0, 1).ToUpper()
+                                </div>
+                            </div>
+                            <div class="media-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mt-0 mb-0">@comment.User.UserName</h6>
+                                    <small class="text-muted">@comment.CreatedDate.ToString("MMM d, yyyy h:mm tt")</small>
+                                </div>
+                                <p class="mb-0">@comment.Content</p>
+                            </div>
+                        </div>
+                        <hr />
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">No comments yet. Be the first to comment!</p>
+                }
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <form asp-controller="Comment" asp-action="Create" method="post">
+                        <input type="hidden" name="EventId" value="@Model.Id" />
+                        <div class="form-group">
+                            <label for="Content">Add a Comment</label>
+                            <textarea class="form-control" id="Content" name="Content" rows="3" required placeholder="Share your thoughts about this event..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane mr-1"></i>Submit Comment
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle mr-2"></i>Please <a asp-area="Identity" asp-page="/Account/Login">login</a> to leave a comment.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4 animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle mr-2"></i>Event Status</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <span class="badge badge-lg @GetStatusBadgeClass(Model.Status)" style="font-size: 1rem; padding: 0.5rem 1rem;">
+                        @Model.Status.ToString()
+                    </span>
+                </div>
+                <div class="status-timeline">
+                    <div class="status-step @(IsStatusCompleted(Model.Status, "Submitted") ? "completed" : "")">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span class="status-step-label">Submitted</span>
+                    </div>
+                    <div class="status-step @(IsStatusCompleted(Model.Status, "ApprovedForSponsorship") ? "completed" : (Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.UnderReview ? "active" : ""))">
+                        <i class="fas fa-search"></i>
+                        <span class="status-step-label">Review</span>
+                    </div>
+                    <div class="status-step @(IsStatusCompleted(Model.Status, "SponsorshipDiscussion") ? "completed" : (Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship ? "active" : ""))">
+                        <i class="fas fa-handshake"></i>
+                        <span class="status-step-label">Sponsor</span>
+                    </div>
+                    <div class="status-step @(Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.Approved ? "completed" : (Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion ? "active" : ""))">
+                        <i class="fas fa-check-circle"></i>
+                        <span class="status-step-label">Approved</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4 animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-share-alt mr-2"></i>Share This Event</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-around">
+                    <a href="#" class="btn btn-outline-primary"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="btn btn-outline-info"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="btn btn-outline-success"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" class="btn btn-outline-secondary"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card animate-on-scroll">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-lightbulb mr-2"></i>Actions</h5>
+            </div>
+            <div class="card-body">
+                <a asp-action="Index" class="btn btn-secondary btn-block mb-2">
+                    <i class="fas fa-arrow-left mr-1"></i>Back to List
+                </a>
+
+                @if (User.Identity.IsAuthenticated && Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship)
+                {
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle mr-2"></i>This event is looking for sponsors!
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    public string GetCardClass(string causeName)
+    {
+        return causeName.ToLower() switch
+        {
+            "education" => "card-education",
+            "healthcare" => "card-healthcare",
+            "environment" => "card-environment",
+            "poverty" => "card-poverty",
+            "animal welfare" => "card-animal-welfare",
+            "disaster relief" => "card-disaster-relief",
+            _ => "card-education"
+        };
+    }
+
+    public string GetCauseIcon(string causeName)
+    {
+        return causeName.ToLower() switch
+        {
+            "education" => "fas fa-graduation-cap",
+            "healthcare" => "fas fa-heartbeat",
+            "environment" => "fas fa-leaf",
+            "poverty" => "fas fa-home",
+            "animal welfare" => "fas fa-paw",
+            "disaster relief" => "fas fa-hands-helping",
+            _ => "fas fa-heart"
+        };
+    }
+
+    public string GetStatusBadgeClass(CharityEventOrganizer.Models.Entities.EventStatus status)
+    {
+        return status switch
+        {
+            CharityEventOrganizer.Models.Entities.EventStatus.Submitted => "badge-secondary",
+            CharityEventOrganizer.Models.Entities.EventStatus.UnderReview => "badge-primary",
+            CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship => "badge-info",
+            CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion => "badge-warning",
+            CharityEventOrganizer.Models.Entities.EventStatus.Approved => "badge-success",
+            CharityEventOrganizer.Models.Entities.EventStatus.Rejected => "badge-danger",
+            _ => "badge-secondary"
+        };
+    }
+
+    public bool IsStatusCompleted(CharityEventOrganizer.Models.Entities.EventStatus currentStatus, string statusToCheck)
+    {
+        var statusValue = Enum.Parse<CharityEventOrganizer.Models.Entities.EventStatus>(statusToCheck);
+        return currentStatus > statusValue || currentStatus == statusValue;
+    }
+}

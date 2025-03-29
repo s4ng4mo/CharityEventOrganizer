@@ -1,0 +1,162 @@
+﻿@model IEnumerable<CharityEventOrganizer.Models.Entities.Event>
+
+@{
+    ViewData["Title"] = "Events";
+}
+
+<!-- Events Header Section -->
+<section class="event-details-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 slide-in-left">Discover Charity Events</h1>
+                <p class="lead slide-in-left">Browse through events that are making a positive impact in communities around the world.</p>
+            </div>
+            <div class="col-lg-4 text-lg-right slide-in-right">
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-plus-circle mr-2"></i>Create Event
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filter Section -->
+<section class="py-4">
+    <div class="container">
+        <div class="card fade-in">
+            <div class="card-body">
+                <form method="get" class="row align-items-end">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <label for="searchTerm">Search</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-white">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                            </div>
+                            <input type="text" class="form-control" id="searchTerm" name="searchTerm" placeholder="Search by title, description..." value="@Context.Request.Query["searchTerm"]">
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <label for="causeId">Cause</label>
+                        <select class="form-control" id="causeId" name="causeId">
+                            <option value="">All Causes</option>
+                            <!-- Add options dynamically -->
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <label for="sortBy">Sort By</label>
+                        <select class="form-control" id="sortBy" name="sortBy">
+                            <option value="date">Date (Newest)</option>
+                            <option value="dateAsc">Date (Oldest)</option>
+                            <option value="name">Name (A-Z)</option>
+                            <option value="nameDesc">Name (Z-A)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-filter mr-2"></i>Filter
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Events Listing -->
+<section class="py-4">
+    <div class="container">
+        @if (Model.Any())
+        {
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card event-card fade-in h-100">
+                            <div class="card-img-wrapper">
+                                <img src="https://placehold.co/800x500/f8f9fa/6A3EA1?text=@item.Cause.Name" class="card-img-top" alt="@item.Title">
+                                <span class="card-cause-tag cause-@item.Cause.Name.ToLower().Replace(" ", "-")">@item.Cause.Name</span>
+                                <div class="card-img-overlay">
+                                    <h5 class="card-title mb-0">@item.Title</h5>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="event-date mr-3">
+                                        <span class="event-date-month">@item.EventDate.ToString("MMM")</span>
+                                        <span class="event-date-day">@item.EventDate.ToString("dd")</span>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0">@item.EventDate.ToString("dddd, MMMM dd, yyyy")</h6>
+                                        <small class="text-muted"><i class="fas fa-map-marker-alt"></i> @item.Location</small>
+                                    </div>
+                                </div>
+                                <p class="card-text">@(item.Description.Length > 100 ? item.Description.Substring(0, 100) + "..." : item.Description)</p>
+                            </div>
+                            <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-teal btn-sm">
+                                    <i class="fas fa-info-circle mr-1"></i>Learn More
+                                </a>
+                                <small class="text-muted">By @item.Organizer.UserName</small>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center mt-4 fade-in">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state fade-in">
+                <div class="empty-state-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h3 class="empty-state-title">No Events Found</h3>
+                <p class="empty-state-description">There are no events matching your search criteria or there are no events available at the moment.</p>
+                <div class="d-flex justify-content-center">
+                    <a asp-action="Index" class="btn btn-outline-primary mr-3">
+                        <i class="fas fa-sync-alt mr-2"></i>Reset Filters
+                    </a>
+                    <a asp-action="Create" class="btn btn-primary">
+                        <i class="fas fa-plus-circle mr-2"></i>Create Event
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Need Help Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <h2 class="fade-in">Need Help Finding Events?</h2>
+                <p class="lead fade-in">Our team can help you discover events that match your interests.</p>
+            </div>
+            <div class="col-lg-4 text-lg-right fade-in">
+                <a href="#" class="btn btn-outline-primary">
+                    <i class="fas fa-envelope mr-2"></i>Contact Us
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

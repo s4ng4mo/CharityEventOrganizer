@@ -1,0 +1,155 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Your Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<div class="profile-hero">
+    <div class="profile-hero-content">
+        <h1>Your <span class="text-gradient">Charitable</span> Journey</h1>
+        <p>Update your profile and continue making a difference in the world</p>
+    </div>
+    <div class="profile-hero-decoration"></div>
+</div>
+
+<div class="container">
+    <div class="profile-dashboard">
+        <!-- Left Sidebar with Avatar and Navigation -->
+        <div class="profile-sidebar">
+            <div class="profile-avatar-container">
+                @if (string.IsNullOrEmpty(Model.ProfilePicture))
+                {
+                    <div class="profile-avatar-placeholder">
+                        <span>@(Model.Input.FirstName?.Substring(0, 1))@(Model.Input.LastName?.Substring(0, 1))</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="profile-avatar">
+                        <img src="@Model.ProfilePicture" alt="Profile picture" />
+                    </div>
+                }
+                <div class="profile-avatar-overlay">
+                    <form id="profile-picture-form" enctype="multipart/form-data" method="post" asp-page-handler="UploadProfilePicture">
+                        <label for="profile-upload" class="photo-upload-label">
+                            <i class="fas fa-camera"></i>
+                            <span>Change Photo</span>
+                        </label>
+                        <input id="profile-upload" type="file" name="profilePicture" class="d-none" onchange="this.form.submit()" accept="image/*" />
+                    </form>
+                </div>
+                <h3 class="profile-name">@Model.Input.FirstName @Model.Input.LastName</h3>
+                <div class="profile-tags">
+                    <span class="profile-tag">Organizer</span>
+                    <span class="profile-tag">Volunteer</span>
+                </div>
+            </div>
+
+            <nav class="profile-navigation">
+                <a href="#" class="profile-nav-item active">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Profile</span>
+                </a>
+                <a asp-page="./ChangePassword" class="profile-nav-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Password</span>
+                </a>
+                <a asp-page="./PersonalData" class="profile-nav-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Personal Data</span>
+                </a>
+                <a asp-controller="Events" asp-action="MySubmissions" class="profile-nav-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>My Events</span>
+                </a>
+            </nav>
+
+            <div class="impact-summary">
+                <h4>Your Impact</h4>
+                <div class="impact-stats">
+                    <div class="impact-stat">
+                        <div class="impact-number">3</div>
+                        <div class="impact-label">Events Created</div>
+                    </div>
+                    <div class="impact-stat">
+                        <div class="impact-number">12</div>
+                        <div class="impact-label">Lives Touched</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="profile-content">
+            <div class="content-header">
+                <h2>Profile Information</h2>
+                <p>Update your personal details and contact information</p>
+            </div>
+
+            <partial name="_StatusMessage" for="StatusMessage" />
+
+            <form id="profile-form" method="post" class="profile-form">
+                <div asp-validation-summary="ModelOnly" class="text-danger alert alert-danger" role="alert"></div>
+
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="fas fa-user-circle"></i>
+                        Personal Information
+                    </h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label asp-for="Input.FirstName">First Name</label>
+                            <input asp-for="Input.FirstName" class="form-control" />
+                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Input.LastName">Last Name</label>
+                            <input asp-for="Input.LastName" class="form-control" />
+                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Input.Username">Username</label>
+                        <input asp-for="Input.Username" class="form-control" readonly />
+                        <span asp-validation-for="Input.Username" class="text-danger"></span>
+                        <small class="form-text">Your username cannot be changed</small>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="form-section-title">
+                        <i class="fas fa-envelope"></i>
+                        Contact Information
+                    </h3>
+
+                    <div class="form-group">
+                        <label asp-for="Input.Email">Email Address</label>
+                        <input asp-for="Input.Email" class="form-control" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Input.PhoneNumber">Phone Number</label>
+                        <input asp-for="Input.PhoneNumber" class="form-control" />
+                        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-save"></i>
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
