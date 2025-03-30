@@ -20,6 +20,7 @@ namespace CharityEventOrganizer.Areas.Identity.Pages.Account.Manage
             _logger = logger;
         }
 
+        public string ProfilePicture { get; set; }
         public async Task<IActionResult> OnGet()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -27,6 +28,8 @@ namespace CharityEventOrganizer.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
+
+            ProfilePicture = user.ProfilePicturePath;
 
             return Page();
         }

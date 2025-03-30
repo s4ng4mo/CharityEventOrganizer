@@ -5,29 +5,153 @@
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
-<h4>@ViewData["Title"]</h4>
-
-<div class="alert alert-warning" role="alert">
-    <p>
-        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-    </p>
+<div class="profile-hero">
+    <div class="profile-hero-content">
+        <h1>Delete Your <span class="text-gradient">Account</span></h1>
+        <p>Permanently remove your account and all personal data</p>
+    </div>
+    <div class="profile-hero-decoration"></div>
 </div>
 
-<div>
-    <form id="delete-user" method="post" class="form-group">
-        <div asp-validation-summary="All" class="text-danger"></div>
-        @if (Model.RequirePassword)
-        {
-            <div class="form-group">
-                <label asp-for="Input.Password"></label>
-                <input asp-for="Input.Password" class="form-control" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+<div class="container">
+    <div class="profile-dashboard">
+        <!-- Left Sidebar with Avatar and Navigation -->
+        <div class="profile-sidebar">
+            <div class="profile-avatar-container">
+                @if (string.IsNullOrEmpty(Model.ProfilePicture))
+                {
+                    <div class="profile-avatar-placeholder">
+                        <span>@(User.Identity.Name?.Substring(0, 1).ToUpper())</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="profile-avatar">
+                        <img src="@Model.ProfilePicture" alt="Profile picture" />
+                    </div>
+                }
+                <h3 class="profile-name">@User.Identity.Name</h3>
+                <div class="profile-tags">
+                    <span class="profile-tag">Organizer</span>
+                    <span class="profile-tag">Volunteer</span>
+                </div>
             </div>
-        }
-        <button class="btn btn-danger" type="submit">Delete data and close my account</button>
-    </form>
+
+            <nav class="profile-navigation">
+                <a asp-page="../Index" class="profile-nav-item">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Profile</span>
+                </a>
+                <a asp-page="../ChangePassword" class="profile-nav-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Password</span>
+                </a>
+                <a asp-page="./PersonalData" class="profile-nav-item active">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Personal Data</span>
+                </a>
+                <a asp-controller="Events" asp-action="MySubmissions" class="profile-nav-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>My Events</span>
+                </a>
+            </nav>
+
+            <div class="impact-summary">
+                <h4>Your Impact</h4>
+                <div class="impact-stats">
+                    <div class="impact-stat">
+                        <div class="impact-number">3</div>
+                        <div class="impact-label">Events Created</div>
+                    </div>
+                    <div class="impact-stat">
+                        <div class="impact-number">12</div>
+                        <div class="impact-label">Lives Touched</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="profile-content">
+            <div class="content-header">
+                <h2>Delete Personal Data</h2>
+                <p>Permanently delete your account and all associated data</p>
+            </div>
+
+            <div class="alert alert-danger mb-4" role="alert">
+                <div class="d-flex">
+                    <div class="mr-3">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                    <div>
+                        <h4 class="alert-heading">Warning!</h4>
+                        <p class="mb-0">
+                            <strong>This action is permanent and cannot be undone.</strong> Deleting your account will remove all your personal information, submitted events, comments, and any other data associated with your account from our system.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <form id="delete-user" method="post" class="profile-form">
+                @if (Model.RequirePassword)
+                {
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="fas fa-lock"></i>
+                            Confirm with Password
+                        </h3>
+
+                        <div class="form-group">
+                            <label asp-for="Input.Password">Current Password</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-lock"></i>
+                                <input asp-for="Input.Password" class="form-control" type="password" />
+                            </div>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            <small class="form-text text-muted">Please enter your current password to confirm your identity.</small>
+                        </div>
+                    </div>
+                }
+
+                <div class="form-section">
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                        <label class="form-check-label" for="confirmDelete">
+                            I understand that this action is permanent and cannot be undone.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a asp-page="./PersonalData" class="btn btn-outline btn-outline-primary mr-3">
+                        <i class="fas fa-arrow-left"></i>
+                        Go Back
+                    </a>
+                    <button class="btn-save" style="background: linear-gradient(45deg, #dc3545, #dc3545); box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);" type="submit">
+                        <i class="fas fa-trash-alt"></i>
+                        Delete my account permanently
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Enable submit button only when checkbox is checked
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkbox = document.getElementById('confirmDelete');
+            const submitButton = document.querySelector('button[type="submit"]');
+
+            submitButton.disabled = true;
+            submitButton.style.opacity = '0.5';
+
+            checkbox.addEventListener('change', function() {
+                submitButton.disabled = !this.checked;
+                submitButton.style.opacity = this.checked ? '1' : '0.5';
+            });
+        });
+    </script>
 }

@@ -5,7 +5,123 @@
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
-<h4>@ViewData["Title"]</h4>
+<div class="profile-hero">
+    <div class="profile-hero-content">
+        <h1>Download Your <span class="text-gradient">Data</span></h1>
+        <p>Get a copy of all your personal information</p>
+    </div>
+    <div class="profile-hero-decoration"></div>
+</div>
+
+<div class="container">
+    <div class="profile-dashboard">
+        <!-- Left Sidebar with Avatar and Navigation -->
+        <div class="profile-sidebar">
+            <div class="profile-avatar-container">
+                @if (string.IsNullOrEmpty(Model.ProfilePicture))
+                {
+                    <div class="profile-avatar-placeholder">
+                        <span>@(User.Identity.Name?.Substring(0, 1).ToUpper())</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="profile-avatar">
+                        <img src="@Model.ProfilePicture" alt="Profile picture" />
+                    </div>
+                }
+                <h3 class="profile-name">@User.Identity.Name</h3>
+                <div class="profile-tags">
+                    <span class="profile-tag">Organizer</span>
+                    <span class="profile-tag">Volunteer</span>
+                </div>
+            </div>
+
+            <nav class="profile-navigation">
+                <a asp-page="../Index" class="profile-nav-item">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Profile</span>
+                </a>
+                <a asp-page="../ChangePassword" class="profile-nav-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Password</span>
+                </a>
+                <a asp-page="./PersonalData" class="profile-nav-item active">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Personal Data</span>
+                </a>
+                <a asp-controller="Events" asp-action="MySubmissions" class="profile-nav-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>My Events</span>
+                </a>
+            </nav>
+
+            <div class="impact-summary">
+                <h4>Your Impact</h4>
+                <div class="impact-stats">
+                    <div class="impact-stat">
+                        <div class="impact-number">3</div>
+                        <div class="impact-label">Events Created</div>
+                    </div>
+                    <div class="impact-stat">
+                        <div class="impact-number">12</div>
+                        <div class="impact-label">Lives Touched</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="profile-content">
+            <div class="content-header">
+                <h2>Download Your Data</h2>
+                <p>Get a copy of all your personal information</p>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="text-center py-4">
+                        <i class="fas fa-file-download text-primary" style="font-size: 4rem;"></i>
+                        <h3 class="mt-4">Your Data is Ready to Download</h3>
+                        <p class="text-muted mb-4">The download contains all personal information associated with your account in JSON format.</p>
+                        <form method="post">
+                            <button type="submit" class="btn-save">
+                                <i class="fas fa-download mr-2"></i>
+                                Download Data
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle mr-2"></i>What's included?</h5>
+                </div>
+                <div class="card-body">
+                    <p>The downloaded file will include:</p>
+                    <ul>
+                        <li>Your profile information (name, email, phone number)</li>
+                        <li>Your account details (username, login providers)</li>
+                        <li>Information about events you've created</li>
+                        <li>Comments you've made on events</li>
+                    </ul>
+                    <p class="mb-0">
+                        <i class="fas fa-lock text-success mr-2"></i>
+                        <strong>Privacy Note:</strong> We care about your data privacy. The downloaded file is for your personal use only.
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <a asp-page="./PersonalData" class="btn btn-outline btn-outline-primary">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Personal Data
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

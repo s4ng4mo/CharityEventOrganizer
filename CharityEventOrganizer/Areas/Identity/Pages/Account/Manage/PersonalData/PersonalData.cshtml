@@ -5,20 +5,105 @@
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
-<h4>@ViewData["Title"]</h4>
+<div class="profile-hero">
+    <div class="profile-hero-content">
+        <h1>Manage Your <span class="text-gradient">Personal Data</span></h1>
+        <p>Download or delete all your personal information</p>
+    </div>
+    <div class="profile-hero-decoration"></div>
+</div>
 
-<div class="row">
-    <div class="col-md-6">
-        <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
-        <p>
-            <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-        </p>
-        <form id="download-data" asp-page="DownloadPersonalData" method="post" class="form-group">
-            <button class="btn btn-primary" type="submit">Download</button>
-        </form>
-        <p>
-            <a id="delete" asp-page="DeletePersonalData" class="btn btn-secondary">Delete</a>
-        </p>
+<div class="container">
+    <div class="profile-dashboard">
+        <!-- Left Sidebar with Avatar and Navigation -->
+        <div class="profile-sidebar">
+            <div class="profile-avatar-container">
+                @if (string.IsNullOrEmpty(Model.ProfilePicture))
+                {
+                    <div class="profile-avatar-placeholder">
+                        <span>@(User.Identity.Name?.Substring(0, 1).ToUpper())</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="profile-avatar">
+                        <img src="@Model.ProfilePicture" alt="Profile picture" />
+                    </div>
+                }
+                <h3 class="profile-name">@User.Identity.Name</h3>
+                <div class="profile-tags">
+                    <span class="profile-tag">Organizer</span>
+                    <span class="profile-tag">Volunteer</span>
+                </div>
+            </div>
+
+            <nav class="profile-navigation">
+                <a asp-page="../Index" class="profile-nav-item">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Profile</span>
+                </a>
+                <a asp-page="../ChangePassword" class="profile-nav-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Password</span>
+                </a>
+                <a asp-page="./PersonalData" class="profile-nav-item active">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Personal Data</span>
+                </a>
+                <a asp-controller="Events" asp-action="MySubmissions" class="profile-nav-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>My Events</span>
+                </a>
+            </nav>
+
+            <div class="impact-summary">
+                <h4>Your Impact</h4>
+                <div class="impact-stats">
+                    <div class="impact-stat">
+                        <div class="impact-number">3</div>
+                        <div class="impact-label">Events Created</div>
+                    </div>
+                    <div class="impact-stat">
+                        <div class="impact-number">12</div>
+                        <div class="impact-label">Lives Touched</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="profile-content">
+            <div class="content-header">
+                <h2>Personal Data</h2>
+                <p>Manage your account data and privacy</p>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title mb-3"><i class="fas fa-download text-primary mr-2"></i>Download Your Data</h3>
+                    <p>Your account contains personal data that you have given us. This page allows you to download that data.</p>
+                    <form id="download-data" asp-page="./DownloadPersonalData" method="post">
+                        <a asp-page="./DownloadPersonalData" class="btn btn-primary">
+                            <i class="fas fa-download mr-2"></i>Download Data
+                        </a>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title mb-3"><i class="fas fa-trash-alt text-danger mr-2"></i>Delete Your Account</h3>
+                    <p class="mb-3">Permanently delete your account and all associated data.</p>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        <strong>Warning:</strong> Deleting your data will permanently remove your account, and this cannot be recovered.
+                    </div>
+                    <a id="delete" asp-page="./DeletePersonalData" class="btn btn-danger">
+                        <i class="fas fa-trash-alt mr-2"></i>Delete Account
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
