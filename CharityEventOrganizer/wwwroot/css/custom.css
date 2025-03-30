@@ -3,7 +3,7 @@
 
 :root {
     /* Vibrant, Expressive Color Palette */
-    --magenta: #3AAED8;
+    --magenta: #3AAED8; /* Main teal-blue */
     --sunshine: #FFB400; /* Warmth and optimism */
     --ocean: #3FB8AF; /* Calm and purpose */
     --lavender: #9183FF; /* Creativity and compassion */
@@ -136,6 +136,8 @@ a {
     background-position: center top;
     background-repeat: no-repeat;
     background-size: cover;
+    transform: rotate(180deg); /* Flip the wave right side up */
+    margin-bottom: -1px;
 }
 
     .wave-divider.parchment {
@@ -164,6 +166,8 @@ a {
     transition: all var(--speed-medium) ease;
     border-bottom: 2px solid var(--ocean);
     margin-bottom: 2rem;
+    position: relative;
+    z-index: 1000; /* Higher z-index to stay on top */
 }
 
     .navbar.scrolled {
@@ -212,6 +216,22 @@ a {
 
     .nav-link.active {
         font-weight: 800;
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: #3AAED8;
+        transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+        width: 100%;
     }
 
 /* Expressive Buttons */
@@ -281,6 +301,7 @@ a {
     .btn-outline.btn-primary {
         color: var(--magenta);
         border-color: var(--magenta);
+        border: 2px solid var(--magenta);
     }
 
         .btn-outline.btn-primary:hover {
@@ -677,7 +698,7 @@ a {
     overflow: hidden;
     box-shadow: var(--shadow-soft);
     transition: all var(--speed-medium) ease;
-    margin-bottom: 30px;
+    margin-bottom: 30px !important;
     text-align: center;
     height: 100%;
     position: relative;
@@ -789,11 +810,13 @@ a {
 .footer {
     background-color: var(--charcoal);
     color: rgba(255, 255, 255, 0.7);
-    padding: 80px 0 30px;
+    padding: 50px 0 20px;
     position: relative;
     overflow: hidden;
     margin-top: 4rem;
     padding-bottom: 0;
+    flex-shrink: 0;
+    width: 100%;
 }
 
     .footer::before {
@@ -815,7 +838,7 @@ a {
 }
 
 .footer-tagline {
-    max-width: 300px;
+    max-width: 400px;
     margin-bottom: 30px;
 }
 
@@ -870,6 +893,13 @@ a {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.footer .col-lg-4 p {
+    max-width: 300px;
+    word-wrap: break-word;
+    white-space: normal;
+    color: rgba(255, 255, 255, 0.7);
+}
+
 /* Animation Classes */
 .animate {
     opacity: 0;
@@ -906,6 +936,7 @@ a {
     position: absolute;
     z-index: 0;
     opacity: 0.5;
+    pointer-events: none; /* Make it non-interactive so clicks pass through */
 }
 
 .doodle-hearts {
@@ -930,6 +961,7 @@ a {
     filter: blur(40px);
     z-index: 0;
     opacity: 0.5;
+    pointer-events: none; /* Make it non-interactive so clicks pass through */
 }
 
 .blob-1 {
@@ -981,141 +1013,12 @@ a {
     border-width: 2px !important;
 }
 
-.btn-outline.btn-outline-primary {
-    border: 2px solid var(--primary);
-}
-
-.wave-divider {
-    transform: rotate(180deg); /* Flip the wave right side up */
-    margin-bottom: -1px;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 991.98px) {
-    h1 {
-        font-size: 3rem;
-    }
-
-    h2 {
-        font-size: 2.5rem;
-    }
-
-    .hero {
-        padding: 100px 0 80px;
-    }
-
-    .hero-image-container {
-        margin-top: 40px;
-    }
-
-    .process-connection {
-        display: none;
-    }
-
-    .step-card {
-        margin-bottom: 40px;
-    }
-
-    .navbar-collapse {
-        background-color: var(--canvas);
-        border-radius: var(--radius-md);
-        padding: 15px;
-        box-shadow: var(--shadow-soft);
-        margin-top: 10px;
-    }
-}
-
-@media (max-width: 767.98px) {
-    h1 {
-        font-size: 2.5rem;
-    }
-
-    h2 {
-        font-size: 2rem;
-    }
-
-    .section {
-        padding: 60px 0;
-    }
-
-    .hero {
-        padding: 80px 0 60px;
-    }
-
-    .hero-subtitle {
-        font-size: 1.2rem;
-    }
-
-    .footer {
-        padding: 60px 0 30px;
-    }
-}
-
-.nav-link {
-    position: relative;
-    transition: all 0.3s ease;
-}
-
-    .nav-link::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background-color: #3AAED8;
-        transition: width 0.3s ease;
-    }
-
-    .nav-link:hover::after,
-    .nav-link.active::after {
-        width: 100%;
-    }
-
-/* Footer fixes */
-html, body {
-    height: 100%;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-}
-
-main {
-    flex: 1 0 auto;
-}
-
-.footer {
-    flex-shrink: 0;
-    width: 100%;
-    background-color: #454851;
-    color: white;
-    padding: 50px 0 20px;
-}
-
-.footer-tagline {
-    max-width: 400px;
-}
-
-.social-links {
-    display: none;
-}
-
-.footer .col-lg-4 p {
-    max-width: 300px;
-    word-wrap: break-word;
-    white-space: normal;
-    color: rgba(255, 255, 255, 0.7);
-}
-
 /* More specific card margin fix */
 .section-parchment .row > div {
     margin-bottom: 30px;
 }
 
 /* Alternative styling for cause cards with important flag */
-.cause-card,
 .section-parchment .col-lg-4,
 .section-parchment .col-md-6 {
     margin-bottom: 30px !important;
@@ -1127,12 +1030,13 @@ main {
         margin-bottom: 15px;
     }
 
-    /* Target second row specifically */
-    .section-parchment .row + .row {
-        margin-top: 30px;
-    }
+        /* Target second row specifically */
+        .section-parchment .row + .row {
+            margin-top: 30px;
+        }
 }
 
+/* Navbar toggle button fixes */
 .navbar-toggler {
     border: none;
     padding: 0.6rem;
@@ -1156,14 +1060,6 @@ main {
     .doodle-stars {
         z-index: -1 !important; /* Make sure it's below interactive elements */
         top: 120px !important; /* Push it down below the navbar */
-        pointer-events: none; /* Make it non-interactive so clicks pass through */
-    }
-
-    /* Ensure navbar has proper z-index and background */
-    .navbar {
-        position: relative;
-        z-index: 1000 !important; /* Higher z-index to stay on top */
-        background-color: var(--canvas) !important; /* Ensure it has background */
     }
 
     .navbar-collapse .d-flex {
@@ -1185,9 +1081,9 @@ main {
         border-bottom: 1px solid rgba(0,0,0,0.05);
     }
 
-    .navbar-nav .nav-item:last-child {
-        border-bottom: none;
-    }
+        .navbar-nav .nav-item:last-child {
+            border-bottom: none;
+        }
 }
 
 /* Register Page CSS */
@@ -1273,7 +1169,7 @@ main {
 .form-control {
     height: 50px;
     border-radius: 25px;
-    padding: 10px 15px 10px 40px;
+    padding: 10px 15px 10px 40px; /* Increased left padding to make room for the icon */
     border: 1px solid #e9ecef;
     font-size: 1rem;
     width: 100%;
@@ -1451,14 +1347,14 @@ main {
 
 /* Hero Section */
 .profile-hero {
-    background: linear-gradient(135deg, #e9f5ff 0%, #f0f8ff 100%);
+    background: linear-gradient(135deg, #e6f9fc 0%, #eefafd 100%); /* Updated to match teal/blue theme */
     padding: 60px 0;
     position: relative;
     overflow: hidden;
     text-align: center;
     margin-bottom: 40px;
     border-bottom: 5px solid;
-    border-image: linear-gradient(to right, #ff8a80, #ff5c8d, #8a4fff, #3AAED8) 1;
+    border-image: linear-gradient(to right, #3AAED8, #39C1AA, #3FB8AF, #3AAED8) 1; /* Updated to match teal/blue theme */
 }
 
 .profile-hero-content {
@@ -1481,16 +1377,12 @@ main {
 }
 
 .text-gradient {
-    /* Create your gradient */
-    background-image: linear-gradient(90deg, #3AAED8, #ff5c8d);
-    /* Apply the mask for webkit browsers */
+    /* Updated gradient to match teal/blue theme */
+    background-image: linear-gradient(90deg, #3AAED8, #39C1AA);
     -webkit-background-clip: text;
-    /* Apply for standard browsers */
     background-clip: text;
-    /* Make the text transparent to show the background */
     -webkit-text-fill-color: transparent;
-    color: transparent; /* Fallback */
-
+    color: transparent;
     display: inline-block;
     position: relative;
 }
@@ -1498,7 +1390,7 @@ main {
 /* Fallback for browsers that don't support background-clip: text */
 @supports not (background-clip: text) {
     .text-gradient {
-        color: #3AAED8; /* Use first gradient color as fallback */
+        color: #3AAED8;
     }
 }
 
@@ -1508,7 +1400,7 @@ main {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: radial-gradient(circle at 20% 30%, rgba(58, 174, 216, 0.1) 0%, transparent 100%), radial-gradient(circle at 80% 70%, rgba(255, 92, 141, 0.1) 0%, transparent 100%);
+    background-image: radial-gradient(circle at 20% 30%, rgba(58, 174, 216, 0.1) 0%, transparent 100%), radial-gradient(circle at 80% 70%, rgba(57, 193, 170, 0.1) 0%, transparent 100%);
     z-index: 1;
 }
 
@@ -1531,7 +1423,7 @@ main {
         position: absolute;
         width: 150px;
         height: 150px;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff5c8d' opacity='0.1'%3E%3Cpath d='M21,9H15V3H9v6H3v6h6v6h6v-6h6V9z'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2339C1AA' opacity='0.1'%3E%3Cpath d='M21,9H15V3H9v6H3v6h6v6h6v-6h6V9z'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
         background-size: contain;
         left: 10%;
@@ -1569,7 +1461,7 @@ main {
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #3AAED8, #8a4fff);
+    background: linear-gradient(135deg, #3AAED8, #39C1AA);
     color: white;
     display: flex;
     align-items: center;
@@ -1778,37 +1670,12 @@ main {
     margin-bottom: 20px;
 }
 
-.form-group {
-    margin-bottom: 20px;
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #444;
 }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-        color: #444;
-    }
-
-.form-control {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #eee;
-    border-radius: 10px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-    .form-control:focus {
-        border-color: #3AAED8;
-        box-shadow: 0 0 0 3px rgba(58, 174, 216, 0.1);
-        outline: none;
-    }
-
-    .form-control[readonly] {
-        background-color: #f6f9fc;
-        border-color: #eee;
-        color: #666;
-    }
 
 .form-text {
     font-size: 0.85rem;
@@ -1823,7 +1690,7 @@ main {
 }
 
 .btn-save {
-    background: linear-gradient(45deg, #3AAED8, #8a4fff);
+    background: linear-gradient(45deg, #3AAED8, #39C1AA);
     color: white;
     border: none;
     border-radius: 30px;
@@ -1870,4 +1737,42 @@ main {
         .profile-hero h1 {
             font-size: 1.8rem;
         }
+}
+
+/* Body Layout for Sticky Footer */
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+/* Social Links Fixes */
+.social-links {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+    .social-links a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+.social-links a:hover {
+    background-color: var(--magenta);
+    transform: translateY(-3px);
 }
