@@ -1,63 +1,247 @@
 ﻿@model CharityEventOrganizer.Models.ViewModels.EventViewModel
 
 @{
-    ViewData["Title"] = "Submit New Event";
+    ViewData["Title"] = "Create a New Event";
 }
 
-<h1>Submit a New Charity Event</h1>
-
-<hr />
-<div class="row">
-    <div class="col-md-8">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+<!-- Hero Section -->
+<section class="event-form-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="animate fade-in">Create Your <span class="text-highlight">Event</span></h1>
+                <p class="hero-subtitle animate fade-in">Share your vision for making a positive impact, and we'll help connect you with sponsors.</p>
             </div>
-
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" rows="5"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
+            <div class="col-lg-4 text-right">
+                <img src="https://images.unsplash.com/photo-1499750310107-5fef28a66643" alt="Person planning an event" class="hero-illustration animate fade-in-right">
             </div>
-
-            <div class="form-group">
-                <label asp-for="EventDate" class="control-label"></label>
-                <input asp-for="EventDate" class="form-control" />
-                <span asp-validation-for="EventDate" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="CauseId" class="control-label"></label>
-                <select asp-for="CauseId" class="form-control" asp-items="ViewBag.CauseId">
-                    <option value="">-- Select a Cause --</option>
-                </select>
-                <span asp-validation-for="CauseId" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Submit Event" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-            </div>
-        </form>
+        </div>
     </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                Submission Guidelines
+</section>
+
+<!-- Wave Divider -->
+<div class="wave-divider"></div>
+
+<!-- Main Form Section -->
+<section class="section section-form">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="form-card animate fade-in">
+                    <div class="form-card-header">
+                        <div class="form-step-indicator">
+                            <div class="form-step active">
+                                <span class="step-number">1</span>
+                                <span class="step-label">Event Details</span>
+                            </div>
+                            <div class="form-step">
+                                <span class="step-number">2</span>
+                                <span class="step-label">Review</span>
+                            </div>
+                            <div class="form-step">
+                                <span class="step-number">3</span>
+                                <span class="step-label">Submit</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-card-body">
+                        <form asp-action="Create" method="post" id="event-form" enctype="multipart/form-data">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="form-section">
+                                <h3 class="form-section-title">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Basic Information
+                                </h3>
+
+                                <div class="form-group">
+                                    <label asp-for="Title">Event Title</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-heading"></i>
+                                        <input asp-for="Title" class="form-control" placeholder="Give your event a meaningful name" />
+                                    </div>
+                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                    <small class="form-text text-muted">Choose a clear, specific title to attract attention</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label asp-for="CauseId">Cause Category</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-tag"></i>
+                                        <select asp-for="CauseId" class="form-control" asp-items="ViewBag.CauseId">
+                                            <option value="">-- Select a cause that best fits your event --</option>
+                                        </select>
+                                    </div>
+                                    <span asp-validation-for="CauseId" class="text-danger"></span>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="EventDate">Event Date & Time</label>
+                                            <div class="input-with-icon">
+                                                <i class="fas fa-calendar"></i>
+                                                <input asp-for="EventDate" class="form-control" type="datetime-local" />
+                                            </div>
+                                            <span asp-validation-for="EventDate" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Location">Location</label>
+                                            <div class="input-with-icon">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                                <input asp-for="Location" class="form-control" placeholder="Where will this event take place?" />
+                                            </div>
+                                            <span asp-validation-for="Location" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <h3 class="form-section-title">
+                                    <i class="fas fa-align-left"></i>
+                                    Event Details
+                                </h3>
+
+                                <div class="form-group">
+                                    <label asp-for="Description">Description</label>
+                                    <textarea asp-for="Description" class="form-control form-control-textarea" rows="6" placeholder="Describe your event, its purpose, activities, and why it matters..."></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                    <small class="form-text text-muted">
+                                        Be specific about your event's goals, target audience, and expected impact.
+                                        The more detailed your description, the better chance of finding a matching sponsor.
+                                    </small>
+                                </div>
+
+                                <!-- Additional Future Fields (commented out for now) -->
+                                <!--
+                                <div class="form-group">
+                                    <label>Event Image (Optional)</label>
+                                    <div class="custom-file-upload">
+                                        <input type="file" id="eventImage" name="EventImage" class="d-none" />
+                                        <label for="eventImage" class="file-upload-label">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <span>Upload an image</span>
+                                        </label>
+                                        <div class="file-name"></div>
+                                    </div>
+                                    <small class="form-text text-muted">A compelling image helps attract attention to your event</small>
+                                </div>
+                                -->
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" id="previewBtn" class="btn btn-outline btn-outline-primary mr-3">
+                                    <i class="fas fa-eye mr-2"></i>Preview
+                                </button>
+                                <button type="submit" class="btn-save">
+                                    <i class="fas fa-paper-plane mr-2"></i>Submit Event
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <p>Your event submission will be reviewed by our team before it can be matched with potential sponsors.</p>
-                <p>Please provide clear and detailed information about your charity event to increase the chances of approval.</p>
+
+            <div class="col-lg-4">
+                <div class="helpful-tips animate fade-in-right">
+                    <div class="tips-header">
+                        <i class="fas fa-lightbulb"></i>
+                        <h3>Tips for Success</h3>
+                    </div>
+                    <div class="tips-body">
+                        <div class="tip-item">
+                            <h4><i class="fas fa-star-half-alt"></i> Be Specific</h4>
+                            <p>Clear, detailed descriptions help sponsors understand your event's purpose and impact.</p>
+                        </div>
+
+                        <div class="tip-item">
+                            <h4><i class="fas fa-bullseye"></i> Define Clear Goals</h4>
+                            <p>Explain what you hope to achieve and how you'll measure success.</p>
+                        </div>
+
+                        <div class="tip-item">
+                            <h4><i class="fas fa-hand-holding-heart"></i> Show the Impact</h4>
+                            <p>Describe how your event will positively affect the community or cause.</p>
+                        </div>
+
+                        <div class="tip-item">
+                            <h4><i class="fas fa-calendar-check"></i> Plan Ahead</h4>
+                            <p>Allow enough time for the approval process and sponsor matching.</p>
+                        </div>
+                    </div>
+
+                    <div class="tips-footer">
+                        <div class="approval-process">
+                            <h4>What Happens Next?</h4>
+                            <ul class="process-list">
+                                <li>
+                                    <span class="process-icon"><i class="fas fa-clipboard-check"></i></span>
+                                    <div class="process-text">
+                                        <strong>Review</strong>
+                                        <p>Our team will review your submission within 48 hours</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="process-icon"><i class="fas fa-handshake"></i></span>
+                                    <div class="process-text">
+                                        <strong>Sponsor Matching</strong>
+                                        <p>Approved events are shared with potential sponsors</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="process-icon"><i class="fas fa-comments"></i></span>
+                                    <div class="process-text">
+                                        <strong>Discussion</strong>
+                                        <p>You'll be connected with interested sponsors to discuss details</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="process-icon"><i class="fas fa-rocket"></i></span>
+                                    <div class="process-text">
+                                        <strong>Launch</strong>
+                                        <p>Once approved, your event goes live on our platform</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Event Preview Modal -->
+<div class="modal fade" id="eventPreviewModal" tabindex="-1" role="dialog" aria-labelledby="eventPreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventPreviewModalLabel">Event Preview</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="event-preview-card">
+                    <div class="event-preview-header">
+                        <h2 id="previewTitle">Your Event Title</h2>
+                        <div class="event-preview-meta">
+                            <span id="previewDate"><i class="fas fa-calendar-alt"></i> Event Date</span>
+                            <span id="previewLocation"><i class="fas fa-map-marker-alt"></i> Location</span>
+                            <span id="previewCause"><i class="fas fa-tag"></i> Cause</span>
+                        </div>
+                    </div>
+                    <div class="event-preview-body">
+                        <p id="previewDescription">Your event description will appear here...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -65,4 +249,107 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // Preview functionality
+        $(document).ready(function () {
+            // Preview button click handler
+            $('#previewBtn').click(function () {
+                // Get form values
+                var title = $('#Title').val() || 'Your Event Title';
+                var description = $('#Description').val() || 'Your event description will appear here...';
+                var eventDate = $('#EventDate').val();
+                var location = $('#Location').val() || 'Location';
+                var causeId = $('#CauseId').val();
+                var causeName = $('#CauseId option:selected').text();
+
+                // Format date if provided
+                var formattedDate = 'Event Date';
+                if (eventDate) {
+                    var date = new Date(eventDate);
+                    formattedDate = date.toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+
+                // Set preview values
+                $('#previewTitle').text(title);
+                $('#previewDescription').text(description);
+                $('#previewDate').html('<i class="fas fa-calendar-alt"></i> ' + formattedDate);
+                $('#previewLocation').html('<i class="fas fa-map-marker-alt"></i> ' + location);
+
+                if (causeId) {
+                    $('#previewCause').html('<i class="fas fa-tag"></i> ' + causeName);
+                    $('#previewCause').show();
+                } else {
+                    $('#previewCause').hide();
+                }
+
+                // Show modal
+                $('#eventPreviewModal').modal('show');
+            });
+
+            // Custom file input
+            $('.custom-file-upload input[type="file"]').change(function (e) {
+                var fileName = e.target.files[0].name;
+                $(this).closest('.custom-file-upload').find('.file-name').text(fileName);
+            });
+
+            // Form validation enhancements
+            $('#event-form').on('submit', function (e) {
+                var isValid = true;
+
+                // Clear previous error highlights
+                $('.form-control').removeClass('is-invalid');
+
+                // Validate required fields
+                if (!$('#Title').val()) {
+                    $('#Title').addClass('is-invalid');
+                    isValid = false;
+                }
+
+                if (!$('#CauseId').val()) {
+                    $('#CauseId').addClass('is-invalid');
+                    isValid = false;
+                }
+
+                if (!$('#EventDate').val()) {
+                    $('#EventDate').addClass('is-invalid');
+                    isValid = false;
+                }
+
+                if (!$('#Location').val()) {
+                    $('#Location').addClass('is-invalid');
+                    isValid = false;
+                }
+
+                if (!$('#Description').val()) {
+                    $('#Description').addClass('is-invalid');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+
+                    // Scroll to first error
+                    $('html, body').animate({
+                        scrollTop: $('.is-invalid:first').offset().top - 100
+                    }, 500);
+
+                    // Show validation message
+                    if ($('.validation-message').length === 0) {
+                        $('<div class="alert alert-danger validation-message">' +
+                            '<i class="fas fa-exclamation-circle"></i> ' +
+                            'Please fill in all required fields' +
+                            '</div>').insertBefore('#event-form');
+                    }
+                }
+            });
+        });
+    </script>
 }

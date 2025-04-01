@@ -4,123 +4,399 @@
     ViewData["Title"] = "My Submissions";
 }
 
-<div class="row mb-4">
-    <div class="col-md-8">
-        <h1 class="animate-on-scroll"><i class="fas fa-clipboard-list text-purple-primary mr-3"></i>My Event Submissions</h1>
-        <p class="lead text-muted animate-on-scroll">Track and manage your charity event submissions</p>
-    </div>
-    <div class="col-md-4 text-md-right">
-        <a asp-action="Create" class="btn btn-primary animate-on-scroll">
-            <i class="fas fa-plus-circle mr-2"></i>Submit New Event
-        </a>
-    </div>
-</div>
-
-@if (Model.Any())
-{
-    <div class="card animate-on-scroll">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-striped m-0">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>Title</th>
-                            <th>Date</th>
-                            <th>Cause</th>
-                            <th>Status</th>
-                            <th>Submitted</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="cause-icon" style="width: 2rem; height: 2rem; font-size: 1rem;">
-                                            <i class="@GetCauseIcon(item.Cause.Name)"></i>
-                                        </div>
-                                        <div>@item.Title</div>
-                                    </div>
-                                </td>
-                                <td>@item.EventDate.ToShortDateString()</td>
-                                <td>@item.Cause.Name</td>
-                                <td>
-                                    <span class="badge @GetStatusBadgeClass(item.Status)">
-                                        @item.Status.ToString()
-                                    </span>
-                                </td>
-                                <td>@item.CreatedDate.ToShortDateString()</td>
-                                <td>
-                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">
-                                        <i class="fas fa-info-circle mr-1"></i>Details
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+<!-- Hero Section -->
+<section class="my-submissions-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h1 class="animate fade-in">Your <span class="text-highlight">Events</span> Journey</h1>
+                <p class="hero-subtitle animate fade-in">Track, manage, and celebrate your contributions to making the world a better place.</p>
             </div>
-        </div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="card animate-on-scroll">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0"><i class="fas fa-chart-pie mr-2"></i>Submission Status Overview</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3 col-6 text-center mb-3">
-                            <div class="h3 text-secondary">@Model.Count(e => e.Status == CharityEventOrganizer.Models.Entities.EventStatus.Submitted)</div>
-                            <div>Submitted</div>
-                        </div>
-                        <div class="col-md-3 col-6 text-center mb-3">
-                            <div class="h3 text-primary">@Model.Count(e => e.Status == CharityEventOrganizer.Models.Entities.EventStatus.UnderReview || e.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship)</div>
-                            <div>In Progress</div>
-                        </div>
-                        <div class="col-md-3 col-6 text-center mb-3">
-                            <div class="h3 text-success">@Model.Count(e => e.Status == CharityEventOrganizer.Models.Entities.EventStatus.Approved || e.Status == CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion)</div>
-                            <div>Approved</div>
-                        </div>
-                        <div class="col-md-3 col-6 text-center mb-3">
-                            <div class="h3 text-danger">@Model.Count(e => e.Status == CharityEventOrganizer.Models.Entities.EventStatus.Rejected)</div>
-                            <div>Rejected</div>
-                        </div>
+            <div class="col-lg-5">
+                <div class="hero-action-card animate fade-in-right">
+                    <div class="hero-card-content">
+                        <h3><i class="fas fa-rocket"></i> Ready to make more impact?</h3>
+                        <p>Submit a new event and continue your mission to change lives through charity.</p>
+                        <a asp-action="Create" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus-circle mr-2"></i>Create New Event
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-}
-else
-{
-    <div class="card animate-on-scroll">
-        <div class="card-body text-center py-5">
-            <i class="fas fa-clipboard-list text-purple-light" style="font-size: 4rem;"></i>
-            <h3 class="mt-4">No Submissions Yet</h3>
-            <p class="text-muted">You haven't submitted any charity events yet. Create your first event to get started!</p>
-            <a asp-action="Create" class="btn btn-primary mt-3">
-                <i class="fas fa-plus-circle mr-2"></i>Submit Your First Event
-            </a>
+</section>
+
+<!-- Wave Divider -->
+<div class="wave-divider"></div>
+
+<!-- Main Dashboard Section -->
+<section class="section section-dashboard">
+    <div class="container">
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="status-card status-card-all animate fade-in" data-filter="all">
+                    <div class="status-card-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="status-card-content">
+                        <h3>@Model.Count()</h3>
+                        <p>Total Events</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="status-card status-card-pending animate fade-in" data-filter="pending">
+                    <div class="status-card-icon">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                    <div class="status-card-content">
+                        <h3>@Model.Count(e => e.Status == CharityEventOrganizer.Models.Entities.EventStatus.Submitted || e.Status == CharityEventOrganizer.Models.Entities.EventStatus.UnderReview || e.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship)</h3>
+                        <p>Pending</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="status-card status-card-approved animate fade-in" data-filter="approved">
+                    <div class="status-card-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="status-card-content">
+                        <h3>@Model.Count(e => e.Status == CharityEventOrganizer.Models.Entities.EventStatus.Approved || e.Status == CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion)</h3>
+                        <p>Approved</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="status-card status-card-rejected animate fade-in" data-filter="rejected">
+                    <div class="status-card-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="status-card-content">
+                        <h3>@Model.Count(e => e.Status == CharityEventOrganizer.Models.Entities.EventStatus.Rejected)</h3>
+                        <p>Rejected</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Any())
+        {
+            <!-- Filter & Search Controls -->
+            <div class="filter-controls mb-4 animate fade-in">
+                <div class="row align-items-center">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <div class="filter-buttons">
+                            <button class="btn btn-filter active" data-filter="all">
+                                <i class="fas fa-th-large"></i> All
+                            </button>
+                            <button class="btn btn-filter" data-filter="pending">
+                                <i class="fas fa-clock"></i> Pending
+                            </button>
+                            <button class="btn btn-filter" data-filter="approved">
+                                <i class="fas fa-check"></i> Approved
+                            </button>
+                            <button class="btn btn-filter" data-filter="rejected">
+                                <i class="fas fa-times"></i> Rejected
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="search-box">
+                            <input type="text" id="eventSearch" class="form-control" placeholder="Search your events...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Events Grid -->
+            <div class="row" id="events-container">
+                @foreach (var item in Model)
+                {
+                    string statusClass = "";
+                    string statusFilter = "";
+
+                    @if (item.Status == CharityEventOrganizer.Models.Entities.EventStatus.Submitted ||
+                        item.Status == CharityEventOrganizer.Models.Entities.EventStatus.UnderReview ||
+                        item.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship)
+                    {
+                        statusClass = "pending";
+                        statusFilter = "pending";
+                    }
+                    else if (item.Status == CharityEventOrganizer.Models.Entities.EventStatus.Approved ||
+                             item.Status == CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion)
+                    {
+                        statusClass = "approved";
+                        statusFilter = "approved";
+                    }
+                    else if (item.Status == CharityEventOrganizer.Models.Entities.EventStatus.Rejected)
+                    {
+                        statusClass = "rejected";
+                        statusFilter = "rejected";
+                    }
+
+                    <div class="col-lg-4 col-md-6 mb-4 event-card-wrapper" data-status="@statusFilter" data-title="@item.Title.ToLower()">
+                        <div class="event-dashboard-card animate fade-in">
+                            <div class="event-dashboard-status @statusClass">
+                                <span class="status-badge">@GetStatusLabel(item.Status)</span>
+                                <span class="date-badge"><i class="far fa-calendar-alt"></i> @item.CreatedDate.ToString("MMM d, yyyy")</span>
+                            </div>
+                            <div class="event-dashboard-body">
+                                <div class="cause-icon-wrapper">
+                                    <div class="cause-icon">
+                                        <i class="@GetCauseIcon(item.Cause.Name)"></i>
+                                    </div>
+                                </div>
+                                <h3 class="event-dashboard-title">@item.Title</h3>
+                                <div class="event-dashboard-details">
+                                    <div class="event-detail">
+                                        <i class="fas fa-tag"></i> @item.Cause.Name
+                                    </div>
+                                    <div class="event-detail">
+                                        <i class="fas fa-calendar"></i> @item.EventDate.ToString("MMM d, yyyy")
+                                    </div>
+                                    <div class="event-detail">
+                                        <i class="fas fa-map-marker-alt"></i> @item.Location
+                                    </div>
+                                </div>
+                                <div class="event-dashboard-description">
+                                    @(item.Description.Length > 100 ? item.Description.Substring(0, 100) + "..." : item.Description)
+                                </div>
+                            </div>
+                            <div class="event-dashboard-footer">
+                                <div class="status-progress">
+                                    <div class="progress-steps">
+                                        <div class="progress-step @(IsStatusCompleted(item.Status, "Submitted") ? "completed" : "")">
+                                            <span class="progress-indicator"></span>
+                                        </div>
+                                        <div class="progress-step @(IsStatusCompleted(item.Status, "UnderReview") ? "completed" : "")">
+                                            <span class="progress-indicator"></span>
+                                        </div>
+                                        <div class="progress-step @(IsStatusCompleted(item.Status, "ApprovedForSponsorship") ? "completed" : "")">
+                                            <span class="progress-indicator"></span>
+                                        </div>
+                                        <div class="progress-step @(IsStatusCompleted(item.Status, "Approved") ? "completed" : "")">
+                                            <span class="progress-indicator"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="event-actions">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">
+                                        <i class="fas fa-info-circle"></i> Details
+                                    </a>
+                                    @if (item.Status == CharityEventOrganizer.Models.Entities.EventStatus.Rejected)
+                                    {
+                                        <button class="btn btn-primary btn-sm resubmit-btn" data-id="@item.Id">
+                                            <i class="fas fa-redo"></i> Resubmit
+                                        </button>
+                                    }
+                                    @if (item.Status == CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion)
+                                    {
+                                        <a href="#" class="btn btn-success btn-sm" onclick="showSponsorMessages(@item.Id)">
+                                            <i class="fas fa-comments"></i> Messages
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Empty Search Results Message (Hidden by default) -->
+            <div id="no-results-message" class="empty-state animate fade-in" style="display: none;">
+                <div class="empty-state-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="empty-state-title">No Matching Events</h3>
+                <p class="empty-state-message">We couldn't find any events matching your search criteria.</p>
+                <button class="btn btn-primary btn-reset-search">
+                    <i class="fas fa-undo-alt mr-2"></i>Reset Search
+                </button>
+            </div>
+        }
+        else
+        {
+            <!-- Empty State -->
+            <div class="empty-state animate fade-in">
+                <div class="empty-state-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h3 class="empty-state-title">No Events Yet</h3>
+                <p class="empty-state-message">You haven't submitted any charity events yet. Ready to make an impact?</p>
+                <a asp-action="Create" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus-circle mr-2"></i>Create Your First Event
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Sponsor Messages Modal (For future implementation) -->
+<div class="modal fade" id="sponsorMessagesModal" tabindex="-1" role="dialog" aria-labelledby="sponsorMessagesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sponsorMessagesModalLabel">
+                    <i class="fas fa-comments mr-2"></i>Sponsor Discussion
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="sponsor-chat-container">
+                    <div class="sponsor-info">
+                        <div class="sponsor-avatar">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="sponsor-details">
+                            <h4>Sponsor Name</h4>
+                            <p>Interested in your event</p>
+                        </div>
+                    </div>
+
+                    <div class="message-thread">
+                        <!-- Message bubbles will be loaded here -->
+                        <div class="message-date-separator">
+                            <span>Today</span>
+                        </div>
+
+                        <div class="message sponsor-message">
+                            <div class="message-content">
+                                <p>Hello! We're interested in sponsoring your event. Could you provide more information about the expected attendance and impact?</p>
+                                <span class="message-time">10:30 AM</span>
+                            </div>
+                        </div>
+
+                        <div class="message user-message">
+                            <div class="message-content">
+                                <p>Hi! Thank you for your interest. We're expecting around 200 attendees and aim to raise awareness about environmental conservation.</p>
+                                <span class="message-time">11:15 AM</span>
+                            </div>
+                        </div>
+
+                        <div class="message sponsor-message">
+                            <div class="message-content">
+                                <p>That sounds great! We'd like to offer promotional materials and funding to support your cause.</p>
+                                <span class="message-time">11:42 AM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="message-input">
+                        <textarea placeholder="Type your message here..." class="form-control"></textarea>
+                        <button class="btn btn-primary send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success">
+                    <i class="fas fa-handshake mr-2"></i>Finalize Agreement
+                </button>
+            </div>
         </div>
     </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Filter buttons
+            $('.btn-filter').click(function() {
+                // Change active button
+                $('.btn-filter').removeClass('active');
+                $(this).addClass('active');
+
+                const filter = $(this).data('filter');
+
+                // Show/hide cards based on filter
+                if (filter === 'all') {
+                    $('.event-card-wrapper').show();
+                } else {
+                    $('.event-card-wrapper').hide();
+                    $(`.event-card-wrapper[data-status="${filter}"]`).show();
+                }
+
+                // Check if any events are visible
+                checkVisibleEvents();
+            });
+
+            // Search functionality
+            $('#eventSearch').on('keyup', function() {
+                const searchTerm = $(this).val().toLowerCase();
+
+                $('.event-card-wrapper').each(function() {
+                    const title = $(this).data('title');
+                    const isVisible = title.includes(searchTerm);
+
+                    // Only hide/show if it matches the current filter
+                    const currentFilter = $('.btn-filter.active').data('filter');
+
+                    if (currentFilter === 'all') {
+                        $(this).toggle(isVisible);
+                    } else {
+                        const matchesFilter = $(this).data('status') === currentFilter;
+                        $(this).toggle(isVisible && matchesFilter);
+                    }
+                });
+
+                // Check if any events are visible
+                checkVisibleEvents();
+            });
+
+            // Reset search
+            $('.btn-reset-search').click(function() {
+                $('#eventSearch').val('');
+                $('#eventSearch').trigger('keyup');
+            });
+
+            // Function to check if any events are visible
+            function checkVisibleEvents() {
+                const visibleEvents = $('.event-card-wrapper:visible').length;
+
+                if (visibleEvents === 0) {
+                    $('#no-results-message').show();
+                    $('#events-container').hide();
+                } else {
+                    $('#no-results-message').hide();
+                    $('#events-container').show();
+                }
+            }
+
+            // Resubmit button (for future implementation)
+            $('.resubmit-btn').click(function() {
+                const eventId = $(this).data('id');
+                // Show confirmation modal or directly submit
+                alert(`Event #${eventId} will be resubmitted. This feature will be implemented soon.`);
+            });
+        });
+
+        // Sponsor messages modal (for future implementation)
+        function showSponsorMessages(eventId) {
+            // Populate modal with actual messages in the future
+            $('#sponsorMessagesModal').modal('show');
+        }
+    </script>
 }
 
 @functions {
-    public string GetStatusBadgeClass(CharityEventOrganizer.Models.Entities.EventStatus status)
+    public string GetStatusLabel(CharityEventOrganizer.Models.Entities.EventStatus status)
     {
         return status switch
         {
-            CharityEventOrganizer.Models.Entities.EventStatus.Submitted => "badge-secondary",
-            CharityEventOrganizer.Models.Entities.EventStatus.UnderReview => "badge-primary",
-            CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship => "badge-info",
-            CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion => "badge-warning",
-            CharityEventOrganizer.Models.Entities.EventStatus.Approved => "badge-success",
-            CharityEventOrganizer.Models.Entities.EventStatus.Rejected => "badge-danger",
-            _ => "badge-secondary"
+            CharityEventOrganizer.Models.Entities.EventStatus.Submitted => "Submitted",
+            CharityEventOrganizer.Models.Entities.EventStatus.UnderReview => "Under Review",
+            CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship => "Seeking Sponsors",
+            CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion => "Sponsor Discussion",
+            CharityEventOrganizer.Models.Entities.EventStatus.Approved => "Approved",
+            CharityEventOrganizer.Models.Entities.EventStatus.Rejected => "Needs Revision",
+            _ => status.ToString()
         };
     }
 
@@ -136,5 +412,11 @@ else
             "disaster relief" => "fas fa-hands-helping",
             _ => "fas fa-heart"
         };
+    }
+
+    public bool IsStatusCompleted(CharityEventOrganizer.Models.Entities.EventStatus currentStatus, string statusToCheck)
+    {
+        var statusValue = Enum.Parse<CharityEventOrganizer.Models.Entities.EventStatus>(statusToCheck);
+        return currentStatus >= statusValue;
     }
 }
