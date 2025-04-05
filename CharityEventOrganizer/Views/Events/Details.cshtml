@@ -1,195 +1,499 @@
 ﻿@model CharityEventOrganizer.Models.Entities.Event
 
 @{
-    ViewData["Title"] = "Event Details";
+    ViewData["Title"] = Model.Title;
 }
 
-<div class="row mb-4">
-    <div class="col-12">
-        <nav aria-label="breadcrumb" class="animate-on-scroll">
-            <ol class="breadcrumb bg-light">
-                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-                <li class="breadcrumb-item"><a asp-controller="Events" asp-action="Index">Events</a></li>
-                <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
-            </ol>
-        </nav>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-8">
-        <div class="card mb-4 animate-on-scroll @GetCardClass(Model.Cause.Name)">
-            <div class="card-body">
-                <div class="d-flex align-items-center mb-4">
-                    <div class="cause-icon">
+<!-- Event Hero Section -->
+<section class="event-details-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="event-header animate fade-in">
+                    <div class="event-category @GetCauseClass(Model.Cause.Name)">
                         <i class="@GetCauseIcon(Model.Cause.Name)"></i>
+                        <span>@Model.Cause.Name</span>
                     </div>
-                    <div>
-                        <h1 class="card-title h3 mb-0">@Model.Title</h1>
-                        <p class="text-muted mb-0">@Model.Cause.Name</p>
+                    <h1>@Model.Title</h1>
+                    <div class="event-meta">
+                        <div class="event-meta-item">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>@Model.EventDate.ToString("dddd, MMMM dd, yyyy")</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="far fa-clock"></i>
+                            <span>@Model.EventDate.ToString("h:mm tt")</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>@Model.Location</span>
+                        </div>
+                        <div class="event-meta-item">
+                            <i class="fas fa-user"></i>
+                            <span>By @Model.Organizer.UserName</span>
+                        </div>
                     </div>
                 </div>
-
-                <div class="mb-4">
-                    <span class="badge badge-light mr-2"><i class="far fa-calendar-alt mr-1"></i>@Model.EventDate.ToString("MMMM dd, yyyy")</span>
-                    <span class="badge badge-light mr-2"><i class="fas fa-map-marker-alt mr-1"></i>@Model.Location</span>
-                    <span class="badge badge-light mr-2"><i class="fas fa-user mr-1"></i>Organized by @Model.Organizer.UserName</span>
+            </div>
+            <div class="col-lg-4">
+                <div class="event-status-card animate fade-in-right">
+                    <div class="event-status @GetStatusClass(Model.Status)">
+                        <i class="@GetStatusIcon(Model.Status)"></i>
+                        <span>@GetStatusLabel(Model.Status)</span>
+                    </div>
                     @if (Model.Sponsor != null)
                     {
-                        <span class="badge badge-warning"><i class="fas fa-hand-holding-usd mr-1"></i>Sponsored by @Model.Sponsor.Name</span>
+                        <div class="event-sponsor">
+                            <div class="sponsor-label">Proudly Sponsored By</div>
+                            <div class="sponsor-name">@Model.Sponsor.Name</div>
+                        </div>
                     }
-                </div>
-
-                <h5 class="mb-3">About This Event</h5>
-                <p class="card-text">@Model.Description</p>
-
-                <hr />
-
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <h5 class="mb-3">Event Date</h5>
-                        <p><i class="far fa-calendar-alt mr-2 text-purple-primary"></i>@Model.EventDate.ToLongDateString()</p>
-                        <p><i class="far fa-clock mr-2 text-purple-primary"></i>@Model.EventDate.ToString("h:mm tt")</p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5 class="mb-3">Location</h5>
-                        <p><i class="fas fa-map-marker-alt mr-2 text-purple-primary"></i>@Model.Location</p>
+                    <div class="event-actions">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.Approved)
+                            {
+                                <a href="#" class="btn btn-primary btn-rounded">
+                                    <i class="fas fa-heart mr-2"></i>I'll Attend
+                                </a>
+                            }
+                            else if (Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship)
+                            {
+                                <a href="#" class="btn btn-primary btn-rounded sponsor-btn">
+                                    <i class="fas fa-hand-holding-heart mr-2"></i>Sponsor This Event
+                                </a>
+                            }
+                        }
+                        <a href="#event-details" class="btn btn-outline btn-outline-primary btn-rounded scroll-to">
+                            <i class="fas fa-info-circle mr-2"></i>Learn More
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</section>
 
-        <div class="card animate-on-scroll">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="far fa-comments mr-2"></i>Comments</h5>
-            </div>
-            <div class="card-body">
-                @if (Model.Comments != null && Model.Comments.Any())
-                {
-                    @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreatedDate))
-                    {
-                        <div class="media mb-4 comment">
-                            <div class="mr-3">
-                                <div class="d-flex align-items-center justify-content-center bg-purple-light text-white rounded-circle" style="width: 50px; height: 50px; font-weight: bold;">
-                                    @comment.User.UserName.Substring(0, 1).ToUpper()
-                                </div>
-                            </div>
-                            <div class="media-body">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h6 class="mt-0 mb-0">@comment.User.UserName</h6>
-                                    <small class="text-muted">@comment.CreatedDate.ToString("MMM d, yyyy h:mm tt")</small>
-                                </div>
-                                <p class="mb-0">@comment.Content</p>
-                            </div>
-                        </div>
-                        <hr />
-                    }
-                }
-                else
-                {
-                    <p class="text-muted">No comments yet. Be the first to comment!</p>
-                }
-
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <form asp-controller="Comment" asp-action="Create" method="post">
-                        <input type="hidden" name="EventId" value="@Model.Id" />
-                        <div class="form-group">
-                            <label for="Content">Add a Comment</label>
-                            <textarea class="form-control" id="Content" name="Content" rows="3" required placeholder="Share your thoughts about this event..."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane mr-1"></i>Submit Comment
-                        </button>
-                    </form>
-                }
-                else
-                {
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle mr-2"></i>Please <a asp-area="Identity" asp-page="/Account/Login">login</a> to leave a comment.
+<!-- Event Content Section -->
+<section class="section" id="event-details">
+    <div class="container">
+        <div class="row">
+            <!-- Main Content Column -->
+            <div class="col-lg-8">
+                <!-- Event Description Card -->
+                <div class="content-card animate fade-in">
+                    <div class="content-card-header">
+                        <h2><i class="fas fa-align-left mr-3"></i>About This Event</h2>
                     </div>
+                    <div class="content-card-body">
+                        <div class="event-description">
+                            @Html.Raw(Model.Description.Replace(Environment.NewLine, "<br />"))
+                        </div>
+
+                        <div class="event-highlights mt-5">
+                            <h3>Event Highlights</h3>
+                            <div class="highlights-container">
+                                <div class="highlight-item">
+                                    <div class="highlight-icon">
+                                        <i class="fas fa-heart"></i>
+                                    </div>
+                                    <div class="highlight-content">
+                                        <h4>Make an Impact</h4>
+                                        <p>Join us in creating positive change for our community through this wonderful event.</p>
+                                    </div>
+                                </div>
+                                <div class="highlight-item">
+                                    <div class="highlight-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div class="highlight-content">
+                                        <h4>Connect with Others</h4>
+                                        <p>Meet like-minded individuals who share your passion for making a difference.</p>
+                                    </div>
+                                </div>
+                                <div class="highlight-item">
+                                    <div class="highlight-icon">
+                                        <i class="fas fa-hands-helping"></i>
+                                    </div>
+                                    <div class="highlight-content">
+                                        <h4>Contribute</h4>
+                                        <p>Your participation directly helps support @Model.Cause.Name initiatives.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comments Section -->
+                <div class="content-card animate fade-in mt-4">
+                    <div class="content-card-header">
+                        <h2><i class="fas fa-comments mr-3"></i>Discussion</h2>
+                    </div>
+                    <div class="content-card-body">
+                        <!-- Comment Form at the top for logged-in users -->
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="comment-form-container mb-4">
+                                <h4>Join the Conversation</h4>
+                                <form id="comment-form">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" id="event-id" value="@Model.Id" />
+                                    <div class="form-group">
+                                        <textarea id="comment-content" class="form-control" rows="4" placeholder="Share your thoughts or ask a question..."></textarea>
+                                        <div id="comment-error" class="text-danger mt-2" style="display: none;"></div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" id="post-comment-btn">
+                                        <i class="fas fa-paper-plane mr-2"></i>Post Comment
+                                    </button>
+                                </form>
+                            </div>
+
+                            <hr class="my-4">
+                        }
+                        else
+                        {
+                            <div class="login-prompt mb-4">
+                                <p>
+                                    <i class="fas fa-lock mr-2"></i>
+                                    <a asp-area="Identity" asp-page="/Account/Login">Login</a> or
+                                    <a asp-area="Identity" asp-page="/Account/Register">create an account</a>
+                                    to join the conversation.
+                                </p>
+                            </div>
+
+                            <hr class="my-4">
+                        }
+
+                        <!-- Comments heading -->
+                        <h5 class="mb-3"><i class="far fa-comments mr-2"></i>Comments (@(Model.Comments?.Count() ?? 0))</h5>
+
+                        <!-- Comments List -->
+                        <div id="comments-container">
+                            @if (Model.Comments != null && Model.Comments.Any())
+                            {
+                                @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreatedDate))
+                                {
+                                    <div class="comment-item">
+                                        <div class="comment-avatar">
+                                            @if (string.IsNullOrEmpty(comment.User.ProfilePicturePath))
+                                            {
+                                                <div class="comment-avatar-placeholder">
+                                                    @comment.User.UserName.Substring(0, 1).ToUpper()
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <img src="@comment.User.ProfilePicturePath" alt="@comment.User.UserName" />
+                                            }
+                                        </div>
+                                        <div class="comment-content">
+                                            <div class="comment-header">
+                                                <div class="comment-author">@comment.User.UserName</div>
+                                                <div class="comment-date">@comment.CreatedDate.ToString("MMM d, yyyy at h:mm tt")</div>
+                                            </div>
+                                            <div class="comment-text">
+                                                @Html.Raw(comment.Content.Replace(Environment.NewLine, "<br />"))
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="no-comments" id="no-comments-message">
+                                    <div class="no-comments-icon">
+                                        <i class="far fa-comment-dots"></i>
+                                    </div>
+                                    <h4>No Comments Yet</h4>
+                                    <p>Be the first to join the conversation!</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar - Moving it outside and making it a sibling of the main content column -->
+            <div class="col-lg-4">
+                <!-- Event Details Sidebar -->
+                <div class="event-sidebar">
+                    <!-- Organizer Card -->
+                    <div class="sidebar-card animate fade-in">
+                        <div class="sidebar-card-header">
+                            <h3><i class="fas fa-user-circle mr-2"></i>Organizer</h3>
+                        </div>
+                        <div class="sidebar-card-body">
+                            <div class="organizer-info">
+                                <div class="organizer-avatar">
+                                    @if (string.IsNullOrEmpty(Model.Organizer.ProfilePicturePath))
+                                    {
+                                        <div class="organizer-avatar-placeholder">
+                                            @Model.Organizer.UserName.Substring(0, 1).ToUpper()
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <img src="@Model.Organizer.ProfilePicturePath" alt="@Model.Organizer.UserName" />
+                                    }
+                                </div>
+                                <div class="organizer-details">
+                                    <h4>@Model.Organizer.UserName</h4>
+                                    <p>Event Organizer</p>
+                                </div>
+                            </div>
+                            <div class="organizer-bio mt-3">
+                                <p>Passionate about making a difference in the world through meaningful events that bring communities together.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Event Timeline Card -->
+                    <div class="sidebar-card animate fade-in">
+                        <div class="sidebar-card-header">
+                            <h3><i class="fas fa-history mr-2"></i>Event Timeline</h3>
+                        </div>
+                        <div class="sidebar-card-body">
+                            <div class="event-timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-dot @(DateTime.Now >= Model.CreatedDate ? "active" : "")"></div>
+                                    <div class="timeline-content">
+                                        <h4>Event Created</h4>
+                                        <p>@Model.CreatedDate.ToString("MMMM dd, yyyy")</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot @(Model.Status >= CharityEventOrganizer.Models.Entities.EventStatus.Approved ? "active" : "")"></div>
+                                    <div class="timeline-content">
+                                        <h4>Event Approved</h4>
+                                        <p>@(Model.Status >= CharityEventOrganizer.Models.Entities.EventStatus.Approved ? "Ready to go!" : "In progress...")</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-dot @(DateTime.Now >= Model.EventDate ? "active" : "")"></div>
+                                    <div class="timeline-content">
+                                        <h4>Event Date</h4>
+                                        <p>@Model.EventDate.ToString("MMMM dd, yyyy")</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Share Card -->
+                    <div class="sidebar-card animate fade-in">
+                        <div class="sidebar-card-header">
+                            <h3><i class="fas fa-share-alt mr-2"></i>Share This Event</h3>
+                        </div>
+                        <div class="sidebar-card-body">
+                            <div class="share-link mt-3">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path" id="share-url" readonly>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" onclick="copyShareUrl()">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="cta-section event-cta">
+    <div class="container">
+        <div class="cta-content text-center">
+            <h2 class="animate fade-in">Ready to Make a <span class="text-highlight">Difference</span>?</h2>
+            <p class="animate fade-in">Join us for this meaningful event and be part of the positive change.</p>
+            <div class="animate fade-in">
+                @if (Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.Approved)
+                {
+                    <a href="#" class="btn btn-primary btn-lg btn-rounded">
+                        <i class="fas fa-heart mr-2"></i>I'll Attend This Event
+                    </a>
+                }
+                else if (User.Identity.IsAuthenticated && Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship)
+                {
+                    <a href="#" class="btn btn-primary btn-lg btn-rounded">
+                        <i class="fas fa-hand-holding-heart mr-2"></i>Sponsor This Event
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Events" asp-action="Index" class="btn btn-primary btn-lg btn-rounded">
+                        <i class="fas fa-search mr-2"></i>Discover More Events
+                    </a>
                 }
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card mb-4 animate-on-scroll">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-info-circle mr-2"></i>Event Status</h5>
-            </div>
-            <div class="card-body">
-                <div class="text-center mb-3">
-                    <span class="badge badge-lg @GetStatusBadgeClass(Model.Status)" style="font-size: 1rem; padding: 0.5rem 1rem;">
-                        @Model.Status.ToString()
-                    </span>
-                </div>
-                <div class="status-timeline">
-                    <div class="status-step @(IsStatusCompleted(Model.Status, "Submitted") ? "completed" : "")">
-                        <i class="fas fa-clipboard-check"></i>
-                        <span class="status-step-label">Submitted</span>
-                    </div>
-                    <div class="status-step @(IsStatusCompleted(Model.Status, "ApprovedForSponsorship") ? "completed" : (Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.UnderReview ? "active" : ""))">
-                        <i class="fas fa-search"></i>
-                        <span class="status-step-label">Review</span>
-                    </div>
-                    <div class="status-step @(IsStatusCompleted(Model.Status, "SponsorshipDiscussion") ? "completed" : (Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship ? "active" : ""))">
-                        <i class="fas fa-handshake"></i>
-                        <span class="status-step-label">Sponsor</span>
-                    </div>
-                    <div class="status-step @(Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.Approved ? "completed" : (Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion ? "active" : ""))">
-                        <i class="fas fa-check-circle"></i>
-                        <span class="status-step-label">Approved</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+</section>
 
-        <div class="card mb-4 animate-on-scroll">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-share-alt mr-2"></i>Share This Event</h5>
-            </div>
-            <div class="card-body">
-                <div class="d-flex justify-content-around">
-                    <a href="#" class="btn btn-outline-primary"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="btn btn-outline-info"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="btn btn-outline-success"><i class="fab fa-whatsapp"></i></a>
-                    <a href="#" class="btn btn-outline-secondary"><i class="fas fa-envelope"></i></a>
-                </div>
-            </div>
-        </div>
+@section Scripts {
+    <script>
+        // Copy share URL function
+        function copyShareUrl() {
+            var copyText = document.getElementById("share-url");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
 
-        <div class="card animate-on-scroll">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-lightbulb mr-2"></i>Actions</h5>
-            </div>
-            <div class="card-body">
-                <a asp-action="Index" class="btn btn-secondary btn-block mb-2">
-                    <i class="fas fa-arrow-left mr-1"></i>Back to List
-                </a>
+            // Show a tooltip or notification
+            alert("Link copied to clipboard!");
+        }
 
-                @if (User.Identity.IsAuthenticated && Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship)
-                {
-                    <div class="alert alert-info mt-3">
-                        <i class="fas fa-info-circle mr-2"></i>This event is looking for sponsors!
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-</div>
+        // Smooth scroll for "Learn More" button
+        document.addEventListener('DOMContentLoaded', function () {
+            const scrollToLinks = document.querySelectorAll('.scroll-to');
+            scrollToLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Comment form submission
+            const commentForm = document.getElementById('comment-form');
+            if (commentForm) {
+                commentForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const eventId = document.getElementById('event-id').value;
+                    const content = document.getElementById('comment-content').value.trim();
+                    const errorElement = document.getElementById('comment-error');
+                    const submitButton = document.getElementById('post-comment-btn');
+
+                    // Validate content
+                    if (!content) {
+                        errorElement.textContent = 'Please enter a comment';
+                        errorElement.style.display = 'block';
+                        return;
+                    }
+
+                    // Hide error and disable button while submitting
+                    errorElement.style.display = 'none';
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Posting...';
+
+                    // Get CSRF token
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                    // Submit via fetch API
+                    fetch('/Comment/Create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'RequestVerificationToken': token
+                        },
+                        body: new URLSearchParams({
+                            eventId: eventId,
+                            content: content
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Post Comment';
+
+                            if (data.success) {
+                                // Clear textarea
+                                document.getElementById('comment-content').value = '';
+
+                                // Hide "no comments" message if present
+                                const noCommentsMessage = document.getElementById('no-comments-message');
+                                if (noCommentsMessage) {
+                                    noCommentsMessage.style.display = 'none';
+                                }
+
+                                // Add new comment to the top of the list
+                                const commentsContainer = document.getElementById('comments-container');
+
+                                // Create comment HTML
+                                const commentHtml = `
+                                        <div class="comment-item new-comment">
+                                            <div class="comment-header">
+                                                <div class="comment-author-info">
+                                                    <div class="comment-avatar">
+                                                        ${data.comment.profilePicture ?
+                                        `<img src="${data.comment.profilePicture}" alt="${data.comment.userName}" />` :
+                                        `<div class="comment-avatar-placeholder">${data.comment.userInitial}</div>`
+                                    }
+                                                    </div>
+                                                    <div class="comment-author">${data.comment.userName}</div>
+                                                </div>
+                                                <div class="comment-date">
+                                                    <i class="far fa-clock"></i>
+                                                    ${data.comment.createdDate}
+                                                </div>
+                                            </div>
+                                            <div class="comment-text">
+                                                ${data.comment.content.replace(/\n/g, '<br />')}
+                                            </div>
+                                        </div>
+                                    `;
+
+                                // Add to container (at the top)
+                                commentsContainer.insertAdjacentHTML('afterbegin', commentHtml);
+
+                                // Add a highlight effect to the new comment
+                                setTimeout(function () {
+                                    const newComment = commentsContainer.querySelector('.new-comment');
+                                    if (newComment) {
+                                        newComment.style.backgroundColor = 'rgba(58, 174, 216, 0.2)';
+
+                                        setTimeout(function () {
+                                            newComment.style.transition = 'background-color 1s ease';
+                                            newComment.style.backgroundColor = 'transparent';
+
+                                            // Remove the class after transition completes
+                                            setTimeout(function () {
+                                                newComment.classList.remove('new-comment');
+                                            }, 1000);
+                                        }, 100);
+                                    }
+                                }, 0);
+                            } else {
+                                // Show error
+                                errorElement.textContent = data.message || 'Failed to post comment';
+                                errorElement.style.display = 'block';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Post Comment';
+                            errorElement.textContent = 'An error occurred. Please try again.';
+                            errorElement.style.display = 'block';
+                        });
+                });
+            }
+        });
+    </script>
+}
 
 @functions {
-    public string GetCardClass(string causeName)
+    public string GetCauseClass(string causeName)
     {
         return causeName.ToLower() switch
         {
-            "education" => "card-education",
-            "healthcare" => "card-healthcare",
-            "environment" => "card-environment",
-            "poverty" => "card-poverty",
-            "animal welfare" => "card-animal-welfare",
-            "disaster relief" => "card-disaster-relief",
-            _ => "card-education"
+            "education" => "cause-education",
+            "healthcare" => "cause-healthcare",
+            "environment" => "cause-environment",
+            "poverty" => "cause-poverty",
+            "animal welfare" => "cause-animal",
+            "disaster relief" => "cause-disaster",
+            _ => "cause-general"
         };
     }
 
@@ -207,23 +511,45 @@
         };
     }
 
-    public string GetStatusBadgeClass(CharityEventOrganizer.Models.Entities.EventStatus status)
+    public string GetStatusClass(CharityEventOrganizer.Models.Entities.EventStatus status)
     {
         return status switch
         {
-            CharityEventOrganizer.Models.Entities.EventStatus.Submitted => "badge-secondary",
-            CharityEventOrganizer.Models.Entities.EventStatus.UnderReview => "badge-primary",
-            CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship => "badge-info",
-            CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion => "badge-warning",
-            CharityEventOrganizer.Models.Entities.EventStatus.Approved => "badge-success",
-            CharityEventOrganizer.Models.Entities.EventStatus.Rejected => "badge-danger",
-            _ => "badge-secondary"
+            CharityEventOrganizer.Models.Entities.EventStatus.Submitted => "status-submitted",
+            CharityEventOrganizer.Models.Entities.EventStatus.UnderReview => "status-review",
+            CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship => "status-sponsorship",
+            CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion => "status-discussion",
+            CharityEventOrganizer.Models.Entities.EventStatus.Approved => "status-approved",
+            CharityEventOrganizer.Models.Entities.EventStatus.Rejected => "status-rejected",
+            _ => "status-general"
         };
     }
 
-    public bool IsStatusCompleted(CharityEventOrganizer.Models.Entities.EventStatus currentStatus, string statusToCheck)
+    public string GetStatusIcon(CharityEventOrganizer.Models.Entities.EventStatus status)
     {
-        var statusValue = Enum.Parse<CharityEventOrganizer.Models.Entities.EventStatus>(statusToCheck);
-        return currentStatus > statusValue || currentStatus == statusValue;
+        return status switch
+        {
+            CharityEventOrganizer.Models.Entities.EventStatus.Submitted => "fas fa-paper-plane",
+            CharityEventOrganizer.Models.Entities.EventStatus.UnderReview => "fas fa-search",
+            CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship => "fas fa-handshake",
+            CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion => "fas fa-comments",
+            CharityEventOrganizer.Models.Entities.EventStatus.Approved => "fas fa-check-circle",
+            CharityEventOrganizer.Models.Entities.EventStatus.Rejected => "fas fa-times-circle",
+            _ => "fas fa-info-circle"
+        };
+    }
+
+    public string GetStatusLabel(CharityEventOrganizer.Models.Entities.EventStatus status)
+    {
+        return status switch
+        {
+            CharityEventOrganizer.Models.Entities.EventStatus.Submitted => "Submitted",
+            CharityEventOrganizer.Models.Entities.EventStatus.UnderReview => "Under Review",
+            CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship => "Seeking Sponsors",
+            CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion => "In Discussion with Sponsors",
+            CharityEventOrganizer.Models.Entities.EventStatus.Approved => "Approved",
+            CharityEventOrganizer.Models.Entities.EventStatus.Rejected => "Needs Revision",
+            _ => status.ToString()
+        };
     }
 }

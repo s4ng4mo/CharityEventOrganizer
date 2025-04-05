@@ -27,9 +27,6 @@
     </div>
 </section>
 
-<!-- Wave Divider -->
-<div class="wave-divider"></div>
-
 <!-- Main Dashboard Section -->
 <section class="section section-dashboard">
     <div class="container">
@@ -306,82 +303,87 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function() {
-            // Filter buttons
-            $('.btn-filter').click(function() {
-                // Change active button
-                $('.btn-filter').removeClass('active');
-                $(this).addClass('active');
-
-                const filter = $(this).data('filter');
-
-                // Show/hide cards based on filter
-                if (filter === 'all') {
-                    $('.event-card-wrapper').show();
-                } else {
-                    $('.event-card-wrapper').hide();
-                    $(`.event-card-wrapper[data-status="${filter}"]`).show();
-                }
-
-                // Check if any events are visible
-                checkVisibleEvents();
-            });
-
-            // Search functionality
-            $('#eventSearch').on('keyup', function() {
-                const searchTerm = $(this).val().toLowerCase();
-
-                $('.event-card-wrapper').each(function() {
-                    const title = $(this).data('title');
-                    const isVisible = title.includes(searchTerm);
-
-                    // Only hide/show if it matches the current filter
-                    const currentFilter = $('.btn-filter.active').data('filter');
-
-                    if (currentFilter === 'all') {
-                        $(this).toggle(isVisible);
-                    } else {
-                        const matchesFilter = $(this).data('status') === currentFilter;
-                        $(this).toggle(isVisible && matchesFilter);
-                    }
+        // Immediately-invoked function expression to create a private scope
+        (function () {
+            document.addEventListener('DOMContentLoaded', function () {
+                // Store original classes and display properties
+                const eventCards = document.querySelectorAll('.event-card-wrapper');
+                eventCards.forEach(card => {
+                    // Store original display value
+                    card.setAttribute('data-original-display', card.style.display || '');
                 });
 
-                // Check if any events are visible
-                checkVisibleEvents();
-            });
+                // Filter functionality
+                const filterButtons = document.querySelectorAll('.btn-filter');
+                filterButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        // Update active state
+                        filterButtons.forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
 
-            // Reset search
-            $('.btn-reset-search').click(function() {
-                $('#eventSearch').val('');
-                $('#eventSearch').trigger('keyup');
-            });
+                        const filter = this.getAttribute('data-filter');
+                        filterEvents(filter, document.getElementById('eventSearch')?.value || '');
+                    });
+                });
 
-            // Function to check if any events are visible
-            function checkVisibleEvents() {
-                const visibleEvents = $('.event-card-wrapper:visible').length;
-
-                if (visibleEvents === 0) {
-                    $('#no-results-message').show();
-                    $('#events-container').hide();
-                } else {
-                    $('#no-results-message').hide();
-                    $('#events-container').show();
+                // Search functionality
+                const searchInput = document.getElementById('eventSearch');
+                if (searchInput) {
+                    searchInput.addEventListener('input', function () {
+                        const activeFilter = document.querySelector('.btn-filter.active');
+                        const filter = activeFilter ? activeFilter.getAttribute('data-filter') : 'all';
+                        filterEvents(filter, this.value);
+                    });
                 }
-            }
 
-            // Resubmit button (for future implementation)
-            $('.resubmit-btn').click(function() {
-                const eventId = $(this).data('id');
-                // Show confirmation modal or directly submit
-                alert(`Event #${eventId} will be resubmitted. This feature will be implemented soon.`);
+                // Reset search
+                const resetButton = document.querySelector('.btn-reset-search');
+                if (resetButton) {
+                    resetButton.addEventListener('click', function () {
+                        if (searchInput) searchInput.value = '';
+                        const activeFilter = document.querySelector('.btn-filter.active');
+                        const filter = activeFilter ? activeFilter.getAttribute('data-filter') : 'all';
+                        filterEvents(filter, '');
+                    });
+                }
+
+                // Filter events without changing CSS display properties directly
+                function filterEvents(statusFilter, searchText) {
+                    let visibleCount = 0;
+                    const searchTerm = searchText.toLowerCase();
+
+                    eventCards.forEach(card => {
+                        const status = card.getAttribute('data-status');
+                        const title = card.getAttribute('data-title').toLowerCase();
+
+                        const statusMatch = statusFilter === 'all' || status === statusFilter;
+                        const searchMatch = searchTerm === '' || title.includes(searchTerm);
+
+                        // Use CSS classes for showing/hiding instead of direct style manipulation
+                        if (statusMatch && searchMatch) {
+                            card.classList.remove('d-none');
+                            visibleCount++;
+                        } else {
+                            card.classList.add('d-none');
+                        }
+                    });
+
+                    // Toggle no results message
+                    const noResultsMessage = document.getElementById('no-results-message');
+                    const eventsContainer = document.getElementById('events-container');
+
+                    if (noResultsMessage && eventsContainer) {
+                        if (visibleCount === 0) {
+                            noResultsMessage.classList.remove('d-none');
+                            eventsContainer.classList.add('d-none');
+                        } else {
+                            noResultsMessage.classList.add('d-none');
+                            eventsContainer.classList.remove('d-none');
+                        }
+                    }
+                }
             });
-        });
-
-        // Sponsor messages modal (for future implementation)
-        function showSponsorMessages(eventId) {
-            // Populate modal with actual messages in the future
-            $('#sponsorMessagesModal').modal('show');
-        }
+        })();
     </script>
 }
 
