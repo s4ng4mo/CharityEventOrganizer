@@ -1,0 +1,241 @@
+﻿@model CharityEventOrganizer.Models.Entities.Event
+@{
+    ViewData["Title"] = "Event Review";
+    Layout = "_AdminLayout";
+}
+
+<div class="event-review-container">
+    <!-- Review Header -->
+    <section class="review-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="animate fade-in">Event <span class="text-highlight">Review</span></h1>
+                    <p class="animate fade-in">Swipe right to approve, left to reject. Help connect meaningful causes with sponsors.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Review Card -->
+    <section class="review-card-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="event-review-card animate fade-in" id="eventReviewCard">
+                        <div class="review-card-header">
+                            <div class="event-category @GetCauseClass(Model.Cause.Name)">
+                                <i class="@GetCauseIcon(Model.Cause.Name)"></i>
+                                <span>@Model.Cause.Name</span>
+                            </div>
+                            <h2>@Model.Title</h2>
+                            <div class="event-meta">
+                                <div class="event-meta-item">
+                                    <i class="far fa-calendar-alt"></i>
+                                    <span>@Model.EventDate.ToString("dddd, MMMM dd, yyyy")</span>
+                                </div>
+                                <div class="event-meta-item">
+                                    <i class="far fa-clock"></i>
+                                    <span>@Model.EventDate.ToString("h:mm tt")</span>
+                                </div>
+                                <div class="event-meta-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>@Model.Location</span>
+                                </div>
+                                <div class="event-meta-item">
+                                    <i class="fas fa-user"></i>
+                                    <span>By @Model.Organizer.UserName</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="review-card-body">
+                            <h3>Event Description</h3>
+                            <div class="event-description">
+                                @Html.Raw(Model.Description.Replace(Environment.NewLine, "<br />"))
+                            </div>
+                            <div class="organizer-info mt-4">
+                                <h3>About the Organizer</h3>
+                                <div class="organizer-details">
+                                    <div class="organizer-avatar">
+                                        @if (string.IsNullOrEmpty(Model.Organizer.ProfilePicturePath))
+                                        {
+                                            <div class="organizer-avatar-placeholder">
+                                                @Model.Organizer.UserName.Substring(0, 1).ToUpper()
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <img src="@Model.Organizer.ProfilePicturePath" alt="@Model.Organizer.UserName" />
+                                        }
+                                    </div>
+                                    <div class="organizer-profile">
+                                        <h4>@Model.Organizer.FirstName @Model.Organizer.LastName</h4>
+                                        <p>@Model.Organizer.Email</p>
+                                        <p class="events-count">Events Created: @Model.Organizer.OrganizedEvents.Count()</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="review-card-actions">
+                            <form asp-action="RejectEvent" asp-route-id="@Model.Id" method="post" class="d-inline" id="rejectForm">
+                                @Html.AntiForgeryToken()
+                                <button type="button" class="btn-reject" id="rejectBtn">
+                                    <i class="fas fa-times"></i>
+                                    <span>Reject</span>
+                                </button>
+                            </form>
+                            <a href="@Url.Action("Details", "Events", new { id = Model.Id })" class="btn-details">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Details</span>
+                            </a>
+                            <form asp-action="ApproveEvent" asp-route-id="@Model.Id" method="post" class="d-inline" id="approveForm">
+                                @Html.AntiForgeryToken()
+                                <button type="button" class="btn-approve" id="approveBtn">
+                                    <i class="fas fa-check"></i>
+                                    <span>Approve</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Decision Status -->
+    <div class="decision-status" id="decisionStatus"></div>
+
+    <!-- Review Counter -->
+    <div class="review-counter">
+        <div class="container text-center">
+            <p class="animate fade-in">You've reviewed <span class="counter-highlight">1</span> of @ViewBag.TotalPending events today</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const card = document.getElementById('eventReviewCard');
+            const approveBtn = document.getElementById('approveBtn');
+            const rejectBtn = document.getElementById('rejectBtn');
+            const approveForm = document.getElementById('approveForm');
+            const rejectForm = document.getElementById('rejectForm');
+            const decisionStatus = document.getElementById('decisionStatus');
+
+            let startX = 0;
+            let currentX = 0;
+            let isDragging = false;
+
+            // Touch events for mobile
+            card.addEventListener('touchstart', function(e) {
+                startX = e.touches[0].clientX;
+                isDragging = true;
+                card.style.transition = 'none';
+            });
+
+            card.addEventListener('touchmove', function(e) {
+                if (!isDragging) return;
+                currentX = e.touches[0].clientX;
+                const diffX = currentX - startX;
+                card.style.transform = `translateX(${diffX}px) rotate(${diffX * 0.05}deg)`;
+
+                // Change background color based on swipe direction
+                if (diffX > 0) {
+                    card.style.boxShadow = `0 0 ${Math.abs(diffX) / 10}px 0 rgba(40, 167, 69, ${Math.abs(diffX) / 500})`;
+                    decisionStatus.innerHTML = '<div class="decision-approve">APPROVE</div>';
+                    decisionStatus.style.opacity = Math.min(Math.abs(diffX) / 200, 1);
+                } else if (diffX < 0) {
+                    card.style.boxShadow = `0 0 ${Math.abs(diffX) / 10}px 0 rgba(220, 53, 69, ${Math.abs(diffX) / 500})`;
+                    decisionStatus.innerHTML = '<div class="decision-reject">REJECT</div>';
+                    decisionStatus.style.opacity = Math.min(Math.abs(diffX) / 200, 1);
+                }
+            });
+
+            card.addEventListener('touchend', function() {
+                if (!isDragging) return;
+                isDragging = false;
+                card.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease';
+                decisionStatus.style.opacity = 0;
+
+                const diffX = currentX - startX;
+
+                if (diffX > 100) {
+                    // Approve with animation
+                    card.style.transform = 'translateX(1000px) rotate(30deg)';
+                    setTimeout(() => {
+                        approveForm.submit();
+                    }, 500);
+                } else if (diffX < -100) {
+                    // Reject with animation
+                    card.style.transform = 'translateX(-1000px) rotate(-30deg)';
+                    setTimeout(() => {
+                        rejectForm.submit();
+                    }, 500);
+                } else {
+                    // Return to center
+                    card.style.transform = 'translateX(0) rotate(0)';
+                    card.style.boxShadow = '';
+                }
+            });
+
+            // Button clicks
+            approveBtn.addEventListener('click', function() {
+                card.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease';
+                card.style.transform = 'translateX(1000px) rotate(30deg)';
+                card.style.boxShadow = '0 0 30px 0 rgba(40, 167, 69, 0.5)';
+                setTimeout(() => {
+                    approveForm.submit();
+                }, 500);
+            });
+
+            rejectBtn.addEventListener('click', function() {
+                card.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease';
+                card.style.transform = 'translateX(-1000px) rotate(-30deg)';
+                card.style.boxShadow = '0 0 30px 0 rgba(220, 53, 69, 0.5)';
+                setTimeout(() => {
+                    rejectForm.submit();
+                }, 500);
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight') {
+                    approveBtn.click();
+                } else if (e.key === 'ArrowLeft') {
+                    rejectBtn.click();
+                }
+            });
+        });
+    </script>
+}
+
+@functions {
+    public string GetCauseClass(string causeName)
+    {
+        return causeName.ToLower() switch
+        {
+            "education" => "cause-education",
+            "healthcare" => "cause-healthcare",
+            "environment" => "cause-environment",
+            "poverty" => "cause-poverty",
+            "animal welfare" => "cause-animal",
+            "disaster relief" => "cause-disaster",
+            _ => "cause-general"
+        };
+    }
+
+    public string GetCauseIcon(string causeName)
+    {
+        return causeName.ToLower() switch
+        {
+            "education" => "fas fa-graduation-cap",
+            "healthcare" => "fas fa-heartbeat",
+            "environment" => "fas fa-leaf",
+            "poverty" => "fas fa-home",
+            "animal welfare" => "fas fa-paw",
+            "disaster relief" => "fas fa-hands-helping",
+            _ => "fas fa-heart"
+        };
+    }
+}

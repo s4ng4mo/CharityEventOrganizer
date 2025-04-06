@@ -1,0 +1,369 @@
+﻿@model IEnumerable<CharityEventOrganizer.Models.Entities.Event>
+@{
+    ViewData["Title"] = "All Events";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-all-events">
+    <!-- Header -->
+    <section class="admin-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="animate fade-in">All <span class="text-highlight">Events</span></h1>
+                    <p class="animate fade-in">Comprehensive view of all charity events in the system.</p>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <a asp-controller="Events" asp-action="Create" class="btn btn-primary btn-rounded animate fade-in">
+                        <i class="fas fa-plus-circle mr-2"></i>Add Event
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="admin-filters">
+        <div class="container">
+            <div class="admin-card animate fade-in">
+                <div class="admin-card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <label for="statusFilter">Status</label>
+                            <select class="form-control" id="statusFilter">
+                                <option value="all">All Statuses</option>
+                                <option value="submitted">Submitted</option>
+                                <option value="review">Under Review</option>
+                                <option value="sponsorship">Seeking Sponsors</option>
+                                <option value="discussion">In Discussion</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <label for="causeFilter">Cause</label>
+                            <select class="form-control" id="causeFilter">
+                                <option value="all">All Causes</option>
+                                <option value="education">Education</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="environment">Environment</option>
+                                <option value="poverty">Poverty</option>
+                                <option value="animal-welfare">Animal Welfare</option>
+                                <option value="disaster-relief">Disaster Relief</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <label for="dateFilter">Date Range</label>
+                            <select class="form-control" id="dateFilter">
+                                <option value="all">All Time</option>
+                                <option value="upcoming">Upcoming</option>
+                                <option value="past">Past</option>
+                                <option value="today">Today</option>
+                                <option value="this-week">This Week</option>
+                                <option value="this-month">This Month</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="searchEvents">Search</label>
+                            <div class="search-box">
+                                <input type="text" id="searchEvents" class="form-control" placeholder="Search events...">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events List -->
+    <section class="admin-content">
+        <div class="container">
+            <div class="admin-card animate fade-in">
+                <div class="admin-card-header">
+                    <h2><i class="fas fa-calendar-alt mr-2"></i>Event List</h2>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="bulkActionsDropdown" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-cog mr-1"></i>Bulk Actions
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bulkActionsDropdown">
+                            <a class="dropdown-item" href="#"><i class="fas fa-check-circle mr-2"></i>Approve Selected</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-times-circle mr-2"></i>Reject Selected</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt mr-2"></i>Delete Selected</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="admin-card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover admin-table" id="eventsTable">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="selectAll">
+                                            <label class="custom-control-label" for="selectAll"></label>
+                                        </div>
+                                    </th>
+                                    <th>Title</th>
+                                    <th>Organizer</th>
+                                    <th>Cause</th>
+                                    <th>Event Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr data-status="@GetStatusClass(item.Status)" data-cause="@item.Cause.Name.ToLower().Replace(" ", "-")">
+                                        <td>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input event-checkbox" id="event_@item.Id">
+                                                <label class="custom-control-label" for="event_@item.Id"></label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="event-title">@item.Title</div>
+                                            <div class="event-location"><small><i class="fas fa-map-marker-alt"></i> @item.Location</small></div>
+                                        </td>
+                                        <td>
+                                            <div class="user-compact">
+                                                @if (string.IsNullOrEmpty(item.Organizer.ProfilePicturePath))
+                                                {
+                                                    <div class="user-avatar-small">@item.Organizer.UserName.Substring(0, 1).ToUpper()</div>
+                                                }
+                                                else
+                                                {
+                                                    <img src="@item.Organizer.ProfilePicturePath" alt="@item.Organizer.UserName" class="user-avatar-small"/>
+                                                }
+                                                <span>@item.Organizer.UserName</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge-cause badge-@item.Cause.Name.ToLower().Replace(" ", "-")">
+                                                @item.Cause.Name
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="event-date">
+                                                <div class="date-calendar">
+                                                    <div class="date-month">@item.EventDate.ToString("MMM")</div>
+                                                    <div class="date-day">@item.EventDate.Day</div>
+                                                </div>
+                                                <div class="date-time">@item.EventDate.ToString("h:mm tt")</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge-status badge-@GetStatusClass(item.Status)">
+                                                @GetStatusLabel(item.Status)
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a asp-controller="Events" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                @if (item.Status == CharityEventOrganizer.Models.Entities.EventStatus.Submitted)
+                                                {
+                                                    <a asp-action="EventReview" class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-check"></i>
+                                                    </a>
+                                                }
+                                                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false">
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item" href="@Url.Action("Details", "Events", new { id = item.Id })">
+                                                        <i class="fas fa-eye mr-2"></i>View Details
+                                                    </a>
+                                                    <a class="dropdown-item" href="#">
+                                                        <i class="fas fa-edit mr-2"></i>Edit Event
+                                                    </a>
+                                                    @if (item.Status == CharityEventOrganizer.Models.Entities.EventStatus.Submitted)
+                                                    {
+                                                        <a class="dropdown-item" href="@Url.Action("EventReview")">
+                                                            <i class="fas fa-check mr-2"></i>Review Event
+                                                        </a>
+                                                    }
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item text-danger" href="#" data-toggle="modal" data-target="#deleteEventModal_@item.Id">
+                                                        <i class="fas fa-trash-alt mr-2"></i>Delete Event
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="admin-card-footer">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <p class="mb-0">Showing <span id="visibleCount">@Model.Count()</span> of @Model.Count() events</p>
+                        </div>
+                        <div class="col-md-6 text-md-right">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-md-end mb-0">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                    </li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Delete Event Modals -->
+@foreach (var item in Model)
+{
+    <div class="modal fade" id="deleteEventModal_@item.Id" tabindex="-1" aria-labelledby="deleteEventModalLabel_@item.Id" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteEventModalLabel_@item.Id">Confirm Deletion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        <strong>Warning:</strong> Are you sure you want to delete this event? This action cannot be undone.
+                    </div>
+                    <p>You are about to delete the event <strong>@item.Title</strong>.</p>
+                    <p>This will permanently remove all associated data including comments and sponsorship information.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger">Delete Event</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusFilter = document.getElementById('statusFilter');
+            const causeFilter = document.getElementById('causeFilter');
+            const dateFilter = document.getElementById('dateFilter');
+            const searchInput = document.getElementById('searchEvents');
+            const tableRows = document.querySelectorAll('#eventsTable tbody tr');
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const eventCheckboxes = document.querySelectorAll('.event-checkbox');
+            const visibleCountElement = document.getElementById('visibleCount');
+
+            // Filter functions
+            function applyFilters() {
+                const statusValue = statusFilter.value;
+                const causeValue = causeFilter.value;
+                const dateValue = dateFilter.value;
+                const searchValue = searchInput.value.toLowerCase();
+                
+                let visibleCount = 0;
+
+                tableRows.forEach(row => {
+                    const rowStatus = row.getAttribute('data-status');
+                    const rowCause = row.getAttribute('data-cause');
+                    const rowTitle = row.querySelector('.event-title').textContent.toLowerCase();
+                    const rowLocation = row.querySelector('.event-location').textContent.toLowerCase();
+                    
+                    const statusMatch = statusValue === 'all' || rowStatus === statusValue;
+                    const causeMatch = causeValue === 'all' || rowCause === causeValue;
+                    // For simplicity, we're not implementing the actual date filter logic here
+                    const dateMatch = true; // dateValue === 'all' || applyDateFilter(row, dateValue);
+                    const searchMatch = rowTitle.includes(searchValue) || rowLocation.includes(searchValue);
+                    
+                    if (statusMatch && causeMatch && dateMatch && searchMatch) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                visibleCountElement.textContent = visibleCount;
+            }
+
+            // Event listeners
+            statusFilter.addEventListener('change', applyFilters);
+            causeFilter.addEventListener('change', applyFilters);
+            dateFilter.addEventListener('change', applyFilters);
+            searchInput.addEventListener('input', applyFilters);
+
+            // Select all functionality
+            selectAllCheckbox.addEventListener('change', function() {
+                const isChecked = this.checked;
+                
+                eventCheckboxes.forEach(checkbox => {
+                    // Only check visible rows
+                    const row = checkbox.closest('tr');
+                    if (row.style.display !== 'none') {
+                        checkbox.checked = isChecked;
+                    }
+                });
+            });
+
+            // Update select all state when individual checkboxes change
+            eventCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectAllState);
+            });
+
+            function updateSelectAllState() {
+                const visibleCheckboxes = Array.from(eventCheckboxes)
+                    .filter(cb => cb.closest('tr').style.display !== 'none');
+                const checkedCheckboxes = Array.from(eventCheckboxes)
+                    .filter(cb => cb.closest('tr').style.display !== 'none' && cb.checked);
+                
+                selectAllCheckbox.checked = visibleCheckboxes.length > 0 && 
+                                           visibleCheckboxes.length === checkedCheckboxes.length;
+                selectAllCheckbox.indeterminate = checkedCheckboxes.length > 0 && 
+                                                  checkedCheckboxes.length < visibleCheckboxes.length;
+            }
+        });
+    </script>
+}
+
+@functions {
+    public string GetStatusClass(CharityEventOrganizer.Models.Entities.EventStatus status)
+    {
+        return status switch
+        {
+            CharityEventOrganizer.Models.Entities.EventStatus.Submitted => "pending",
+            CharityEventOrganizer.Models.Entities.EventStatus.UnderReview => "review",
+            CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship => "sponsorship",
+            CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion => "discussion",
+            CharityEventOrganizer.Models.Entities.EventStatus.Approved => "approved",
+            CharityEventOrganizer.Models.Entities.EventStatus.Rejected => "rejected",
+            _ => "default"
+        };
+    }
+
+    public string GetStatusLabel(CharityEventOrganizer.Models.Entities.EventStatus status)
+    {
+        return status switch
+        {
+            CharityEventOrganizer.Models.Entities.EventStatus.Submitted => "Submitted",
+            CharityEventOrganizer.Models.Entities.EventStatus.UnderReview => "Under Review",
+            CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship => "Seeking Sponsors",
+            CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion => "In Discussion",
+            CharityEventOrganizer.Models.Entities.EventStatus.Approved => "Approved",
+            CharityEventOrganizer.Models.Entities.EventStatus.Rejected => "Rejected",
+            _ => status.ToString()
+        };
+    }
+}

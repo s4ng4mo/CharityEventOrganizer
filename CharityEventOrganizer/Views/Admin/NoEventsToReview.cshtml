@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "No Events To Review";
+    Layout = "_AdminLayout";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="empty-state animate fade-in">
+                <div class="empty-state-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="empty-state-title">All Caught Up!</h3>
+                <p class="empty-state-message">There are no events waiting for review at the moment. Great job!</p>
+                <a asp-action="Dashboard" class="btn btn-primary btn-lg">
+                    <i class="fas fa-tachometer-alt mr-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

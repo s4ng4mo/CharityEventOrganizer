@@ -1,0 +1,223 @@
+﻿@model CharityEventOrganizer.Models.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-dashboard">
+    <!-- Admin Hero Section -->
+    <section class="admin-hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="animate fade-in">Admin <span class="text-highlight">Dashboard</span></h1>
+                    <p class="animate fade-in">Manage charity events, users, and sponsors to make the world a better place.</p>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <a asp-action="EventReview" class="btn btn-primary btn-lg btn-rounded animate fade-in">
+                        <i class="fas fa-check-circle mr-2"></i>Review Events
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Overview -->
+    <section class="admin-stats">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="stat-card stat-events animate fade-in">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>@Model.EventsPendingReview</h3>
+                            <p>Pending Review</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="stat-card stat-users animate fade-in">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>@Model.TotalUsers</h3>
+                            <p>Total Users</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="stat-card stat-sponsors animate fade-in">
+                        <div class="stat-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>@Model.TotalSponsors</h3>
+                            <p>Active Sponsors</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="stat-card stat-approved animate fade-in">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>@Model.TotalApprovedEvents</h3>
+                            <p>Approved Events</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Content -->
+    <section class="admin-content">
+        <div class="container">
+            <div class="row">
+                <!-- Recent Events -->
+                <div class="col-lg-8 mb-4">
+                    <div class="admin-card animate fade-in">
+                        <div class="admin-card-header">
+                            <h2><i class="fas fa-calendar-day mr-2"></i>Recent Events</h2>
+                            <a asp-action="AllEvents" class="btn btn-sm btn-outline btn-outline-primary">View All</a>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Organizer</th>
+                                            <th>Cause</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.RecentEvents)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="event-title">@item.Title</div>
+                                                </td>
+                                                <td>@item.Organizer.UserName</td>
+                                                <td>
+                                                    <span class="badge-cause badge-@item.Cause.Name.ToLower().Replace(" ", "-")">
+                                                        @item.Cause.Name
+                                                    </span>
+                                                </td>
+                                                <td>@item.EventDate.ToString("MMM dd, yyyy")</td>
+                                                <td>
+                                                    <span class="badge-status badge-@GetStatusClass(item.Status)">
+                                                        @GetStatusLabel(item.Status)
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <a asp-controller="Events" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        @if (item.Status == CharityEventOrganizer.Models.Entities.EventStatus.Submitted)
+                                                        {
+                                                            <a asp-action="EventReview" class="btn btn-sm btn-outline-primary">
+                                                                <i class="fas fa-check"></i>
+                                                            </a>
+                                                        }
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="col-lg-4 mb-4">
+                    <div class="admin-card animate fade-in">
+                        <div class="admin-card-header">
+                            <h2><i class="fas fa-bolt mr-2"></i>Quick Actions</h2>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="quick-actions">
+                                <a asp-action="EventReview" class="quick-action-item">
+                                    <div class="quick-action-icon">
+                                        <i class="fas fa-clipboard-check"></i>
+                                    </div>
+                                    <div class="quick-action-content">
+                                        <h4>Review Events</h4>
+                                        <p>@Model.EventsPendingReview events waiting for review</p>
+                                    </div>
+                                </a>
+                                <a asp-action="UserManagement" class="quick-action-item">
+                                    <div class="quick-action-icon">
+                                        <i class="fas fa-user-shield"></i>
+                                    </div>
+                                    <div class="quick-action-content">
+                                        <h4>Manage Users</h4>
+                                        <p>View and manage user accounts</p>
+                                    </div>
+                                </a>
+                                <a asp-action="SponsorManagement" class="quick-action-item">
+                                    <div class="quick-action-icon">
+                                        <i class="fas fa-handshake"></i>
+                                    </div>
+                                    <div class="quick-action-content">
+                                        <h4>Manage Sponsors</h4>
+                                        <p>Review and manage sponsor accounts</p>
+                                    </div>
+                                </a>
+                                <a asp-action="AllEvents" class="quick-action-item">
+                                    <div class="quick-action-icon">
+                                        <i class="fas fa-calendar-week"></i>
+                                    </div>
+                                    <div class="quick-action-content">
+                                        <h4>All Events</h4>
+                                        <p>Manage all events in the system</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@functions {
+    public string GetStatusClass(CharityEventOrganizer.Models.Entities.EventStatus status)
+    {
+        return status switch
+        {
+            CharityEventOrganizer.Models.Entities.EventStatus.Submitted => "pending",
+            CharityEventOrganizer.Models.Entities.EventStatus.UnderReview => "review",
+            CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship => "sponsorship",
+            CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion => "discussion",
+            CharityEventOrganizer.Models.Entities.EventStatus.Approved => "approved",
+            CharityEventOrganizer.Models.Entities.EventStatus.Rejected => "rejected",
+            _ => "default"
+        };
+    }
+
+    public string GetStatusLabel(CharityEventOrganizer.Models.Entities.EventStatus status)
+    {
+        return status switch
+        {
+            CharityEventOrganizer.Models.Entities.EventStatus.Submitted => "Submitted",
+            CharityEventOrganizer.Models.Entities.EventStatus.UnderReview => "Under Review",
+            CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship => "Seeking Sponsors",
+            CharityEventOrganizer.Models.Entities.EventStatus.SponsorshipDiscussion => "In Discussion",
+            CharityEventOrganizer.Models.Entities.EventStatus.Approved => "Approved",
+            CharityEventOrganizer.Models.Entities.EventStatus.Rejected => "Rejected",
+            _ => status.ToString()
+        };
+    }
+}

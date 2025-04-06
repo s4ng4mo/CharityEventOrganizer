@@ -1,6 +1,20 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<CharityEventOrganizer.Models.Entities.ApplicationUser> SignInManager
 @inject UserManager<CharityEventOrganizer.Models.Entities.ApplicationUser> UserManager
+
+@{
+    // Check if current user is an admin
+    var isAdmin = false;
+    if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        if (user != null)
+        {
+            isAdmin = await UserManager.IsInRoleAsync(user, "Admin");
+        }
+    }
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,6 +58,14 @@
                                 <a class="nav-link" asp-area="" asp-controller="Events" asp-action="MySubmissions">My Events</a>
                             </li>
                         }
+                        @if (isAdmin)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Dashboard">
+                                    <i class="fas fa-tachometer-alt mr-1"></i>Admin Dashboard
+                                </a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">About Us</a>
                         </li>
@@ -63,6 +85,12 @@
                                     <a class="dropdown-item" asp-controller="Events" asp-action="MySubmissions">
                                         <i class="fas fa-clipboard-list mr-2"></i>My Events
                                     </a>
+                                    @if (isAdmin)
+                                    {
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard">
+                                            <i class="fas fa-tachometer-alt mr-2"></i>Admin Dashboard
+                                        </a>
+                                    }
                                     <div class="dropdown-divider"></div>
                                     <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                                         <button type="submit" class="dropdown-item">

@@ -1,0 +1,428 @@
+﻿@model IEnumerable<CharityEventOrganizer.Models.Entities.ApplicationUser>
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject UserManager<CharityEventOrganizer.Models.Entities.ApplicationUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+@{
+    ViewData["Title"] = "User Management";
+    Layout = "_AdminLayout";
+
+    // Get all roles
+    var roles = await RoleManager.Roles.ToListAsync();
+}
+
+<div class="admin-user-management">
+    <!-- Header -->
+    <section class="admin-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="animate fade-in">User <span class="text-highlight">Management</span></h1>
+                    <p class="animate fade-in">Manage user accounts and permissions in the system.</p>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <a href="#" class="btn btn-primary btn-rounded animate fade-in" data-toggle="modal" data-target="#addUserModal">
+                        <i class="fas fa-user-plus mr-2"></i>Add User
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User List -->
+    <section class="admin-content">
+        <div class="container">
+            <div class="admin-card animate fade-in">
+                <div class="admin-card-header">
+                    <h2><i class="fas fa-users mr-2"></i>All Users</h2>
+                    <div class="search-box">
+                        <input type="text" id="userSearch" class="form-control" placeholder="Search users...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <div class="admin-card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover admin-table" id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Events</th>
+                                    <th>Created</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="user-info">
+                                                @if (string.IsNullOrEmpty(user.ProfilePicturePath))
+                                                {
+                                                    <div class="user-avatar-placeholder">
+                                                        @user.UserName.Substring(0, 1).ToUpper()
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <img src="@user.ProfilePicturePath" alt="@user.UserName" class="user-avatar" />
+                                                }
+                                                <div class="user-details">
+                                                    <div class="user-name">@user.FirstName @user.LastName</div>
+                                                    <div class="user-username">@user.UserName</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>@user.Email</td>
+                                        <td>
+                                            @{
+                                                var userRoles = await UserManager.GetRolesAsync(user);
+                                                foreach (var role in userRoles)
+                                                {
+                                                    <span class="badge badge-@GetRoleBadgeClass(role)">@role</span>
+                                                }
+                                                if (!userRoles.Any())
+                                                {
+                                                    <span class="badge badge-secondary">User</span>
+                                                }
+                                            }
+                                        </td>
+                                        <td>@user.OrganizedEvents.Count()</td>
+                                        <td>-</td>
+                                        <td>
+                                            @if (user.EmailConfirmed)
+                                            {
+                                                <span class="badge badge-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-warning">Pending</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton_@user.Id" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton_@user.Id">
+                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#viewUserModal_@user.Id">
+                                                        <i class="fas fa-eye mr-2"></i>View Details
+                                                    </a>
+                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editUserModal_@user.Id">
+                                                        <i class="fas fa-edit mr-2"></i>Edit User
+                                                    </a>
+                                                    <div class="dropdown-item">
+                                                        <button type="button" class="btn btn-sm btn-link p-0" data-toggle="modal" data-target="#assignRoleModal_@user.Id">
+                                                            <i class="fas fa-user-tag mr-2"></i>Manage Roles
+                                                        </button>
+                                                    </div>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item text-danger" href="#" data-toggle="modal" data-target="#deleteUserModal_@user.Id">
+                                                        <i class="fas fa-trash-alt mr-2"></i>Delete User
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Modals for each user -->
+@foreach (var user in Model)
+{
+    <!-- View User Modal -->
+    <div class="modal fade" id="viewUserModal_@user.Id" tabindex="-1" aria-labelledby="viewUserModalLabel_@user.Id" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewUserModalLabel_@user.Id">User Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="user-profile-header">
+                        @if (string.IsNullOrEmpty(user.ProfilePicturePath))
+                        {
+                            <div class="user-profile-avatar-placeholder">
+                                @user.UserName.Substring(0, 1).ToUpper()
+                            </div>
+                        }
+                        else
+                        {
+                            <img src="@user.ProfilePicturePath" alt="@user.UserName" class="user-profile-avatar" />
+                        }
+                        <div class="user-profile-name">@user.FirstName @user.LastName</div>
+                        <div class="user-profile-username">@user.UserName</div>
+                    </div>
+                    <div class="user-profile-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Email</div>
+                            <div class="detail-value">@user.Email</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Phone</div>
+                            <div class="detail-value">@(string.IsNullOrEmpty(user.PhoneNumber) ? "Not provided" : user.PhoneNumber)</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Email Confirmed</div>
+                            <div class="detail-value">
+                                @if (user.EmailConfirmed)
+                                {
+                                    <span class="text-success"><i class="fas fa-check-circle mr-1"></i>Yes</span>
+                                }
+                                else
+                                {
+                                    <span class="text-warning"><i class="fas fa-times-circle mr-1"></i>No</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Events Created</div>
+                            <div class="detail-value">@user.OrganizedEvents.Count()</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUserModal_@user.Id" tabindex="-1" aria-labelledby="editUserModalLabel_@user.Id" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel_@user.Id">Edit User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="firstName_@user.Id">First Name</label>
+                            <input type="text" class="form-control" id="firstName_@user.Id" value="@user.FirstName">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName_@user.Id">Last Name</label>
+                            <input type="text" class="form-control" id="lastName_@user.Id" value="@user.LastName">
+                        </div>
+                        <div class="form-group">
+                            <label for="email_@user.Id">Email</label>
+                            <input type="email" class="form-control" id="email_@user.Id" value="@user.Email">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone_@user.Id">Phone</label>
+                            <input type="tel" class="form-control" id="phone_@user.Id" value="@user.PhoneNumber">
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="emailConfirmed_@user.Id" @(user.EmailConfirmed ? "checked" : "")>
+                                <label class="custom-control-label" for="emailConfirmed_@user.Id">Email Confirmed</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Roles Modal -->
+    <div class="modal fade" id="assignRoleModal_@user.Id" tabindex="-1" aria-labelledby="assignRoleModalLabel_@user.Id" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assignRoleModalLabel_@user.Id">Manage Roles</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Current roles for <strong>@user.UserName</strong>:</p>
+                    <div class="mb-3">
+                        @{
+                            var userRoles = await UserManager.GetRolesAsync(user);
+                            if (userRoles.Any())
+                            {
+                                foreach (var role in userRoles)
+                                {
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge badge-@GetRoleBadgeClass(role) mr-2">@role</span>
+                                        <form asp-action="RemoveRole" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="userId" value="@user.Id" />
+                                            <input type="hidden" name="roleName" value="@role" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-times"></i> Remove
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div>This user has no assigned roles.</div>
+                            }
+                        }
+                    </div>
+
+                    <hr>
+
+                    <form asp-action="AssignRole" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="userId" value="@user.Id" />
+                        <div class="form-group">
+                            <label for="roleSelect_@user.Id">Assign a new role:</label>
+                            <select class="form-control" id="roleSelect_@user.Id" name="roleName">
+                                @foreach (var role in roles)
+                                {
+                                    if (!userRoles.Contains(role.Name))
+                                    {
+                                        <option value="@role.Name">@role.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Assign Role</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete User Modal -->
+    <div class="modal fade" id="deleteUserModal_@user.Id" tabindex="-1" aria-labelledby="deleteUserModalLabel_@user.Id" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteUserModalLabel_@user.Id">Confirm Deletion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        <strong>Warning:</strong> Are you sure you want to delete this user? This action cannot be undone.
+                    </div>
+                    <p>You are about to delete the user account for <strong>@user.FirstName @user.LastName (@user.UserName)</strong>.</p>
+                    <p>This will permanently remove their account, all their events, and any other associated data.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger">Delete User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="newFirstName">First Name</label>
+                        <input type="text" class="form-control" id="newFirstName">
+                    </div>
+                    <div class="form-group">
+                        <label for="newLastName">Last Name</label>
+                        <input type="text" class="form-control" id="newLastName">
+                    </div>
+                    <div class="form-group">
+                        <label for="newUsername">Username</label>
+                        <input type="text" class="form-control" id="newUsername">
+                    </div>
+                    <div class="form-group">
+                        <label for="newEmail">Email</label>
+                        <input type="email" class="form-control" id="newEmail">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPhone">Phone</label>
+                        <input type="tel" class="form-control" id="newPhone">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Password</label>
+                        <input type="password" class="form-control" id="newPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="newRole">Role</label>
+                        <select class="form-control" id="newRole">
+                            <option value="User">User</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Sponsor">Sponsor</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Add User</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Search functionality
+            const searchInput = document.getElementById('userSearch');
+            const table = document.getElementById('usersTable');
+            const rows = table.querySelectorAll('tbody tr');
+
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase();
+
+                rows.forEach(row => {
+                    const userName = row.querySelector('.user-name').textContent.toLowerCase();
+                    const userUsername = row.querySelector('.user-username').textContent.toLowerCase();
+                    const userEmail = row.querySelectorAll('td')[1].textContent.toLowerCase();
+
+                    if (userName.includes(searchTerm) || userUsername.includes(searchTerm) || userEmail.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+@functions {
+    public string GetRoleBadgeClass(string role)
+    {
+        return role.ToLower() switch
+        {
+            "admin" => "danger",
+            "sponsor" => "warning",
+            _ => "primary"
+        };
+    }
+}

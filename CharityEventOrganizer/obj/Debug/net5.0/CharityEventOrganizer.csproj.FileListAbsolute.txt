@@ -174,3 +174,10 @@ C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug
 C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Areas\Identity\Pages\Account\Manage\PersonalData\DeletePersonalData.cshtml.g.cs
 C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Areas\Identity\Pages\Account\Manage\PersonalData\DownloadPersonalData.cshtml.g.cs
 C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Areas\Identity\Pages\Account\Manage\PersonalData\PersonalData.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Admin\AllEvents.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Admin\Dashboard.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Admin\EventReview.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Admin\NoEventsToReview.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Admin\SponsorManagement.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Admin\UserManagement.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Shared\_AdminLayout.cshtml.g.cs

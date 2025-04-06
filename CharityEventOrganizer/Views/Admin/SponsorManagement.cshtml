@@ -1,0 +1,329 @@
+﻿@model IEnumerable<CharityEventOrganizer.Models.Entities.Sponsor>
+@{
+    ViewData["Title"] = "Sponsor Management";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-sponsor-management">
+    <!-- Header -->
+    <section class="admin-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="animate fade-in">Sponsor <span class="text-highlight">Management</span></h1>
+                    <p class="animate fade-in">Manage sponsors and their connections to charity events.</p>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <a href="#" class="btn btn-primary btn-rounded animate fade-in" data-toggle="modal" data-target="#addSponsorModal">
+                        <i class="fas fa-handshake mr-2"></i>Add Sponsor
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sponsor List -->
+    <section class="admin-content">
+        <div class="container">
+            <div class="admin-card animate fade-in">
+                <div class="admin-card-header">
+                    <h2><i class="fas fa-handshake mr-2"></i>All Sponsors</h2>
+                    <div class="search-box">
+                        <input type="text" id="sponsorSearch" class="form-control" placeholder="Search sponsors...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <div class="admin-card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover admin-table" id="sponsorsTable">
+                            <thead>
+                                <tr>
+                                    <th>Sponsor</th>
+                                    <th>Website</th>
+                                    <th>Contact</th>
+                                    <th>Events Sponsored</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var sponsor in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="sponsor-info">
+                                                <div class="sponsor-avatar-placeholder">
+                                                    @sponsor.Name.Substring(0, 1).ToUpper()
+                                                </div>
+                                                <div class="sponsor-details">
+                                                    <div class="sponsor-name">@sponsor.Name</div>
+                                                    <div class="sponsor-description truncate">@sponsor.Description</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(sponsor.Website))
+                                            {
+                                                <a href="@sponsor.Website" target="_blank">@sponsor.Website</a>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Not provided</span>
+                                            }
+                                        </td>
+                                        <td>@sponsor.User.Email</td>
+                                        <td>@sponsor.SponsoredEvents.Count()</td>
+                                        <td>
+                                            <span class="badge badge-success">Active</span>
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton_@sponsor.Id" data-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton_@sponsor.Id">
+                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#viewSponsorModal_@sponsor.Id">
+                                                        <i class="fas fa-eye mr-2"></i>View Details
+                                                    </a>
+                                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#editSponsorModal_@sponsor.Id">
+                                                        <i class="fas fa-edit mr-2"></i>Edit Sponsor
+                                                    </a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item text-danger" href="#" data-toggle="modal" data-target="#deleteSponsorModal_@sponsor.Id">
+                                                        <i class="fas fa-trash-alt mr-2"></i>Delete Sponsor
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Modals for each sponsor -->
+@foreach (var sponsor in Model)
+{
+    <!-- View Sponsor Modal -->
+    <div class="modal fade" id="viewSponsorModal_@sponsor.Id" tabindex="-1" aria-labelledby="viewSponsorModalLabel_@sponsor.Id" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewSponsorModalLabel_@sponsor.Id">Sponsor Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="sponsor-profile-header">
+                        <div class="sponsor-profile-avatar-placeholder">
+                            @sponsor.Name.Substring(0, 1).ToUpper()
+                        </div>
+                        <div class="sponsor-profile-name">@sponsor.Name</div>
+                        @if (!string.IsNullOrEmpty(sponsor.Website))
+                        {
+                            <a href="@sponsor.Website" target="_blank" class="sponsor-profile-website">
+                                <i class="fas fa-globe mr-1"></i>@sponsor.Website
+                            </a>
+                        }
+                    </div>
+                    <div class="sponsor-profile-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Description</div>
+                            <div class="detail-value">@sponsor.Description</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Contact Email</div>
+                            <div class="detail-value">@sponsor.User.Email</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Contact Person</div>
+                            <div class="detail-value">@sponsor.User.FirstName @sponsor.User.LastName</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Events Sponsored</div>
+                            <div class="detail-value">@sponsor.SponsoredEvents.Count()</div>
+                        </div>
+                    </div>
+
+                    @if (sponsor.SponsoredEvents.Any())
+                    {
+                        <div class="sponsor-events mt-4">
+                            <h6>Sponsored Events</h6>
+                            <ul class="list-group">
+                                @foreach (var evt in sponsor.SponsoredEvents)
+                                {
+                                    <li class="list-group-item">
+                                        <a href="@Url.Action("Details", "Events", new { id = evt.Id })">@evt.Title</a>
+                                        <span class="badge badge-primary float-right">@evt.EventDate.ToString("MMM dd, yyyy")</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Sponsor Modal -->
+    <div class="modal fade" id="editSponsorModal_@sponsor.Id" tabindex="-1" aria-labelledby="editSponsorModalLabel_@sponsor.Id" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editSponsorModalLabel_@sponsor.Id">Edit Sponsor</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="sponsorName_@sponsor.Id">Sponsor Name</label>
+                            <input type="text" class="form-control" id="sponsorName_@sponsor.Id" value="@sponsor.Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="sponsorDescription_@sponsor.Id">Description</label>
+                            <textarea class="form-control" id="sponsorDescription_@sponsor.Id" rows="3">@sponsor.Description</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="sponsorWebsite_@sponsor.Id">Website</label>
+                            <input type="url" class="form-control" id="sponsorWebsite_@sponsor.Id" value="@sponsor.Website">
+                        </div>
+                        <div class="form-group">
+                            <label for="sponsorEmail_@sponsor.Id">Contact Email</label>
+                            <input type="email" class="form-control" id="sponsorEmail_@sponsor.Id" value="@sponsor.User.Email">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Sponsor Modal -->
+    <div class="modal fade" id="deleteSponsorModal_@sponsor.Id" tabindex="-1" aria-labelledby="deleteSponsorModalLabel_@sponsor.Id" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteSponsorModalLabel_@sponsor.Id">Confirm Deletion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        <strong>Warning:</strong> Are you sure you want to delete this sponsor? This action cannot be undone.
+                    </div>
+                    <p>You are about to delete the sponsor <strong>@sponsor.Name</strong>.</p>
+                    <p>This will remove their sponsorship status from @sponsor.SponsoredEvents.Count() events.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger">Delete Sponsor</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Add Sponsor Modal -->
+<div class="modal fade" id="addSponsorModal" tabindex="-1" aria-labelledby="addSponsorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSponsorModalLabel">Add New Sponsor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="newSponsorName">Sponsor Name</label>
+                        <input type="text" class="form-control" id="newSponsorName">
+                    </div>
+                    <div class="form-group">
+                        <label for="newSponsorDescription">Description</label>
+                        <textarea class="form-control" id="newSponsorDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="newSponsorWebsite">Website</label>
+                        <input type="url" class="form-control" id="newSponsorWebsite">
+                    </div>
+                    <div class="form-group">
+                        <label for="newSponsorEmail">Contact Email</label>
+                        <input type="email" class="form-control" id="newSponsorEmail">
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="createNewUser">
+                        <label class="form-check-label" for="createNewUser">
+                            Create new user account for this sponsor
+                        </label>
+                    </div>
+                    <div id="newUserSection" style="display: none;">
+                        <div class="form-group">
+                            <label for="newUsername">Username</label>
+                            <input type="text" class="form-control" id="newUsername">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">Password</label>
+                            <input type="password" class="form-control" id="newPassword">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Add Sponsor</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality
+            const searchInput = document.getElementById('sponsorSearch');
+            const table = document.getElementById('sponsorsTable');
+            const rows = table.querySelectorAll('tbody tr');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+
+                rows.forEach(row => {
+                    const sponsorName = row.querySelector('.sponsor-name').textContent.toLowerCase();
+                    const sponsorDesc = row.querySelector('.sponsor-description').textContent.toLowerCase();
+                    const contactEmail = row.querySelectorAll('td')[2].textContent.toLowerCase();
+
+                    if (sponsorName.includes(searchTerm) || sponsorDesc.includes(searchTerm) || contactEmail.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+
+            // Toggle new user section
+            const createNewUserCheckbox = document.getElementById('createNewUser');
+            const newUserSection = document.getElementById('newUserSection');
+
+            createNewUserCheckbox.addEventListener('change', function() {
+                newUserSection.style.display = this.checked ? 'block' : 'none';
+            });
+        });
+    </script>
+}

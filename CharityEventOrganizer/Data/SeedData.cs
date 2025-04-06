@@ -15,6 +15,20 @@ namespace CharityEventOrganizer.Data
             using var context = new ApplicationDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
 
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            // Create roles if they don't exist
+            string[] roleNames = { "Admin", "User", "Sponsor" };
+            foreach (var roleName in roleNames)
+            {
+                var roleExists = await roleManager.RoleExistsAsync(roleName);
+                if (!roleExists)
+                {
+                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
             // Check if we already have causes
             if (context.Causes.Any())
             {
@@ -33,16 +47,32 @@ namespace CharityEventOrganizer.Data
 
             await context.SaveChangesAsync();
 
-            // Create roles
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            const string adminEmail = "admin@charityeventorganizer.com";
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
-            string[] roleNames = { "Admin", "User", "Sponsor" };
-            foreach (var roleName in roleNames)
+            if (adminUser == null)
             {
-                var roleExist = await roleManager.RoleExistsAsync(roleName);
-                if (!roleExist)
+                adminUser = new ApplicationUser
                 {
-                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                    UserName = "admin",
+                    Email = adminEmail,
+                    EmailConfirmed = true,
+                    FirstName = "System",
+                    LastName = "Administrator"
+                };
+
+                var result = await userManager.CreateAsync(adminUser, "Admin123!");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
+                    Console.WriteLine("Admin user created successfully");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        Console.WriteLine($"Error creating admin user: {error.Description}");
+                    }
                 }
             }
         }
