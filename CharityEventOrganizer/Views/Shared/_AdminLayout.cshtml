@@ -45,12 +45,6 @@
                         </div>
                         <span>Event Review</span>
                     </a>
-                    <a asp-controller="Admin" asp-action="AllEvents" class="admin-menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "AllEvents" ? "active" : "")">
-                        <div class="admin-menu-icon">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <span>Events</span>
-                    </a>
                     <a asp-controller="Admin" asp-action="UserManagement" class="admin-menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "UserManagement" ? "active" : "")">
                         <div class="admin-menu-icon">
                             <i class="fas fa-users"></i>
@@ -64,12 +58,6 @@
                         <span>Sponsors</span>
                     </a>
                     <div class="admin-menu-divider"></div>
-                    <a href="#" class="admin-menu-item">
-                        <div class="admin-menu-icon">
-                            <i class="fas fa-cog"></i>
-                        </div>
-                        <span>Settings</span>
-                    </a>
                     <a asp-controller="Home" asp-action="Index" class="admin-menu-item">
                         <div class="admin-menu-icon">
                             <i class="fas fa-home"></i>
@@ -130,57 +118,6 @@
                     </button>
                     <h2 class="topbar-title">@ViewData["Title"]</h2>
                 </div>
-                <div class="topbar-right">
-                    <div class="notification-bell">
-                        <a href="#" class="topbar-icon-btn" id="notificationDropdown" data-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-bell"></i>
-                            <span class="badge badge-pill badge-danger">3</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right notification-dropdown" aria-labelledby="notificationDropdown">
-                            <div class="notification-header">
-                                <h6>Notifications</h6>
-                                <a href="#" class="text-muted">Mark all as read</a>
-                            </div>
-                            <div class="notification-list">
-                                <a href="#" class="notification-item">
-                                    <div class="notification-icon bg-primary">
-                                        <i class="fas fa-calendar-plus"></i>
-                                    </div>
-                                    <div class="notification-content">
-                                        <div class="notification-text">New event submission</div>
-                                        <div class="notification-time">2 minutes ago</div>
-                                    </div>
-                                </a>
-                                <a href="#" class="notification-item">
-                                    <div class="notification-icon bg-info">
-                                        <i class="fas fa-user-plus"></i>
-                                    </div>
-                                    <div class="notification-content">
-                                        <div class="notification-text">New user registered</div>
-                                        <div class="notification-time">1 hour ago</div>
-                                    </div>
-                                </a>
-                                <a href="#" class="notification-item">
-                                    <div class="notification-icon bg-success">
-                                        <i class="fas fa-handshake"></i>
-                                    </div>
-                                    <div class="notification-content">
-                                        <div class="notification-text">New sponsor partnership</div>
-                                        <div class="notification-time">3 hours ago</div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="notification-footer">
-                                <a href="#" class="text-center d-block">View all notifications</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="help-btn">
-                        <a href="#" class="topbar-icon-btn">
-                            <i class="fas fa-question-circle"></i>
-                        </a>
-                    </div>
-                </div>
             </header>
 
             <!-- Main Content Area -->
@@ -192,12 +129,7 @@
             <footer class="admin-footer">
                 <div class="container-fluid">
                     <div class="admin-footer-content">
-                        <p>&copy; @DateTime.Now.Year Heartful Events - Admin Dashboard</p>
-                        <div class="admin-footer-links">
-                            <a href="#">Privacy</a>
-                            <a href="#">Terms</a>
-                            <a href="#">Help</a>
-                        </div>
+                        <p>Heartful Events - Admin Dashboard</p>
                     </div>
                 </div>
             </footer>
