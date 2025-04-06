@@ -23,12 +23,15 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="event-review-card animate fade-in" id="eventReviewCard">
+                        <!-- Card Header with Title and Cause -->
                         <div class="review-card-header">
-                            <div class="event-category @GetCauseClass(Model.Cause.Name)">
-                                <i class="@GetCauseIcon(Model.Cause.Name)"></i>
-                                <span>@Model.Cause.Name</span>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h2 class="mb-0">@Model.Title</h2>
+                                <div class="event-category @GetCauseClass(Model.Cause.Name)">
+                                    <i class="@GetCauseIcon(Model.Cause.Name)"></i>
+                                    <span>@Model.Cause.Name</span>
+                                </div>
                             </div>
-                            <h2>@Model.Title</h2>
                             <div class="event-meta">
                                 <div class="event-meta-item">
                                     <i class="far fa-calendar-alt"></i>
@@ -48,25 +51,30 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Card Body -->
                         <div class="review-card-body">
-                            <h3>Event Description</h3>
-                            <div class="event-description">
-                                @Html.Raw(Model.Description.Replace(Environment.NewLine, "<br />"))
+                            <!-- Event Description -->
+                            <div class="event-section mb-4">
+                                <h3>Event Description</h3>
+                                <div class="event-description">
+                                    @Html.Raw(Model.Description.Replace(Environment.NewLine, "<br />"))
+                                </div>
                             </div>
-                            <div class="organizer-info mt-4">
+
+                            <!-- Organizer Info Section -->
+                            <div class="event-section">
                                 <h3>About the Organizer</h3>
-                                <div class="organizer-details">
+                                <div class="organizer-info">
                                     <div class="organizer-avatar">
                                         @if (string.IsNullOrEmpty(Model.Organizer.ProfilePicturePath))
                                         {
-                                            <div class="organizer-avatar-placeholder">
-                                                @Model.Organizer.UserName.Substring(0, 1).ToUpper()
-                                            </div>
-                                        }
+                            <div class="organizer-avatar-placeholder">
+                                @Model.Organizer.UserName.Substring(0, 1).ToUpper()
+                            </div> }
                                         else
                                         {
-                                            <img src="@Model.Organizer.ProfilePicturePath" alt="@Model.Organizer.UserName" />
-                                        }
+                            <img src="@Model.Organizer.ProfilePicturePath" alt="@Model.Organizer.UserName" />}
                                     </div>
                                     <div class="organizer-profile">
                                         <h4>@Model.Organizer.FirstName @Model.Organizer.LastName</h4>
@@ -76,6 +84,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Card Actions -->
                         <div class="review-card-actions">
                             <form asp-action="RejectEvent" asp-route-id="@Model.Id" method="post" class="d-inline" id="rejectForm">
                                 @Html.AntiForgeryToken()
