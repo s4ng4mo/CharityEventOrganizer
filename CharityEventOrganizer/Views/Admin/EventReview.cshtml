@@ -26,10 +26,8 @@
                         <!-- Card Header with Title and Cause -->
                         <div class="review-card-header">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h2 class="mb-0">@Model.Title</h2>
-                                <div class="event-category @GetCauseClass(Model.Cause.Name)">
-                                    <i class="@GetCauseIcon(Model.Cause.Name)"></i>
-                                    <span>@Model.Cause.Name</span>
+                                <div class="d-flex align-items-center">
+                                    <h2 class="mb-0 mr-3">@Model.Title</h2>
                                 </div>
                             </div>
                             <div class="event-meta">
@@ -48,6 +46,10 @@
                                 <div class="event-meta-item">
                                     <i class="fas fa-user"></i>
                                     <span>By @Model.Organizer.UserName</span>
+                                </div>
+                                <div class="event-category @GetCauseClass(Model.Cause.Name)">
+                                    <i class="@GetCauseIcon(Model.Cause.Name)"></i>
+                                    <span>@Model.Cause.Name</span>
                                 </div>
                             </div>
                         </div>
@@ -114,13 +116,6 @@
 
     <!-- Decision Status -->
     <div class="decision-status" id="decisionStatus"></div>
-
-    <!-- Review Counter -->
-    <div class="review-counter">
-        <div class="container text-center">
-            <p class="animate fade-in">You've reviewed <span class="counter-highlight">1</span> of @ViewBag.TotalPending events today</p>
-        </div>
-    </div>
 </div>
 
 @section Scripts {

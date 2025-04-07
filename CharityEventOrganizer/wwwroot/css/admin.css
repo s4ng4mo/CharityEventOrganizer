@@ -29,16 +29,27 @@
     --speed-medium: 0.4s;
     --speed-slow: 0.8s;
 }
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 /* Base Layout */
 .admin-body {
     background-color: #f7f9fc;
     min-height: 100vh;
+    overflow: hidden;
 }
 
 .admin-layout {
     display: flex;
-    height: 100vh;
-    position: relative;
+    height: 100vh; /* Use viewport height */
+    width: 100vw; /* Use viewport width */
+    position: fixed; /* Fix the layout to prevent extra space */
+    top: 0;
+    left: 0;
     overflow: hidden;
 }
 
@@ -230,6 +241,7 @@
     transition: all 0.3s ease;
     position: relative;
     background-color: #f7f9fc;
+    overflow: hidden;
 }
 
 /* Admin Topbar */
@@ -385,7 +397,7 @@
 .admin-footer {
     background-color: white;
     border-top: 1px solid #f0f0f0;
-    padding: 15px 25px;
+    margin-top: auto;
 }
 
 .admin-footer-content {
@@ -844,6 +856,17 @@
     touch-action: pan-x;
 }
 
+    /* Add this to admin.css */
+    .event-review-card .event-category {
+        position: static; /* Override the absolute positioning */
+        right: auto;
+        bottom: auto;
+        padding: 6px 20px;
+        display: inline-flex;
+        align-items: center;
+        margin-left: 15px;
+    }
+
 .review-card-header {
     padding: 25px;
     background-color: #f8f9fa;
@@ -857,7 +880,6 @@
 }
 
 .event-category {
-    display: inline-flex;
     align-items: center;
     padding: 8px 16px;
     border-radius: 30px;
