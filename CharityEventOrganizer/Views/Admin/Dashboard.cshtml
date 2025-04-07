@@ -22,6 +22,23 @@
         </div>
     </section>
 
+    @if (Model.HasPendingPersonalEvents)
+{
+    <div class="alert alert-info animate fade-in">
+        <div class="d-flex align-items-center">
+            <div class="mr-3">
+                <i class="fas fa-info-circle fa-2x"></i>
+            </div>
+            <div>
+                <h4 class="alert-heading">You have pending events</h4>
+                <p class="mb-0">
+                    You have submitted events that are awaiting review. These events will be reviewed by other administrators to maintain fairness.
+                </p>
+            </div>
+        </div>
+    </div>
+}
+
     <!-- Stats Overview -->
     <section class="admin-stats">
         <div class="container">

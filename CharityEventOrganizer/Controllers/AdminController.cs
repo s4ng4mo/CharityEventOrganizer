@@ -35,6 +35,7 @@ namespace CharityEventOrganizer.Controllers
             {
                 EventsPendingReview = await _context.Events
                     .Where(e => e.Status == EventStatus.Submitted)
+                    .Where(e => e.OrganizerId != _userManager.GetUserId(User))
                     .CountAsync(),
                 TotalUsers = await _userManager.Users.CountAsync(),
                 TotalSponsors = await _context.Sponsors.CountAsync(),
@@ -52,13 +53,24 @@ namespace CharityEventOrganizer.Controllers
             return View(dashboardViewModel);
         }
 
+        private async Task<bool> HasPendingEvents()
+        {
+            var currentAdminId = _userManager.GetUserId(User);
+
+            return await _context.Events
+                .AnyAsync(e => e.OrganizerId == currentAdminId && e.Status == EventStatus.Submitted);
+        }
+
         // GET: Admin/EventReview
         public async Task<IActionResult> EventReview()
         {
+            var currentAdminId = _userManager.GetUserId(User);
+
             var pendingEvent = await _context.Events
                 .Include(e => e.Organizer)
                 .Include(e => e.Cause)
                 .Where(e => e.Status == EventStatus.Submitted)
+                .Where(e => e.OrganizerId != currentAdminId)
                 .OrderBy(e => e.CreatedDate)
                 .FirstOrDefaultAsync();
 

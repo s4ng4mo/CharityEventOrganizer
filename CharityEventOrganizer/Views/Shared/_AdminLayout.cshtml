@@ -13,6 +13,22 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/custom.css" />
     <link rel="stylesheet" href="~/css/admin.css" />
+    <style>
+        body.admin-body .modal-backdrop.show {
+            pointer-events: none !important;
+            background-color: transparent !important;
+            opacity: 0 !important;
+        }
+
+        body.admin-body .modal {
+            pointer-events: none;
+            background-color: transparent !important;
+        }
+
+        body.admin-body .modal-dialog {
+            pointer-events: auto;
+        }
+    </style>
 </head>
 <body class="admin-body">
     <!-- Decorative Elements -->

@@ -10,5 +10,6 @@ namespace CharityEventOrganizer.Models.ViewModels
         public int TotalSponsors { get; set; }
         public int TotalApprovedEvents { get; set; }
         public IEnumerable<Event> RecentEvents { get; set; }
+        public bool HasPendingPersonalEvents { get; set; }
     }
 }
