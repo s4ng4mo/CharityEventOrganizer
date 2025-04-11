@@ -180,3 +180,9 @@ C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug
 C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Admin\SponsorManagement.cshtml.g.cs
 C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Admin\UserManagement.cshtml.g.cs
 C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Shared\_AdminLayout.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Sponsor\CompleteProfile.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Sponsor\Dashboard.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Sponsor\EventDiscussions.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Sponsor\EventsForSponsorship.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Sponsor\Profile.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Sponsor\SponsoredEvents.cshtml.g.cs

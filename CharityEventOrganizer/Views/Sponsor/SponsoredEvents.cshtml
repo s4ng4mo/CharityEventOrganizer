@@ -1,0 +1,229 @@
+﻿@model CharityEventOrganizer.Models.Entities.Sponsor
+@{
+    ViewData["Title"] = "Sponsored Events";
+}
+
+<!-- Hero Section -->
+<section class="sponsored-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="animate fade-in">Your <span class="text-highlight">Sponsored</span> Events</h1>
+                <p class="hero-subtitle animate fade-in">Track and manage the events you've helped make possible.</p>
+            </div>
+            <div class="col-lg-4 text-right">
+                <a asp-action="Dashboard" class="btn btn-outline-primary btn-rounded animate fade-in">
+                    <i class="fas fa-chevron-left mr-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="wave-divider"></div>
+</section>
+
+<!-- Sponsored Events List -->
+<section class="sponsored-events-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="animate fade-in">Your Impact</h2>
+            @if (Model.SponsoredEvents != null && Model.SponsoredEvents.Any())
+            {
+                <p class="animate fade-in">You've sponsored @Model.SponsoredEvents.Count events, helping make a difference in communities.</p>
+            }
+            else
+            {
+                <p class="animate fade-in">You haven't sponsored any events yet. Find an event to make a difference!</p>
+            }
+        </div>
+
+        @if (Model.SponsoredEvents != null && Model.SponsoredEvents.Any())
+        {
+            <div class="sponsored-events-timeline">
+                @foreach (var item in Model.SponsoredEvents.OrderByDescending(e => e.EventDate))
+                {
+                    <div class="timeline-item animate fade-in">
+                        <div class="timeline-dot @GetCauseClass(item.Cause.Name)">
+                            <i class="@GetCauseIcon(item.Cause.Name)"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-card">
+                                <div class="timeline-card-header">
+                                    <h3 class="timeline-title">@item.Title</h3>
+                                    <div class="timeline-meta">
+                                        <span class="timeline-date">
+                                            <i class="far fa-calendar-alt mr-1"></i>
+                                            @item.EventDate.ToString("MMMM dd, yyyy")
+                                        </span>
+                                        <span class="timeline-status @GetEventStatusClass(item.Status)">
+                                            <i class="@GetEventStatusIcon(item.Status) mr-1"></i>
+                                            @GetEventStatusLabel(item.Status)
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="timeline-card-body">
+                                    <div class="event-details-row">
+                                        <div class="event-detail-item">
+                                            <div class="detail-label">
+                                                <i class="fas fa-map-marker-alt"></i> Location
+                                            </div>
+                                            <div class="detail-value">@item.Location</div>
+                                        </div>
+                                        <div class="event-detail-item">
+                                            <div class="detail-label">
+                                                <i class="fas fa-tag"></i> Cause
+                                            </div>
+                                            <div class="detail-value">@item.Cause.Name</div>
+                                        </div>
+                                        <div class="event-detail-item">
+                                            <div class="detail-label">
+                                                <i class="fas fa-user"></i> Organizer
+                                            </div>
+                                            <div class="detail-value">@item.Organizer.UserName</div>
+                                        </div>
+                                    </div>
+                                    <p class="timeline-description">
+                                        @(item.Description?.Length > 150 ? item.Description.Substring(0, 150) + "..." : item.Description)
+                                    </p>
+                                </div>
+                                <div class="timeline-card-footer">
+                                    <a asp-controller="Events" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-info-circle mr-1"></i> View Event Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state animate fade-in">
+                <div class="empty-state-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <h3 class="empty-state-title">No Sponsored Events Yet</h3>
+                <p class="empty-state-message">You haven't sponsored any events yet. Discover events that align with your values and help make a difference!</p>
+                <a asp-action="EventsForSponsorship" class="btn btn-primary btn-rounded">
+                    <i class="fas fa-search mr-2"></i>Find Events to Sponsor
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Impact Statistics Section (If they have sponsored events) -->
+@if (Model.SponsoredEvents != null && Model.SponsoredEvents.Any())
+{
+    <section class="impact-statistics-section">
+        <div class="container">
+            <div class="impact-statistics-card animate fade-in">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="impact-stat">
+                            <div class="impact-stat-number">@Model.SponsoredEvents.Count()</div>
+                            <div class="impact-stat-label">Events Sponsored</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="impact-stat">
+                            <div class="impact-stat-number">@Model.SponsoredEvents.Select(e => e.Cause.Name).Distinct().Count()</div>
+                            <div class="impact-stat-label">Causes Supported</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="impact-stat">
+                            <div class="impact-stat-number">@Model.SponsoredEvents.Count(e => e.EventDate > DateTime.Now)</div>
+                            <div class="impact-stat-label">Upcoming Events</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+<!-- Call to Action Section -->
+<section class="sponsor-cta-section">
+    <div class="container">
+        <div class="cta-content text-center">
+            <h2 class="animate fade-in">Ready to Make More <span class="text-highlight">Impact</span>?</h2>
+            <p class="animate fade-in">Discover more events that align with your values and help communities thrive.</p>
+            <a asp-action="EventsForSponsorship" class="btn btn-primary btn-lg btn-rounded animate fade-in">
+                <i class="fas fa-search mr-2"></i>Find More Events
+            </a>
+        </div>
+    </div>
+</section>
+
+@functions {
+    public string GetCauseClass(string causeName)
+    {
+        return causeName.ToLower() switch
+        {
+            "education" => "cause-education",
+            "healthcare" => "cause-healthcare",
+            "environment" => "cause-environment",
+            "poverty" => "cause-poverty",
+            "animal welfare" => "cause-animal",
+            "disaster relief" => "cause-disaster",
+            _ => "cause-general"
+        };
+    }
+
+    public string GetCauseIcon(string causeName)
+    {
+        return causeName.ToLower() switch
+        {
+            "education" => "fas fa-graduation-cap",
+            "healthcare" => "fas fa-heartbeat",
+            "environment" => "fas fa-leaf",
+            "poverty" => "fas fa-home",
+            "animal welfare" => "fas fa-paw",
+            "disaster relief" => "fas fa-hands-helping",
+            _ => "fas fa-heart"
+        };
+    }
+
+    public string GetEventStatusClass(EventStatus status)
+    {
+        return status switch
+        {
+            EventStatus.Submitted => "status-submitted",
+            EventStatus.UnderReview => "status-under-review",
+            EventStatus.ApprovedForSponsorship => "status-sponsorship",
+            EventStatus.SponsorshipDiscussion => "status-discussion",
+            EventStatus.Approved => "status-approved",
+            EventStatus.Rejected => "status-rejected",
+            _ => "status-default"
+        };
+    }
+
+    public string GetEventStatusIcon(EventStatus status)
+    {
+        return status switch
+        {
+            EventStatus.Submitted => "fas fa-paper-plane",
+            EventStatus.UnderReview => "fas fa-search",
+            EventStatus.ApprovedForSponsorship => "fas fa-handshake",
+            EventStatus.SponsorshipDiscussion => "fas fa-comments",
+            EventStatus.Approved => "fas fa-check-circle",
+            EventStatus.Rejected => "fas fa-times-circle",
+            _ => "fas fa-info-circle"
+        };
+    }
+
+    public string GetEventStatusLabel(EventStatus status)
+    {
+        return status switch
+        {
+            EventStatus.Submitted => "Submitted",
+            EventStatus.UnderReview => "Under Review",
+            EventStatus.ApprovedForSponsorship => "Seeking Sponsors",
+            EventStatus.SponsorshipDiscussion => "In Discussion",
+            EventStatus.Approved => "Approved",
+            EventStatus.Rejected => "Needs Revision",
+            _ => status.ToString()
+        };
+    }
+}
