@@ -1,4 +1,4 @@
-﻿@model CharityEventOrganizer.Models.Entities.Sponsor
+﻿@model CharityEventOrganizer.Models.ViewModels.SponsorViewModel
 @{
     ViewData["Title"] = "Sponsored Events";
 }
@@ -28,11 +28,11 @@
             <h2 class="animate fade-in">Your Impact</h2>
             @if (Model.SponsoredEvents != null && Model.SponsoredEvents.Any())
             {
-                <p class="animate fade-in">You've sponsored @Model.SponsoredEvents.Count events, helping make a difference in communities.</p>
+                <p class="animate fade-in">You've officially sponsored @Model.SponsoredEvents.Count() events, helping make a real difference in communities.</p>
             }
             else
             {
-                <p class="animate fade-in">You haven't sponsored any events yet. Find an event to make a difference!</p>
+                <p class="animate fade-in">You haven't finalized any sponsorships yet. Events that are approved and sponsored will appear here.</p>
             }
         </div>
 
@@ -54,9 +54,9 @@
                                             <i class="far fa-calendar-alt mr-1"></i>
                                             @item.EventDate.ToString("MMMM dd, yyyy")
                                         </span>
-                                        <span class="timeline-status @GetEventStatusClass(item.Status)">
-                                            <i class="@GetEventStatusIcon(item.Status) mr-1"></i>
-                                            @GetEventStatusLabel(item.Status)
+                                        <span class="timeline-status status-approved">
+                                            <i class="fas fa-check-circle mr-1"></i>
+                                            Sponsored
                                         </span>
                                     </div>
                                 </div>
@@ -102,9 +102,17 @@
                 <div class="empty-state-icon">
                     <i class="fas fa-hand-holding-heart"></i>
                 </div>
-                <h3 class="empty-state-title">No Sponsored Events Yet</h3>
-                <p class="empty-state-message">You haven't sponsored any events yet. Discover events that align with your values and help make a difference!</p>
-                <a asp-action="EventsForSponsorship" class="btn btn-primary btn-rounded">
+                <h3 class="empty-state-title">No Finalized Sponsorships Yet</h3>
+                <p class="empty-state-message">You haven't finalized any sponsorships yet. If you're in discussion with any event organizers, finalize the sponsorship to see events here!</p>
+
+                @if (ViewBag.HasEventsInDiscussion != null && ViewBag.HasEventsInDiscussion)
+                {
+                    <a asp-action="EventDiscussions" class="btn btn-primary btn-rounded mr-3">
+                        <i class="fas fa-comments mr-2"></i>View Discussions
+                    </a>
+                }
+
+                <a asp-action="EventsForSponsorship" class="btn btn-outline-primary btn-rounded">
                     <i class="fas fa-search mr-2"></i>Find Events to Sponsor
                 </a>
             </div>
@@ -182,48 +190,6 @@
             "animal welfare" => "fas fa-paw",
             "disaster relief" => "fas fa-hands-helping",
             _ => "fas fa-heart"
-        };
-    }
-
-    public string GetEventStatusClass(EventStatus status)
-    {
-        return status switch
-        {
-            EventStatus.Submitted => "status-submitted",
-            EventStatus.UnderReview => "status-under-review",
-            EventStatus.ApprovedForSponsorship => "status-sponsorship",
-            EventStatus.SponsorshipDiscussion => "status-discussion",
-            EventStatus.Approved => "status-approved",
-            EventStatus.Rejected => "status-rejected",
-            _ => "status-default"
-        };
-    }
-
-    public string GetEventStatusIcon(EventStatus status)
-    {
-        return status switch
-        {
-            EventStatus.Submitted => "fas fa-paper-plane",
-            EventStatus.UnderReview => "fas fa-search",
-            EventStatus.ApprovedForSponsorship => "fas fa-handshake",
-            EventStatus.SponsorshipDiscussion => "fas fa-comments",
-            EventStatus.Approved => "fas fa-check-circle",
-            EventStatus.Rejected => "fas fa-times-circle",
-            _ => "fas fa-info-circle"
-        };
-    }
-
-    public string GetEventStatusLabel(EventStatus status)
-    {
-        return status switch
-        {
-            EventStatus.Submitted => "Submitted",
-            EventStatus.UnderReview => "Under Review",
-            EventStatus.ApprovedForSponsorship => "Seeking Sponsors",
-            EventStatus.SponsorshipDiscussion => "In Discussion",
-            EventStatus.Approved => "Approved",
-            EventStatus.Rejected => "Needs Revision",
-            _ => status.ToString()
         };
     }
 }

@@ -64,12 +64,17 @@ namespace CharityEventOrganizer.Controllers
                 .OrderByDescending(e => e.CreatedDate)
                 .ToListAsync();
 
+            // Get events that are fully sponsored (Approved status)
+            var sponsoredEvents = sponsor.SponsoredEvents
+                .Where(e => e.Status == EventStatus.Approved)
+                .ToList();
+
             var viewModel = new SponsorDashboardViewModel
             {
                 Sponsor = sponsor,
                 EventsNeedingSponsors = eventsNeedingSponsors,
                 EventsInDiscussion = eventsInDiscussion,
-                SponsoredEvents = sponsor.SponsoredEvents.ToList()
+                SponsoredEvents = sponsoredEvents // Now properly filtered
             };
 
             return View(viewModel);
@@ -168,7 +173,24 @@ namespace CharityEventOrganizer.Controllers
                 return RedirectToAction("CompleteProfile");
             }
 
-            return View(sponsor);
+            // Check if there are events in discussion to customize the empty state message
+            var hasEventsInDiscussion = await _context.Events
+                .AnyAsync(e => e.Status == EventStatus.SponsorshipDiscussion && e.SponsorId == sponsor.Id);
+
+            ViewBag.HasEventsInDiscussion = hasEventsInDiscussion;
+
+            // Filter the events to only include truly sponsored events (status = Approved)
+            var sponsorViewModel = new SponsorViewModel
+            {
+                Id = sponsor.Id,
+                Name = sponsor.Name,
+                Description = sponsor.Description,
+                Website = sponsor.Website,
+                User = sponsor.User,
+                SponsoredEvents = sponsor.SponsoredEvents.Where(e => e.Status == EventStatus.Approved).ToList()
+            };
+
+            return View(sponsorViewModel);
         }
 
         // GET: Sponsor/EventDiscussions

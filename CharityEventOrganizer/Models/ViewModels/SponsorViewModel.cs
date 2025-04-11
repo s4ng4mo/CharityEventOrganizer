@@ -4,6 +4,16 @@ using CharityEventOrganizer.Models.Entities;
 
 namespace CharityEventOrganizer.Models.ViewModels
 {
+    public class SponsorViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Website { get; set; }
+        public ApplicationUser User { get; set; }
+        public IEnumerable<Event> SponsoredEvents { get; set; }
+    }
+
     public class SponsorDashboardViewModel
     {
         public Sponsor Sponsor { get; set; }
