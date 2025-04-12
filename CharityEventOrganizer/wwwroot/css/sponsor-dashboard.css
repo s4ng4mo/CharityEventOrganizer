@@ -1404,6 +1404,35 @@
     margin-bottom: 15px;
 }
 
+/* Specific styling for discussion event cards in EventDiscussions view */
+.discussion-event-card {
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    transition: all var(--speed-medium) ease;
+    margin-bottom: 30px;
+    border: 1px solid #f0f0f0;
+}
+
+    .discussion-event-card .discussion-event-body {
+        flex: 1;
+        padding: 20px;
+    }
+
+    .discussion-event-card .discussion-sidebar {
+        width: 250px;
+        padding: 25px;
+        background-color: rgba(248, 249, 250, 0.7);
+        border-left: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
 /* Responsive Adjustments */
 @media (max-width: 991px) {
     .sponsor-dashboard-hero,
@@ -1501,6 +1530,17 @@
     .sidebar-action-buttons {
         flex-direction: row;
     }
+
+    .discussion-event-card {
+        flex-direction: column;
+    }
+
+        .discussion-event-card .discussion-sidebar {
+            width: 100%;
+            border-left: none;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 20px 25px;
+        }
 }
 
 @media (max-width: 767px) {
@@ -1563,6 +1603,17 @@
     .sidebar-action-buttons {
         flex-direction: column;
     }
+
+    .discussion-event-card {
+        flex-direction: column;
+    }
+
+        .discussion-event-card .discussion-sidebar {
+            width: 100%;
+            border-left: none;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 20px 25px;
+        }
 }
 
 .sponsor-interest-section,
