@@ -245,8 +245,8 @@ namespace CharityEventOrganizer.Controllers
                 Website = sponsor.Website,
                 UserEmail = currentUser.Email,
                 UserFirstName = currentUser.FirstName,
-                UserLastName = currentUser.LastName,
-                ProfilePicturePath = currentUser.ProfilePicturePath
+                UserLastName = currentUser.LastName
+                // Removed ProfilePicturePath property
             };
 
             return View(viewModel);

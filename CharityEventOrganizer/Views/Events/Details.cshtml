@@ -176,18 +176,9 @@
                                 {
                                     <div class="comment-item">
                                         <div class="comment-avatar">
-                                            @if (string.IsNullOrEmpty(comment.User.ProfilePicturePath))
-                                            {
-                                                <div class="comment-avatar-placeholder">
-                                                    @comment.User.UserName.Substring(0, 1).ToUpper()
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <div class="profile-avatar-placeholder">
-                                                    <span>@(User.Identity.Name?.Substring(0, 1).ToUpper())</span>
-                                                </div>
-                                            }
+                                            <div class="comment-avatar-placeholder">
+                                                @comment.User.UserName.Substring(0, 1).ToUpper()
+                                            </div>
                                         </div>
                                         <div class="comment-content">
                                             <div class="comment-header">
@@ -228,18 +219,9 @@
                         <div class="sidebar-card-body">
                             <div class="organizer-info">
                                 <div class="organizer-avatar">
-                                    @if (string.IsNullOrEmpty(Model.Organizer.ProfilePicturePath))
-                                    {
-                                        <div class="organizer-avatar-placeholder">
-                                            @Model.Organizer.UserName.Substring(0, 1).ToUpper()
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="profile-avatar-placeholder">
-                                            <span>@(User.Identity.Name?.Substring(0, 1).ToUpper())</span>
-                                        </div>
-                                    }
+                                    <div class="organizer-avatar-placeholder">
+                                        @Model.Organizer.UserName.Substring(0, 1).ToUpper()
+                                    </div>
                                 </div>
                                 <div class="organizer-details">
                                     <h4>@Model.Organizer.UserName</h4>
@@ -425,27 +407,24 @@
 
                                 // Create comment HTML
                                 const commentHtml = `
-                                        <div class="comment-item new-comment">
-                                            <div class="comment-header">
-                                                <div class="comment-author-info">
-                                                    <div class="comment-avatar">
-                                                        ${data.comment.profilePicture ?
-                                        `<img src="${data.comment.profilePicture}" alt="${data.comment.userName}" />` :
-                                        `<div class="comment-avatar-placeholder">${data.comment.userInitial}</div>`
-                                    }
+                                            <div class="comment-item new-comment">
+                                                <div class="comment-header">
+                                                    <div class="comment-author-info">
+                                                        <div class="comment-avatar">
+                                                            <div class="comment-avatar-placeholder">${data.comment.userInitial}</div>
+                                                        </div>
+                                                        <div class="comment-author">${data.comment.userName}</div>
                                                     </div>
-                                                    <div class="comment-author">${data.comment.userName}</div>
+                                                    <div class="comment-date">
+                                                        <i class="far fa-clock"></i>
+                                                        ${data.comment.createdDate}
+                                                    </div>
                                                 </div>
-                                                <div class="comment-date">
-                                                    <i class="far fa-clock"></i>
-                                                    ${data.comment.createdDate}
+                                                <div class="comment-text">
+                                                    ${data.comment.content.replace(/\n/g, '<br />')}
                                                 </div>
                                             </div>
-                                            <div class="comment-text">
-                                                ${data.comment.content.replace(/\n/g, '<br />')}
-                                            </div>
-                                        </div>
-                                    `;
+                                        `;
 
                                 // Add to container (at the top)
                                 commentsContainer.insertAdjacentHTML('afterbegin', commentHtml);

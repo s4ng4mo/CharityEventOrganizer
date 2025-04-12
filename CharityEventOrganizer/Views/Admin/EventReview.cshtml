@@ -69,14 +69,9 @@
                                 <h3>About the Organizer</h3>
                                 <div class="organizer-info">
                                     <div class="organizer-avatar">
-                                        @if (string.IsNullOrEmpty(Model.Organizer.ProfilePicturePath))
-                                        {
-                            <div class="organizer-avatar-placeholder">
-                                @Model.Organizer.UserName.Substring(0, 1).ToUpper()
-                            </div> }
-                                        else
-                                        {
-                            <img src="@Model.Organizer.ProfilePicturePath" alt="@Model.Organizer.UserName" />}
+                                        <div class="organizer-avatar-placeholder">
+                                            @Model.Organizer.UserName.Substring(0, 1).ToUpper()
+                                        </div>
                                     </div>
                                     <div class="organizer-profile">
                                         <h4>@Model.Organizer.FirstName @Model.Organizer.LastName</h4>

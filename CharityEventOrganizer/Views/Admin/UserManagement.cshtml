@@ -54,16 +54,9 @@
                                     <tr>
                                         <td>
                                             <div class="user-info">
-                                                @if (string.IsNullOrEmpty(user.ProfilePicturePath))
-                                                {
-                                                    <div class="user-avatar-placeholder">
-                                                        @user.UserName.Substring(0, 1).ToUpper()
-                                                    </div>
-                                                }
-                                                else
-                                                {
-                                                    <img src="@user.ProfilePicturePath" alt="@user.UserName" class="user-avatar" />
-                                                }
+                                                <div class="user-avatar-placeholder">
+                                                    @user.UserName.Substring(0, 1).ToUpper()
+                                                </div>
                                                 <div class="user-details">
                                                     <div class="user-name">@user.FirstName @user.LastName</div>
                                                     <div class="user-username">@user.UserName</div>
@@ -143,16 +136,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="user-profile-header">
-                        @if (string.IsNullOrEmpty(user.ProfilePicturePath))
-                        {
-                            <div class="user-profile-avatar-placeholder">
-                                @user.UserName.Substring(0, 1).ToUpper()
-                            </div>
-                        }
-                        else
-                        {
-                            <img src="@user.ProfilePicturePath" alt="@user.UserName" class="user-profile-avatar" />
-                        }
+                        <div class="user-profile-avatar-placeholder">
+                            @user.UserName.Substring(0, 1).ToUpper()
+                        </div>
                         <div class="user-profile-name">@user.FirstName @user.LastName</div>
                         <div class="user-profile-username">@user.UserName</div>
                     </div>

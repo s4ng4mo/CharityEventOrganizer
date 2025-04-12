@@ -29,16 +29,9 @@
                 <!-- Sponsor Avatar Card -->
                 <div class="sponsor-avatar-card animate fade-in">
                     <div class="avatar-container">
-                        @if (string.IsNullOrEmpty(Model.ProfilePicturePath))
-                        {
-                            <div class="sponsor-avatar-placeholder">
-                                @Model.Name.Substring(0, 1).ToUpper()
-                            </div>
-                        }
-                        else
-                        {
-                            <img src="@Model.ProfilePicturePath" class="sponsor-avatar-img" alt="@Model.Name">
-                        }
+                        <div class="sponsor-avatar-placeholder">
+                            @Model.Name.Substring(0, 1).ToUpper()
+                        </div>
                     </div>
                     <h3 class="sponsor-name">@Model.Name</h3>
                     <p class="sponsor-email">@Model.UserEmail</p>

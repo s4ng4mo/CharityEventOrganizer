@@ -71,8 +71,8 @@ namespace CharityEventOrganizer.Controllers
                         content = comment.Content,
                         createdDate = comment.CreatedDate.ToString("MMM d, yyyy at h:mm tt"),
                         userName = user.UserName,
-                        userInitial = user.UserName.Substring(0, 1).ToUpper(),
-                        profilePicture = user.ProfilePicturePath
+                        userInitial = user.UserName.Substring(0, 1).ToUpper()
+                        // Removed profilePicturePath
                     }
                 });
             }
