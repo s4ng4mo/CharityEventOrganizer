@@ -957,14 +957,16 @@
     margin-top: 30px;
 }
 
+/* Updated Discussion Item Styling for Sidebar Layout */
 .discussion-item {
+    display: flex;
     background-color: white;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-soft);
     margin-bottom: 20px;
     overflow: hidden;
-    display: flex;
     transition: all var(--speed-medium) ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
     .discussion-item:hover {
@@ -974,16 +976,23 @@
 
 .discussion-main {
     flex: 1;
-    padding: 20px;
+    padding: 25px;
 }
 
-.discussion-info {
-    margin-bottom: 20px;
+.discussion-sidebar {
+    width: 250px;
+    padding: 25px;
+    background-color: rgba(248, 249, 250, 0.7);
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .discussion-title {
     font-size: 1.3rem;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    color: var(--charcoal);
 }
 
 .discussion-meta {
@@ -1008,40 +1017,108 @@
 .discussion-description {
     color: var(--graphite);
     margin-bottom: 20px;
+    line-height: 1.6;
 }
 
 .discussion-actions {
     display: flex;
-    gap: 10px;
+    gap: 15px;
 }
 
-.discussion-status {
-    width: 150px;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-left: 1px solid #f0f0f0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+.btn-event-details, .btn-open-discussion {
+    padding: 10px 15px;
 }
 
-.discussion-status-badge {
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 15px;
     background-color: rgba(58, 174, 216, 0.1);
     color: var(--magenta);
-    padding: 8px 15px;
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 600;
-    text-align: center;
+    margin-bottom: 20px;
+    align-self: flex-start;
+}
+
+    .status-badge i {
+        margin-right: 6px;
+    }
+
+.sidebar-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: auto;
+}
+
+.discussion-status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 15px;
+    background-color: rgba(58, 174, 216, 0.1);
+    color: var(--magenta);
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+    .discussion-status-badge i {
+        margin-right: 6px;
+    }
+
+.sidebar-action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    margin-top: auto;
+}
+
+.sidebar-btn {
+    padding: 12px 15px;
+    font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
 }
 
-.discussion-options {
-    text-align: right;
+.btn-finalize-sponsorship, .btn-cancel-interest {
+    width: 100%;
+    padding: 12px 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+.btn-finalize-sponsorship {
+    background-color: var(--leaf);
+    border-color: var(--leaf);
+    color: white;
+}
+
+    .btn-finalize-sponsorship:hover {
+        background-color: #6AAF17;
+        border-color: #6AAF17;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(127, 196, 28, 0.3);
+    }
+
+.btn-cancel-interest {
+    color: #dc3545;
+    border-color: #dc3545;
+    background-color: transparent;
+}
+
+    .btn-cancel-interest:hover {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.2);
+    }
 
 /* Call to Action Section */
 .sponsor-cta-section {
@@ -1381,15 +1458,48 @@
         gap: 10px;
     }
 
+    /* New responsive styles for discussion items with sidebar */
     .discussion-item {
         flex-direction: column;
     }
 
-    .discussion-status {
+    .discussion-sidebar {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 20px 25px;
+    }
+
+    .discussion-actions {
+        flex-direction: column;
+    }
+
+    .btn-event-details, .btn-open-discussion {
+        width: 100%;
+    }
+
+    .sidebar-actions {
         flex-direction: row;
-        width: auto;
-        justify-content: space-between;
-        align-items: center;
+        margin-top: 15px;
+    }
+
+    .btn-finalize-sponsorship, .btn-cancel-interest {
+        flex: 1;
+    }
+
+    .sponsor-event-card {
+        flex-direction: column;
+    }
+
+    .discussion-sidebar {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 20px 25px;
+    }
+
+    .sidebar-action-buttons {
+        flex-direction: row;
     }
 }
 
@@ -1444,6 +1554,15 @@
         .form-actions .btn {
             width: 100%;
         }
+
+    /* Additional responsive adjustments for sidebar layout */
+    .sidebar-actions {
+        flex-direction: column;
+    }
+
+    .sidebar-action-buttons {
+        flex-direction: column;
+    }
 }
 
 .sponsor-interest-section,

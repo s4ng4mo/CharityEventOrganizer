@@ -41,62 +41,57 @@
             <div class="discussions-list">
                 @foreach (var item in Model)
                 {
-                    <div class="discussion-item animate fade-in">
-                        <div class="discussion-main">
-                            <div class="discussion-info">
-                                <h3 class="discussion-title">@item.Title</h3>
-                                <div class="discussion-meta">
-                                    <span class="discussion-meta-item">
-                                        <i class="fas fa-calendar-alt"></i> @item.EventDate.ToString("MMMM dd, yyyy")
-                                    </span>
-                                    <span class="discussion-meta-item">
-                                        <i class="fas fa-map-marker-alt"></i> @item.Location
-                                    </span>
-                                    <span class="discussion-meta-item">
-                                        <i class="fas fa-tag"></i> @item.Cause.Name
-                                    </span>
-                                    <span class="discussion-meta-item">
-                                        <i class="fas fa-user"></i> Organizer: @item.Organizer.UserName
-                                    </span>
-                                </div>
-                                <div class="discussion-description">
-                                    @(item.Description?.Length > 200 ? item.Description.Substring(0, 200) + "..." : item.Description)
-                                </div>
+                    <div class="sponsor-event-card animate fade-in">
+                        <div class="event-card-body">
+                            <h3 class="event-title">@item.Title</h3>
+                            <div class="event-meta">
+                                <span class="event-meta-item">
+                                    <i class="fas fa-calendar-alt"></i> @item.EventDate.ToString("MMMM dd, yyyy")
+                                </span>
+                                <span class="event-meta-item">
+                                    <i class="fas fa-map-marker-alt"></i> @item.Location
+                                </span>
+                                <span class="event-meta-item">
+                                    <i class="fas fa-tag"></i> @item.Cause.Name
+                                </span>
+                                <span class="event-meta-item">
+                                    <i class="fas fa-user"></i> Organizer: @item.Organizer.UserName
+                                </span>
                             </div>
-                            <div class="discussion-actions">
-                                <a asp-controller="Events" asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">
+                            <p class="event-description">
+                                @(item.Description?.Length > 200 ? item.Description.Substring(0, 200) + "..." : item.Description)
+                            </p>
+
+                            <div class="event-card-actions">
+                                <a asp-controller="Events" asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary">
                                     <i class="fas fa-info-circle mr-1"></i> View Event Details
                                 </a>
-                                <button type="button" class="btn btn-primary btn-sm"
+                                <button type="button" class="btn btn-primary"
                                         onclick="openDiscussionModal('@item.Id', '@item.Title', '@item.Organizer.UserName')">
                                     <i class="fas fa-comments mr-1"></i> Open Discussion
                                 </button>
                             </div>
                         </div>
-                        <div class="discussion-status">
+
+                        <div class="discussion-sidebar">
                             <div class="discussion-status-badge">
                                 <i class="fas fa-comments"></i> In Discussion
                             </div>
-                            <div class="discussion-options">
-                                <div class="dropdown">
-                                    <button class="more-options-btn" type="button" id="dropdownMenuButton_@item.Id" data-toggle="dropdown" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v"></i>
+
+                            <div class="sidebar-action-buttons">
+                                <form asp-action="FinalizeSponsorship" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Are you sure you want to finalize sponsorship for this event?')">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-success btn-block sidebar-btn">
+                                        <i class="fas fa-check-circle mr-1"></i> Finalize Sponsorship
                                     </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton_@item.Id">
-                                        <form asp-action="FinalizeSponsorship" asp-route-id="@item.Id" method="post">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="dropdown-item text-success">
-                                                <i class="fas fa-check-circle mr-2"></i> Finalize Sponsorship
-                                            </button>
-                                        </form>
-                                        <form asp-action="CancelInterest" asp-route-id="@item.Id" method="post">
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" class="dropdown-item text-danger">
-                                                <i class="fas fa-times-circle mr-2"></i> Cancel Interest
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
+                                </form>
+
+                                <form asp-action="CancelInterest" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Are you sure you want to cancel your interest in this event?')">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-danger btn-block sidebar-btn">
+                                        <i class="fas fa-times-circle mr-1"></i> Cancel Interest
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -213,23 +208,23 @@
         }
 
         // Handle sending a new message
-        document.getElementById('sendMessageBtn').addEventListener('click', function() {
+        document.getElementById('sendMessageBtn').addEventListener('click', function () {
             const messageText = document.getElementById('messageText').value.trim();
             if (!messageText) return;
 
             // In a real implementation, you would save the message via AJAX
             // For now, just add it to the UI
             const messageThread = document.getElementById('messageThread');
-            const currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
             const messageHtml = `
-                <div class="message sponsor-message">
-                    <div class="message-content">
-                        <p>${messageText}</p>
-                        <span class="message-time">${currentTime}</span>
+                    <div class="message sponsor-message">
+                        <div class="message-content">
+                            <p>${messageText}</p>
+                            <span class="message-time">${currentTime}</span>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
 
             messageThread.insertAdjacentHTML('beforeend', messageHtml);
             document.getElementById('messageText').value = '';
@@ -239,7 +234,7 @@
         });
 
         // Also send message on Enter key (but Shift+Enter allows newlines)
-        document.getElementById('messageText').addEventListener('keydown', function(e) {
+        document.getElementById('messageText').addEventListener('keydown', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 document.getElementById('sendMessageBtn').click();
