@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CharityEventOrganizer.Models.Entities;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -17,20 +14,16 @@ namespace CharityEventOrganizer.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IWebHostEnvironment _environment;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IWebHostEnvironment environment)
+            SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _environment = environment;
         }
 
         public string Username { get; set; }
-        public string ProfilePicture { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -65,7 +58,6 @@ namespace CharityEventOrganizer.Areas.Identity.Pages.Account.Manage
             var email = await _userManager.GetEmailAsync(user);
 
             Username = userName;
-            ProfilePicture = user.ProfilePicturePath; // Assuming you add this property to ApplicationUser
 
             Input = new InputModel
             {
@@ -142,41 +134,6 @@ namespace CharityEventOrganizer.Areas.Identity.Pages.Account.Manage
             return RedirectToPage();
         }
 
-        public async Task<IActionResult> OnPostUploadProfilePictureAsync(IFormFile profilePicture)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            if (profilePicture != null && profilePicture.Length > 0)
-            {
-                // Create a unique filename
-                var fileName = $"{user.Id}_{Guid.NewGuid()}{Path.GetExtension(profilePicture.FileName)}";
-                var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads", "profile-pictures");
-
-                // Create directory if it doesn't exist
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
-
-                var filePath = Path.Combine(uploadsFolder, fileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await profilePicture.CopyToAsync(fileStream);
-                }
-
-                // Update user's profile picture path
-                user.ProfilePicturePath = $"/uploads/profile-pictures/{fileName}";
-                await _userManager.UpdateAsync(user);
-
-                StatusMessage = "Profile picture updated successfully";
-            }
-
-            return RedirectToPage();
-        }
+        // Removed OnPostUploadProfilePictureAsync method
     }
 }

@@ -32,8 +32,6 @@ namespace CharityEventOrganizer.Areas.Identity.Pages.Account.Manage
         [TempData]
         public string StatusMessage { get; set; }
 
-        public string ProfilePicture { get; set; }
-
         public class InputModel
         {
             [Required]
@@ -66,8 +64,6 @@ namespace CharityEventOrganizer.Areas.Identity.Pages.Account.Manage
             {
                 return RedirectToPage("./SetPassword");
             }
-
-            ProfilePicture = user.ProfilePicturePath;
 
             return Page();
         }

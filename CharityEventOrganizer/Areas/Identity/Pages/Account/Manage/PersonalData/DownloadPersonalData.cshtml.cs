@@ -25,8 +25,6 @@ namespace CharityEventOrganizer.Areas.Identity.Pages.Account.Manage
             _logger = logger;
         }
 
-        public string ProfilePicture { get; set; }
-
         // Add this new method to handle GET requests
         public async Task<IActionResult> OnGetAsync()
         {
@@ -35,8 +33,6 @@ namespace CharityEventOrganizer.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-
-            ProfilePicture = user.ProfilePicturePath;
 
             // Just return the page for GET requests
             return Page();

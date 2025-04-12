@@ -184,7 +184,9 @@
                                             }
                                             else
                                             {
-                                                <img src="@comment.User.ProfilePicturePath" alt="@comment.User.UserName" />
+                                                <div class="profile-avatar-placeholder">
+                                                    <span>@(User.Identity.Name?.Substring(0, 1).ToUpper())</span>
+                                                </div>
                                             }
                                         </div>
                                         <div class="comment-content">
@@ -234,7 +236,9 @@
                                     }
                                     else
                                     {
-                                        <img src="@Model.Organizer.ProfilePicturePath" alt="@Model.Organizer.UserName" />
+                                        <div class="profile-avatar-placeholder">
+                                            <span>@(User.Identity.Name?.Substring(0, 1).ToUpper())</span>
+                                        </div>
                                     }
                                 </div>
                                 <div class="organizer-details">

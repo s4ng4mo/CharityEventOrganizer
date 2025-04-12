@@ -18,18 +18,9 @@
         <!-- Left Sidebar with Avatar and Navigation -->
         <div class="profile-sidebar">
             <div class="profile-avatar-container">
-                @if (string.IsNullOrEmpty(Model.ProfilePicture))
-                {
-                    <div class="profile-avatar-placeholder">
-                        <span>@(User.Identity.Name?.Substring(0, 1).ToUpper())</span>
-                    </div>
-                }
-                else
-                {
-                    <div class="profile-avatar">
-                        <img src="@Model.ProfilePicture" alt="Profile picture" />
-                    </div>
-                }
+                <div class="profile-avatar-placeholder">
+                    @(User.Identity.Name?.Substring(0, 1).ToUpper())
+                </div>
                 <h3 class="profile-name">@User.Identity.Name</h3>
                 <div class="profile-tags">
                     <span class="profile-tag">Organizer</span>

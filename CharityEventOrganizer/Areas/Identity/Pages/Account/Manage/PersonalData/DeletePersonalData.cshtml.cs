@@ -36,7 +36,6 @@ namespace CharityEventOrganizer.Areas.Identity.Pages.Account.Manage
         }
 
         public bool RequirePassword { get; set; }
-        public string ProfilePicture { get; set; }
 
         public async Task<IActionResult> OnGet()
         {
@@ -47,8 +46,6 @@ namespace CharityEventOrganizer.Areas.Identity.Pages.Account.Manage
             }
 
             RequirePassword = await _userManager.HasPasswordAsync(user);
-            ProfilePicture = user.ProfilePicturePath;
-
             return Page();
         }
 

@@ -18,26 +18,8 @@
         <!-- Left Sidebar with Avatar and Navigation -->
         <div class="profile-sidebar">
             <div class="profile-avatar-container">
-                @if (string.IsNullOrEmpty(Model.ProfilePicture))
-                {
-                    <div class="profile-avatar-placeholder">
-                        <span>@(Model.Input.FirstName?.Substring(0, 1))@(Model.Input.LastName?.Substring(0, 1))</span>
-                    </div>
-                }
-                else
-                {
-                    <div class="profile-avatar">
-                        <img src="@Model.ProfilePicture" alt="Profile picture" />
-                    </div>
-                }
-                <div class="profile-avatar-overlay">
-                    <form id="profile-picture-form" enctype="multipart/form-data" method="post" asp-page-handler="UploadProfilePicture">
-                        <label for="profile-upload" class="photo-upload-label">
-                            <i class="fas fa-camera"></i>
-                            <span>Change Photo</span>
-                        </label>
-                        <input id="profile-upload" type="file" name="profilePicture" class="d-none" onchange="this.form.submit()" accept="image/*" />
-                    </form>
+                <div class="profile-avatar-placeholder">
+                    @(Model.Input.FirstName?.Substring(0, 1))@(Model.Input.LastName?.Substring(0, 1))
                 </div>
                 <h3 class="profile-name">@Model.Input.FirstName @Model.Input.LastName</h3>
                 <div class="profile-tags">
