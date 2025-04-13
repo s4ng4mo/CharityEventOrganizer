@@ -128,7 +128,12 @@
 </section>
 
 @section Scripts {
+    @await Html.PartialAsync("_ChatModal")
+
     <script>
-        
+        function openDiscussionModal(eventId, eventTitle, organizerName) {
+            // Open the chat modal
+            openChatModal(eventId, eventTitle, organizerName, false); // false indicates user is not the organizer
+        }
     </script>
 }

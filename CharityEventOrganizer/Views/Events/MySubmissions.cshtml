@@ -116,8 +116,8 @@
                     string statusFilter = "";
 
                     @if (item.Status == CharityEventOrganizer.Models.Entities.EventStatus.Submitted ||
-                        item.Status == CharityEventOrganizer.Models.Entities.EventStatus.UnderReview ||
-                        item.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship)
+                      item.Status == CharityEventOrganizer.Models.Entities.EventStatus.UnderReview ||
+                      item.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship)
                     {
                         statusClass = "pending";
                         statusFilter = "pending";
@@ -225,76 +225,6 @@
     </div>
 </section>
 
-<!-- Sponsor Messages Modal (For future implementation) -->
-<div class="modal fade" id="sponsorMessagesModal" tabindex="-1" role="dialog" aria-labelledby="sponsorMessagesModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="sponsorMessagesModalLabel">
-                    <i class="fas fa-comments mr-2"></i>Sponsor Discussion
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="sponsor-chat-container">
-                    <div class="sponsor-info">
-                        <div class="sponsor-avatar">
-                            <i class="fas fa-building"></i>
-                        </div>
-                        <div class="sponsor-details">
-                            <h4>Sponsor Name</h4>
-                            <p>Interested in your event</p>
-                        </div>
-                    </div>
-
-                    <div class="message-thread">
-                        <!-- Message bubbles will be loaded here -->
-                        <div class="message-date-separator">
-                            <span>Today</span>
-                        </div>
-
-                        <div class="message sponsor-message">
-                            <div class="message-content">
-                                <p>Hello! We're interested in sponsoring your event. Could you provide more information about the expected attendance and impact?</p>
-                                <span class="message-time">10:30 AM</span>
-                            </div>
-                        </div>
-
-                        <div class="message user-message">
-                            <div class="message-content">
-                                <p>Hi! Thank you for your interest. We're expecting around 200 attendees and aim to raise awareness about environmental conservation.</p>
-                                <span class="message-time">11:15 AM</span>
-                            </div>
-                        </div>
-
-                        <div class="message sponsor-message">
-                            <div class="message-content">
-                                <p>That sounds great! We'd like to offer promotional materials and funding to support your cause.</p>
-                                <span class="message-time">11:42 AM</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="message-input">
-                        <textarea placeholder="Type your message here..." class="form-control"></textarea>
-                        <button class="btn btn-primary send-btn">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success">
-                    <i class="fas fa-handshake mr-2"></i>Finalize Agreement
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 @section Scripts {
     <script>
         // Immediately-invoked function expression to create a private scope
@@ -378,6 +308,43 @@
                 }
             });
         })();
+    </script>
+
+    @await Html.PartialAsync("_ChatModal")
+
+    <script>
+        function showSponsorMessages(eventId) {
+            console.log('Opening messages for event ID:', eventId);
+
+            // Find the event card that contains this event ID
+            const eventCards = document.querySelectorAll('.event-dashboard-card');
+            let eventTitle = '';
+            let sponsorName = 'Sponsor';
+
+            // Look through all cards to find the matching one
+            for (const card of eventCards) {
+                const detailsLink = card.querySelector('a[href*="/Events/Details/"]');
+                if (detailsLink && detailsLink.getAttribute('href').endsWith('/' + eventId)) {
+                    eventTitle = card.querySelector('.event-dashboard-title').textContent;
+                    // Check if there's a status badge that mentions sponsor
+                    const statusBadge = card.querySelector('.status-badge');
+                    if (statusBadge && statusBadge.textContent.includes('Sponsor')) {
+                        console.log('Found event card with title:', eventTitle);
+                        break;
+                    }
+                }
+            }
+
+            if (!eventTitle) {
+                console.log('Event card not found, using default title');
+                eventTitle = 'Event Discussion';
+            }
+
+            console.log('Opening chat modal with:', { eventId, eventTitle, sponsorName });
+
+            // Open the chat modal
+            openChatModal(eventId, eventTitle, sponsorName, true); // true indicates user is the organizer
+        }
     </script>
 }
 

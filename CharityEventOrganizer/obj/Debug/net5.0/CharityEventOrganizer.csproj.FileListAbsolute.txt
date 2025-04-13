@@ -186,3 +186,4 @@ C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug
 C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Sponsor\EventsForSponsorship.cshtml.g.cs
 C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Sponsor\Profile.cshtml.g.cs
 C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Sponsor\SponsoredEvents.cshtml.g.cs
+C:\Users\User\source\repos\CharityEventOrganizer\CharityEventOrganizer\obj\Debug\net5.0\Razor\Views\Shared\_ChatModal.cshtml.g.cs
