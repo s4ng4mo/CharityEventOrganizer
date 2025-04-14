@@ -1024,18 +1024,6 @@ a {
     margin-bottom: 30px !important;
 }
 
-/* Add more vertical space between rows of cards */
-@media (min-width: 768px) {
-    .section-parchment .row {
-        margin-bottom: 15px;
-    }
-
-        /* Target second row specifically */
-        .section-parchment .row + .row {
-            margin-top: 30px;
-        }
-}
-
 /* Navbar toggle button fixes */
 .navbar-toggler {
     border: none;
@@ -1053,7 +1041,7 @@ a {
 }
 
 /* Position the orb/blob below the navbar and fix z-index */
-@media (max-width: 992px) {
+@media (max-width: 991px) {
     .blob-1,
     .doodle-hearts,
     .blob-2,
@@ -1737,6 +1725,8 @@ a {
         .profile-hero h1 {
             font-size: 1.8rem;
         }
+
+
 }
 
 /* Body Layout for Sticky Footer */
@@ -3699,4 +3689,202 @@ main {
     font-size: 1rem;
     max-width: 300px;
     margin: 0 auto;
+}
+
+/* Featured Event Cards - Modern Design Without Images - Fixed Layout */
+.featured-event-card {
+    position: relative;
+    background-color: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(0);
+    margin-bottom: 20px;
+    border: none;
+}
+
+    .featured-event-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+.featured-event-header {
+    position: relative;
+    padding: 18px 20px;
+    background: var(--magenta);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.featured-event-date {
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    padding-right: 15px; /* Ensure gap between date and cause */
+}
+
+    .featured-event-date i {
+        margin-right: 10px;
+        font-size: 1.1rem;
+    }
+
+.featured-event-cause {
+    background-color: white;
+    color: var(--charcoal);
+    border-radius: 30px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    white-space: nowrap; /* Prevent wrapping within badge */
+    display: flex;
+    align-items: center;
+    max-width: 150px; /* Maximum width of the cause badge */
+}
+
+    .featured-event-cause i {
+        margin-right: 8px;
+        color: var(--magenta);
+        flex-shrink: 0;
+    }
+
+    .featured-event-cause span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+.featured-event-card:hover .featured-event-cause {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.featured-event-content {
+    padding: 25px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.featured-event-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--charcoal);
+    position: relative;
+    display: inline-block;
+    transition: all 0.3s ease;
+    font-family: 'Caveat', cursive; /* Match the design aesthetic */
+}
+
+.featured-event-card:hover .featured-event-title {
+    color: var(--magenta);
+}
+
+.featured-event-location {
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+    color: var(--graphite);
+    margin-bottom: 15px;
+}
+
+    .featured-event-location i {
+        color: var(--magenta);
+        margin-right: 8px;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+.featured-event-description {
+    color: var(--graphite);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.featured-event-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+    .featured-event-footer .btn {
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        background-color: var(--magenta);
+        color: white;
+        border: none;
+    }
+
+        .featured-event-footer .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(58, 174, 216, 0.2);
+        }
+
+.featured-event-organizer {
+    display: flex;
+    align-items: center;
+    color: var(--graphite);
+    font-size: 0.9rem;
+}
+
+    .featured-event-organizer i {
+        margin-right: 8px;
+        color: var(--ocean);
+    }
+
+/* Responsive Adjustments */
+@media (max-width: 767px) {
+    .featured-event-card {
+        margin-bottom: 30px;
+    }
+
+    .featured-event-content {
+        padding: 20px;
+    }
+
+    .featured-event-title {
+        font-size: 1.3rem;
+    }
+
+    .featured-event-header {
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    .featured-event-cause {
+        max-width: 120px;
+    }
+}
+
+@media (max-width: 576px) {
+    .featured-event-header {
+        padding: 15px;
+    }
+
+    .featured-event-date {
+        font-size: 0.9rem;
+    }
+
+    .featured-event-cause {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+        max-width: 110px;
+    }
 }

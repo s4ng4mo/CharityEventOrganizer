@@ -52,29 +52,35 @@
                 @foreach (var item in Model.FeaturedEvents)
                 {
                     <div class="col-lg-4 col-md-6">
-                        <div class="event-card animate fade-in">
-                            <div class="event-card-image">
-                                <img src="https://source.unsplash.com/random/600x400/?@item.Cause.Name.ToLower()" alt="@item.Title">
-                                <div class="event-date">
-                                    <span class="event-date-day">@item.EventDate.Day</span>
-                                    <span class="event-date-month">@item.EventDate.ToString("MMM")</span>
+                        <div class="featured-event-card animate fade-in">
+                            <div class="featured-event-header">
+                                <div class="featured-event-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>@item.EventDate.ToString("MMM dd, yyyy")</span>
                                 </div>
-                                <div class="event-category category-@item.Cause.Name.ToLower().Replace(" ", "")">
-                                    @item.Cause.Name
+                                <div class="featured-event-cause">
+                                    <i class="@GetCauseIcon(item.Cause.Name)"></i>
+                                    <span>@item.Cause.Name</span>
                                 </div>
                             </div>
-                            <div class="event-card-content">
-                                <h4 class="event-card-title">@item.Title</h4>
-                                <div class="event-card-location">
-                                    <i class="fas fa-map-marker-alt"></i> @item.Location
+                            <div class="featured-event-content">
+                                <h4 class="featured-event-title">@item.Title</h4>
+                                <div class="featured-event-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>@item.Location</span>
                                 </div>
-                                <p class="event-card-description">@(item.Description.Length > 100 ? item.Description.Substring(0, 100) + "..." : item.Description)</p>
-                            </div>
-                            <div class="event-card-footer">
-                                <a asp-controller="Events" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm btn-rounded">
-                                    Learn More
-                                </a>
-                                <span class="event-card-organizer">By @item.Organizer.UserName</span>
+                                <p class="featured-event-description">
+                                    @(item.Description.Length > 100 ? item.Description.Substring(0, 100) + "..." : item.Description)
+                                </p>
+                                <div class="featured-event-footer">
+                                    <a asp-controller="Events" asp-action="Details" asp-route-id="@item.Id" class="btn">
+                                        <i class="fas fa-arrow-right mr-2"></i>Learn More
+                                    </a>
+                                    <div class="featured-event-organizer">
+                                        <i class="fas fa-user"></i>
+                                        <span>@item.Organizer.UserName</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -165,7 +171,7 @@
                         <div class="cause-card-body">
                             <h4 class="cause-card-title">@cause.Name</h4>
                             <p class="cause-card-description">@cause.Description</p>
-                            <a href="#" class="btn btn-outline btn-sm btn-rounded">
+                            <a asp-controller="Events" asp-action="Index" asp-route-causeId="@cause.Id" class="btn btn-outline btn-sm btn-rounded">
                                 Explore Events
                             </a>
                         </div>
