@@ -4,159 +4,382 @@
     ViewData["Title"] = "Events";
 }
 
-<!-- Events Header Section -->
-<section class="event-details-header">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h1 class="display-4 slide-in-left">Discover Charity Events</h1>
-                <p class="lead slide-in-left">Browse through events that are making a positive impact in communities around the world.</p>
-            </div>
-            <div class="col-lg-4 text-lg-right slide-in-right">
-                <a asp-action="Create" class="btn btn-primary">
-                    <i class="fas fa-plus-circle mr-2"></i>Create Event
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
+<div class="events-page-container">
+    <!-- Creative Hero Section -->
+    <section class="events-hero">
+        <div class="events-hero-decoration"></div>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <div class="events-hero-content">
+                        <span class="events-badge">Discover & Connect</span>
+                        <h1 class="events-title">Find Events That <span class="events-highlight">Change Lives</span></h1>
+                        <p class="events-subtitle">Browse through meaningful charity events making a positive impact in communities worldwide.</p>
 
-<!-- Filter Section -->
-<section class="py-4">
-    <div class="container">
-        <div class="card fade-in">
-            <div class="card-body">
-                <form method="get" class="row align-items-end">
-                    <div class="col-md-4 mb-3 mb-md-0">
-                        <label for="searchTerm">Search</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text bg-white">
-                                    <i class="fas fa-search"></i>
-                                </span>
-                            </div>
-                            <input type="text" class="form-control" id="searchTerm" name="searchTerm" placeholder="Search by title, description..." value="@Context.Request.Query["searchTerm"]">
+                        <div class="events-hero-actions">
+                            <a asp-action="Create" class="btn btn-primary events-btn-primary">
+                                <i class="fas fa-plus-circle mr-2"></i>Create Event
+                            </a>
+                            <a href="#explore" class="events-scroll-link">
+                                <span>Explore Events</span>
+                                <i class="fas fa-arrow-down"></i>
+                            </a>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-3 mb-md-0">
-                        <label for="causeId">Cause</label>
-                        <select class="form-control" id="causeId" name="causeId">
-                            <option value="">All Causes</option>
-                            <!-- Add options dynamically -->
-                        </select>
+                </div>
+                <div class="col-lg-5">
+                    <div class="events-hero-visual">
+                        <div class="events-hero-image">
+                            <div class="events-visual-element events-element-1">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="events-visual-element events-element-2">
+                                <i class="fas fa-hands-helping"></i>
+                            </div>
+                            <div class="events-visual-element events-element-3">
+                                <i class="fas fa-globe-americas"></i>
+                            </div>
+                            <img src="https://placehold.co/600x400/f8f9fa/3AAED8?text=Making+A+Difference" alt="Making a difference" class="img-fluid">
+                        </div>
+                        <div class="events-counts">
+                            <div class="events-count-item">
+                                <span class="events-count-number">@Model.Count()</span>
+                                <span class="events-count-label">Events</span>
+                            </div>
+                            <div class="events-count-item">
+                                <span class="events-count-number">@Model.Select(e => e.Cause).Distinct().Count()</span>
+                                <span class="events-count-label">Causes</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-3 mb-3 mb-md-0">
-                        <label for="sortBy">Sort By</label>
-                        <select class="form-control" id="sortBy" name="sortBy">
-                            <option value="date">Date (Newest)</option>
-                            <option value="dateAsc">Date (Oldest)</option>
-                            <option value="name">Name (A-Z)</option>
-                            <option value="nameDesc">Name (Z-A)</option>
-                        </select>
+                </div>
+            </div>
+        </div>
+        <div class="events-wave-divider"></div>
+    </section>
+
+    <!-- Interactive Filter Section -->
+    <section class="events-filter-section" id="explore">
+        <div class="container">
+            <div class="events-filter-wrapper">
+                <div class="events-filter-header">
+                    <div class="events-filter-title">
+                        <i class="fas fa-filter"></i>
+                        <h3>Find Your Perfect Event</h3>
                     </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary btn-block">
-                            <i class="fas fa-filter mr-2"></i>Filter
+                    <div class="events-filter-toggle">
+                        <button type="button" class="events-toggle-btn" id="toggleFilterBtn">
+                            <i class="fas fa-sliders-h"></i>
+                            <span>Filter Options</span>
                         </button>
                     </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
+                </div>
 
-<!-- Events Listing -->
-<section class="py-4">
-    <div class="container">
-        @if (Model.Any())
-        {
-            <div class="row">
-                @foreach (var item in Model)
-                {
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card event-card fade-in h-100">
-                            <div class="card-img-wrapper">
-                                <img src="https://placehold.co/800x500/f8f9fa/6A3EA1?text=@item.Cause.Name" class="card-img-top" alt="@item.Title">
-                                <span class="card-cause-tag cause-@item.Cause.Name.ToLower().Replace(" ", "-")">@item.Cause.Name</span>
-                                <div class="card-img-overlay">
-                                    <h5 class="card-title mb-0">@item.Title</h5>
+                <div class="events-filter-body" id="filterBody">
+                    <form method="get" asp-action="Index" class="events-filter-form">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="events-form-group">
+                                    <label for="searchTerm">
+                                        <i class="fas fa-search"></i>
+                                        Search Events
+                                    </label>
+                                    <input type="text" class="form-control events-input" id="searchTerm" name="searchTerm"
+                                           placeholder="Enter keywords..."
+                                           value="@ViewBag.CurrentSearchTerm">
                                 </div>
                             </div>
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="event-date mr-3">
-                                        <span class="event-date-month">@item.EventDate.ToString("MMM")</span>
-                                        <span class="event-date-day">@item.EventDate.ToString("dd")</span>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0">@item.EventDate.ToString("dddd, MMMM dd, yyyy")</h6>
-                                        <small class="text-muted"><i class="fas fa-map-marker-alt"></i> @item.Location</small>
-                                    </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="events-form-group">
+                                    <label for="causeId">
+                                        <i class="fas fa-tag"></i>
+                                        Filter by Cause
+                                    </label>
+                                    <select class="form-control events-select" id="causeId" name="causeId">
+                                        <option value="">All Causes</option>
+                                        @foreach (var cause in ViewBag.Causes)
+                                        {
+                                            <option value="@cause.Id" selected="@(ViewBag.CurrentCauseId == cause.Id)">@cause.Name</option>
+                                        }
+                                    </select>
                                 </div>
-                                <p class="card-text">@(item.Description.Length > 100 ? item.Description.Substring(0, 100) + "..." : item.Description)</p>
                             </div>
-                            <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-teal btn-sm">
-                                    <i class="fas fa-info-circle mr-1"></i>Learn More
-                                </a>
-                                <small class="text-muted">By @item.Organizer.UserName</small>
+                            <div class="col-md-3 mb-3">
+                                <div class="events-form-group">
+                                    <label for="sortBy">
+                                        <i class="fas fa-sort"></i>
+                                        Sort Results
+                                    </label>
+                                    <select class="form-control events-select" id="sortBy" name="sortBy">
+                                        <option value="date" selected="@(ViewBag.CurrentSortBy == "date")">Date (Newest First)</option>
+                                        <option value="dateAsc" selected="@(ViewBag.CurrentSortBy == "dateAsc")">Date (Oldest First)</option>
+                                        <option value="name" selected="@(ViewBag.CurrentSortBy == "name")">Name (A-Z)</option>
+                                        <option value="nameDesc" selected="@(ViewBag.CurrentSortBy == "nameDesc")">Name (Z-A)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="events-form-group events-btn-group">
+                                    <button type="submit" class="btn events-btn-primary btn-block">
+                                        <i class="fas fa-filter mr-2"></i>Apply Filters
+                                    </button>
+                                    @if (!string.IsNullOrEmpty(ViewBag.CurrentSearchTerm) ||
+                                        ViewBag.CurrentCauseId != null ||
+                                        ViewBag.CurrentSortBy != "date")
+                                    {
+                                        <a asp-action="Index" class="events-reset-link">
+                                            <i class="fas fa-undo-alt"></i> Reset
+                                        </a>
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
-                }
-            </div>
 
-            <!-- Pagination -->
-            <div class="d-flex justify-content-center mt-4 fade-in">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        }
-        else
-        {
-            <div class="empty-state fade-in">
-                <div class="empty-state-icon">
-                    <i class="fas fa-calendar-alt"></i>
-                </div>
-                <h3 class="empty-state-title">No Events Found</h3>
-                <p class="empty-state-description">There are no events matching your search criteria or there are no events available at the moment.</p>
-                <div class="d-flex justify-content-center">
-                    <a asp-action="Index" class="btn btn-outline-primary mr-3">
-                        <i class="fas fa-sync-alt mr-2"></i>Reset Filters
-                    </a>
-                    <a asp-action="Create" class="btn btn-primary">
-                        <i class="fas fa-plus-circle mr-2"></i>Create Event
-                    </a>
-                </div>
-            </div>
-        }
-    </div>
-</section>
+                        <div class="events-active-filters" id="activeFilters">
+                            @if (!string.IsNullOrEmpty(ViewBag.CurrentSearchTerm))
+                            {
+                                <div class="events-filter-tag">
+                                    <span>Search: @ViewBag.CurrentSearchTerm</span>
+                                    <button type="button" class="events-remove-filter" data-field="searchTerm">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            }
 
-<!-- Need Help Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8 mb-4 mb-lg-0">
-                <h2 class="fade-in">Need Help Finding Events?</h2>
-                <p class="lead fade-in">Our team can help you discover events that match your interests.</p>
-            </div>
-            <div class="col-lg-4 text-lg-right fade-in">
-                <a href="#" class="btn btn-outline-primary">
-                    <i class="fas fa-envelope mr-2"></i>Contact Us
-                </a>
+                            @if (ViewBag.CurrentCauseId != null)
+                            {
+                                var causes = ViewBag.Causes as IEnumerable<CharityEventOrganizer.Models.Entities.Cause>;
+                                var selectedCause = causes?.FirstOrDefault(c => c.Id == ViewBag.CurrentCauseId);
+                                if (selectedCause != null)
+                                {
+                                    <div class="events-filter-tag">
+                                        <span>Cause: @selectedCause.Name</span>
+                                        <button type="button" class="events-remove-filter" data-field="causeId">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                }
+                            }
+
+                            @if (ViewBag.CurrentSortBy != "date")
+                            {
+                                string sortText = ViewBag.CurrentSortBy switch
+                                {
+                                    "dateAsc" => "Date (Oldest First)",
+                                    "name" => "Name (A-Z)",
+                                    "nameDesc" => "Name (Z-A)",
+                                    _ => ""
+                                };
+
+                                if (!string.IsNullOrEmpty(sortText))
+                                {
+                                    <div class="events-filter-tag">
+                                        <span>Sort: @sortText</span>
+                                        <button type="button" class="events-remove-filter" data-field="sortBy">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+    <!-- Event Listing Section -->
+    <section class="events-listing">
+        <div class="container">
+            @if (Model.Any())
+            {
+                <div class="events-causes-filter">
+                    <div class="events-filter-scroll">
+                        <a href="@Url.Action("Index", new { searchTerm = ViewBag.CurrentSearchTerm, sortBy = ViewBag.CurrentSortBy })"
+                           class="events-cause-btn @(ViewBag.CurrentCauseId == null ? "active" : "")">
+                            <i class="fas fa-globe-americas"></i>
+                            <span>All Causes</span>
+                        </a>
+
+                        @foreach (var cause in ViewBag.Causes)
+                        {
+                            <a href="@Url.Action("Index", new { searchTerm = ViewBag.CurrentSearchTerm, causeId = cause.Id, sortBy = ViewBag.CurrentSortBy })"
+                               class="events-cause-btn @(ViewBag.CurrentCauseId == cause.Id ? "active" : "")">
+                                @switch (cause.Name.ToLower())
+                                {
+                                    case "education":
+                                        <i class="fas fa-graduation-cap"></i>
+                                        break;
+                                    case "healthcare":
+                                        <i class="fas fa-heartbeat"></i>
+                                        break;
+                                    case "environment":
+                                        <i class="fas fa-leaf"></i>
+                                        break;
+                                    case "animal welfare":
+                                        <i class="fas fa-paw"></i>
+                                        break;
+                                    case "disaster relief":
+                                        <i class="fas fa-house-damage"></i>
+                                        break;
+                                    default:
+                                        <i class="fas fa-hand-holding-heart"></i>
+                                        break;
+                                }
+                                <span>@cause.Name</span>
+                            </a>
+                        }
+                    </div>
+                </div>
+
+                <div class="row" id="eventsContainer">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-lg-4 col-md-6 mb-4 events-item">
+                            <div class="events-card">
+                                <div class="events-card-top">
+                                    <div class="events-ribbon">
+                                        <span class="events-date">@item.EventDate.ToString("MMM dd")</span>
+                                    </div>
+                                    <div class="events-image-wrapper">
+                                        <img src="https://placehold.co/800x500/f8f9fa/3AAED8?text=@item.Cause.Name" alt="@item.Title" class="events-card-img">
+                                        <div class="events-image-overlay">
+                                            <div class="events-overlay-content">
+                                                <span class="events-cause-tag">@item.Cause.Name</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="events-card-body">
+                                    <h3 class="events-card-title">@item.Title</h3>
+
+                                    <div class="events-card-details">
+                                        <div class="events-detail">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <span>@item.EventDate.ToString("dddd, MMMM dd, yyyy")</span>
+                                        </div>
+                                        <div class="events-detail">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span>@item.Location</span>
+                                        </div>
+                                        <div class="events-detail">
+                                            <i class="fas fa-user"></i>
+                                            <span>By @item.Organizer.UserName</span>
+                                        </div>
+                                    </div>
+
+                                    <p class="events-card-description">
+                                        @(item.Description.Length > 100 ? item.Description.Substring(0, 100) + "..." : item.Description)
+                                    </p>
+
+                                    <div class="events-card-footer">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="events-view-btn">
+                                            <i class="fas fa-arrow-right"></i>
+                                            <span>View Details</span>
+                                        </a>
+                                        <div class="events-comments">
+                                            <i class="fas fa-comment"></i>
+                                            <span>@(item.Comments?.Count ?? 0)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="events-empty-state">
+                    <div class="events-empty-illustrations">
+                        <div class="events-empty-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                    <h3 class="events-empty-title">No Events Found</h3>
+                    <p class="events-empty-description">
+                        There are no events matching your search criteria or there are no events available at the moment.
+                    </p>
+                    <div class="events-empty-actions">
+                        <a asp-action="Index" class="btn events-btn-outline-primary">
+                            <i class="fas fa-sync-alt mr-2"></i>Reset Filters
+                        </a>
+                        <a asp-action="Create" class="btn events-btn-primary">
+                            <i class="fas fa-plus-circle mr-2"></i>Create Event
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- Create Your Own Event CTA -->
+    <section class="events-create-cta">
+        <div class="container">
+            <div class="events-create-wrapper">
+                <div class="events-create-content">
+                    <h2 class="events-create-title">Have a Cause You Care About?</h2>
+                    <p class="events-create-text">
+                        Create your own charity event and connect with sponsors who share your vision.
+                        It's easy to get started and make a difference in your community.
+                    </p>
+                </div>
+                <div class="events-create-action">
+                    <a asp-action="Create" class="btn events-btn-primary events-btn-lg">
+                        <i class="fas fa-plus-circle mr-2"></i>Create Your Event
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        // Toggle filter area
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('toggleFilterBtn');
+            const filterBody = document.getElementById('filterBody');
+
+            if (toggleBtn && filterBody) {
+                toggleBtn.addEventListener('click', function () {
+                    filterBody.classList.toggle('events-filter-open');
+                    this.classList.toggle('active');
+                });
+            }
+
+            // Show filter body by default if any filters are applied
+            if (document.querySelector('.events-filter-tag')) {
+                filterBody.classList.add('events-filter-open');
+            }
+
+            // Remove filters
+            document.querySelectorAll('.events-remove-filter').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const field = this.getAttribute('data-field');
+
+                    // Clear the field and submit form
+                    const input = document.querySelector(`[name="${field}"]`);
+                    if (input) {
+                        input.value = '';
+                        document.querySelector('.events-filter-form').submit();
+                    }
+                });
+            });
+
+            // Horizontal scroll for cause filters
+            const filterScroll = document.querySelector('.events-filter-scroll');
+            if (filterScroll) {
+                // Allow mouse wheel horizontal scrolling
+                filterScroll.addEventListener('wheel', function (e) {
+                    if (e.deltaY !== 0) {
+                        e.preventDefault();
+                        this.scrollLeft += e.deltaY;
+                    }
+                });
+            }
+        });
+    </script>
+}

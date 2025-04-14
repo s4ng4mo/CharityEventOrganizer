@@ -40,11 +40,6 @@
                                 <span asp-validation-for="Input.Password" class="text-danger"></span>
                             </div>
 
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" asp-for="Input.RememberMe" />
-                                <label class="form-check-label" asp-for="Input.RememberMe">Remember me</label>
-                            </div>
-
                             <div class="register-actions">
                                 <button id="login-submit" type="submit" class="btn btn-register">
                                     Sign In
@@ -52,9 +47,6 @@
                                 </button>
 
                                 <div class="login-link">
-                                    <div class="mb-2">
-                                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                                    </div>
                                     <div>
                                         Don't have an account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Sign up</a>
                                     </div>

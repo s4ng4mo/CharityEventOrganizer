@@ -26,13 +26,50 @@ namespace CharityEventOrganizer.Controllers
         }
 
         // GET: Events
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, int? causeId, string sortBy)
         {
-            var events = await _context.Events
+            // Start with all approved events
+            var eventsQuery = _context.Events
                 .Include(e => e.Cause)
                 .Include(e => e.Organizer)
+                .Include(e => e.Comments)
                 .Where(e => e.Status == EventStatus.Approved)
-                .ToListAsync();
+                .AsQueryable();
+
+            // Apply search filter if provided
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                searchTerm = searchTerm.ToLower();
+                eventsQuery = eventsQuery.Where(e =>
+                    e.Title.ToLower().Contains(searchTerm) ||
+                    e.Description.ToLower().Contains(searchTerm) ||
+                    e.Location.ToLower().Contains(searchTerm));
+            }
+
+            // Apply cause filter if provided
+            if (causeId.HasValue && causeId > 0)
+            {
+                eventsQuery = eventsQuery.Where(e => e.CauseId == causeId);
+            }
+
+            // Apply sorting
+            eventsQuery = sortBy switch
+            {
+                "dateAsc" => eventsQuery.OrderBy(e => e.EventDate),
+                "name" => eventsQuery.OrderBy(e => e.Title),
+                "nameDesc" => eventsQuery.OrderByDescending(e => e.Title),
+                _ => eventsQuery.OrderByDescending(e => e.EventDate) // Default sorting is by date (newest first)
+            };
+
+            var events = await eventsQuery.ToListAsync();
+
+            // Store the current filter values in ViewBag for the view to use
+            ViewBag.CurrentSearchTerm = searchTerm;
+            ViewBag.CurrentCauseId = causeId;
+            ViewBag.CurrentSortBy = sortBy ?? "date";
+
+            // Get all causes for the filter dropdown
+            ViewBag.Causes = await _context.Causes.ToListAsync();
 
             return View(events);
         }

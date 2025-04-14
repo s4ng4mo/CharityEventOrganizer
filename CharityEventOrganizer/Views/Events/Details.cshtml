@@ -51,13 +51,7 @@
                     <div class="event-actions">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            @if (Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.Approved)
-                            {
-                                <a href="#" class="btn btn-primary btn-rounded">
-                                    <i class="fas fa-heart mr-2"></i>I'll Attend
-                                </a>
-                            }
-                            else if (Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship)
+                            @if (Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship)
                             {
                                 <a href="#" class="btn btn-primary btn-rounded sponsor-btn">
                                     <i class="fas fa-hand-holding-heart mr-2"></i>Sponsor This Event
@@ -297,13 +291,7 @@
             <h2 class="animate fade-in">Ready to Make a <span class="text-highlight">Difference</span>?</h2>
             <p class="animate fade-in">Join us for this meaningful event and be part of the positive change.</p>
             <div class="animate fade-in">
-                @if (Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.Approved)
-                {
-                    <a href="#" class="btn btn-primary btn-lg btn-rounded">
-                        <i class="fas fa-heart mr-2"></i>I'll Attend This Event
-                    </a>
-                }
-                else if (User.Identity.IsAuthenticated && Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship)
+                @if (User.Identity.IsAuthenticated && Model.Status == CharityEventOrganizer.Models.Entities.EventStatus.ApprovedForSponsorship)
                 {
                     <a href="#" class="btn btn-primary btn-lg btn-rounded">
                         <i class="fas fa-hand-holding-heart mr-2"></i>Sponsor This Event
