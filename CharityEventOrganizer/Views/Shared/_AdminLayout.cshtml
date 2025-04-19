@@ -13,22 +13,6 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/custom.css" />
     <link rel="stylesheet" href="~/css/admin.css" />
-    <style>
-        body.admin-body .modal-backdrop.show {
-            pointer-events: none !important;
-            background-color: transparent !important;
-            opacity: 0 !important;
-        }
-
-        body.admin-body .modal {
-            pointer-events: none;
-            background-color: transparent !important;
-        }
-
-        body.admin-body .modal-dialog {
-            pointer-events: auto;
-        }
-    </style>
 </head>
 <body class="admin-body">
     <!-- Decorative Elements -->
@@ -43,8 +27,9 @@
                     <i class="fas fa-heart-circle-check"></i>
                     <span>Heartful Events</span>
                 </a>
+                <!-- Mobile sidebar toggle - only visible on mobile -->
                 <button class="btn sidebar-toggle d-md-none" id="sidebarToggle">
-                    <i class="fas fa-bars"></i>
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="admin-sidebar-content">
@@ -86,8 +71,8 @@
                 <div class="admin-user-info">
                     @if (SignInManager.IsSignedIn(User))
                     {
-                        <div class="dropdown">
-                            <a href="#" role="button" id="adminUserDropdown" data-toggle="dropdown" aria-expanded="false">
+                        <div class="dropdown w-100">
+                            <a href="#" role="button" id="adminUserDropdown" data-toggle="dropdown" aria-expanded="false" class="w-100">
                                 <div class="admin-user-avatar">
                                     <div class="admin-user-initial">@User.Identity.Name?.Substring(0, 1).ToUpper()</div>
                                 </div>
@@ -119,7 +104,12 @@
             <!-- Admin Topbar -->
             <header class="admin-topbar">
                 <div class="topbar-left">
-                    <button class="btn sidebar-toggle d-none d-md-block" id="sidebarToggleLg">
+                    <!-- Desktop sidebar toggle - only visible on desktop -->
+                    <button class="btn sidebar-toggle d-none d-lg-block" id="sidebarToggleLg">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <!-- Mobile sidebar toggle - only visible on mobile -->
+                    <button class="btn sidebar-toggle d-lg-none" id="sidebarToggleMobile">
                         <i class="fas fa-bars"></i>
                     </button>
                     <h2 class="topbar-title">@ViewData["Title"]</h2>
@@ -134,12 +124,14 @@
             <!-- Footer -->
             <footer class="admin-footer">
                 <div class="container-fluid">
-                    <div class="admin-footer-content">
+                    <div class="admin-footer-content py-3">
                         <p>Heartful Events - Admin Dashboard</p>
                     </div>
                 </div>
             </footer>
         </main>
+
+        <!-- Sidebar Overlay - Will be created dynamically -->
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -147,15 +139,102 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     <script>
+        // Improved sidebar toggle functionality
         document.addEventListener('DOMContentLoaded', function () {
-            // Toggle sidebar
-            const toggleButtons = document.querySelectorAll('.sidebar-toggle');
+            // Get DOM elements
             const adminLayout = document.querySelector('.admin-layout');
+            const toggleButtons = document.querySelectorAll('.sidebar-toggle');
+            const sidebarOverlay = document.createElement('div');
 
-            toggleButtons.forEach(button => {
-                button.addEventListener('click', function () {
+            // Create overlay element for mobile
+            sidebarOverlay.classList.add('sidebar-overlay');
+            adminLayout.appendChild(sidebarOverlay);
+
+            // Toggle function based on screen size
+            const toggleSidebar = () => {
+                // Check if we're on mobile/tablet view
+                if (window.innerWidth < 992) {
+                    // Mobile behavior - expanded/collapsed
+                    if (adminLayout.classList.contains('sidebar-expanded')) {
+                        adminLayout.classList.remove('sidebar-expanded');
+
+                        // Change the icon from X to bars for the mobile toggle
+                        const mobileToggleIcon = document.querySelector('#sidebarToggle i');
+                        if (mobileToggleIcon) {
+                            mobileToggleIcon.classList.remove('fa-times');
+                            mobileToggleIcon.classList.add('fa-bars');
+                        }
+                    } else {
+                        adminLayout.classList.add('sidebar-expanded');
+
+                        // Change the icon from bars to X for the mobile toggle
+                        const mobileToggleIcon = document.querySelector('#sidebarToggle i');
+                        if (mobileToggleIcon) {
+                            mobileToggleIcon.classList.remove('fa-bars');
+                            mobileToggleIcon.classList.add('fa-times');
+                        }
+                    }
+                } else {
+                    // Desktop behavior - wide/narrow
                     adminLayout.classList.toggle('sidebar-collapsed');
-                });
+                }
+            };
+
+            // Add click event to all toggle buttons
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', toggleSidebar);
+            });
+
+            // Close sidebar when clicking overlay
+            sidebarOverlay.addEventListener('click', () => {
+                adminLayout.classList.remove('sidebar-expanded');
+
+                // Reset the mobile toggle icon
+                const mobileToggleIcon = document.querySelector('#sidebarToggle i');
+                if (mobileToggleIcon) {
+                    mobileToggleIcon.classList.remove('fa-times');
+                    mobileToggleIcon.classList.add('fa-bars');
+                }
+            });
+
+            // Handle resize events to maintain correct state
+            let timeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    // Reset classes on resize
+                    if (window.innerWidth >= 992) {
+                        adminLayout.classList.remove('sidebar-expanded');
+                    } else {
+                        adminLayout.classList.remove('sidebar-collapsed');
+                    }
+
+                    // Reset icons based on sidebar state
+                    const mobileToggleIcon = document.querySelector('#sidebarToggle i');
+                    if (mobileToggleIcon) {
+                        if (adminLayout.classList.contains('sidebar-expanded')) {
+                            mobileToggleIcon.classList.remove('fa-bars');
+                            mobileToggleIcon.classList.add('fa-times');
+                        } else {
+                            mobileToggleIcon.classList.remove('fa-times');
+                            mobileToggleIcon.classList.add('fa-bars');
+                        }
+                    }
+                }, 250);
+            });
+
+            // Close sidebar when pressing escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && adminLayout.classList.contains('sidebar-expanded')) {
+                    adminLayout.classList.remove('sidebar-expanded');
+
+                    // Reset the mobile toggle icon
+                    const mobileToggleIcon = document.querySelector('#sidebarToggle i');
+                    if (mobileToggleIcon) {
+                        mobileToggleIcon.classList.remove('fa-times');
+                        mobileToggleIcon.classList.add('fa-bars');
+                    }
+                }
             });
 
             // Animation for elements with animate class

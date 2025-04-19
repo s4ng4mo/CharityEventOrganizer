@@ -40,17 +40,15 @@ html, body {
 .admin-body {
     background-color: #f7f9fc;
     min-height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
 .admin-layout {
     display: flex;
-    height: 100vh; /* Use viewport height */
-    width: 100vw; /* Use viewport width */
-    position: fixed; /* Fix the layout to prevent extra space */
-    top: 0;
-    left: 0;
-    overflow: hidden;
+    min-height: 100vh; /* Use min-height instead of fixed height */
+    width: 100%;
+    position: relative; /* Use relative instead of fixed positioning */
+    overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
 .admin-blob {
@@ -237,7 +235,7 @@ html, body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    max-width: calc(100vw - 260px);
+    max-width: calc(100% - 260px);
     transition: all 0.3s ease;
     position: relative;
     background-color: #f7f9fc;
@@ -436,6 +434,7 @@ html, body {
     justify-content: center;
     border-radius: 8px;
     transition: all 0.3s ease;
+    cursor: pointer;
 }
 
     .sidebar-toggle:hover {
@@ -443,12 +442,13 @@ html, body {
         color: white;
     }
 
+/* Sidebar Collapsed State - Desktop View */
 .sidebar-collapsed .admin-sidebar {
     width: 70px;
 }
 
 .sidebar-collapsed .admin-main {
-    max-width: calc(100vw - 70px);
+    max-width: calc(100% - 70px);
 }
 
 .sidebar-collapsed .admin-logo span,
@@ -873,11 +873,11 @@ html, body {
     border-bottom: 1px solid #e9ecef;
 }
 
-.review-card-header h2 {
-    font-size: 2rem;
-    color: var(--charcoal);
-    margin-bottom: 0;
-}
+    .review-card-header h2 {
+        font-size: 2rem;
+        color: var(--charcoal);
+        margin-bottom: 0;
+    }
 
 .event-category {
     align-items: center;
@@ -919,11 +919,11 @@ html, body {
     margin-bottom: 25px;
 }
 
-.event-section h3 {
-    font-size: 1.3rem;
-    margin-bottom: 15px;
-    color: var(--charcoal);
-}
+    .event-section h3 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        color: var(--charcoal);
+    }
 
 .review-card-body {
     padding: 25px;
@@ -1242,4 +1242,131 @@ html, body {
 .date-time {
     font-size: 0.85rem;
     color: var(--graphite);
+}
+
+/* Responsive Styling - Mobile and Tablet */
+/* Overlay for mobile sidebar */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    display: none;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.sidebar-expanded .sidebar-overlay {
+    display: block;
+    opacity: 1;
+}
+
+/* Media Queries */
+@media (min-width: 992px) {
+    /* Desktop view */
+    .admin-sidebar {
+        position: sticky;
+        top: 0;
+        left: 0;
+        transform: translateX(0);
+    }
+
+    /* Hide the mobile toggle on desktop */
+    #sidebarToggle {
+        display: none;
+    }
+}
+
+@media (max-width: 991px) {
+    /* Tablet and mobile view */
+    .admin-layout {
+        flex-direction: column; /* Stack content on smaller screens */
+    }
+
+    .admin-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-260px); /* Start with sidebar hidden */
+        z-index: 1000;
+        height: 100%;
+        width: 260px; /* Keep width consistent */
+    }
+
+    .admin-main {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+    }
+
+    /* Always show the hamburger in the topbar on mobile */
+    #sidebarToggleLg {
+        display: none; /* Hide desktop toggle */
+    }
+
+    #sidebarToggle, #sidebarToggleMobile {
+        display: flex; /* Show mobile toggle */
+    }
+
+    /* When sidebar is expanded */
+    .sidebar-expanded .admin-sidebar {
+        transform: translateX(0);
+    }
+
+    .sidebar-expanded .admin-main {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 767px) {
+    /* Mobile specific styles */
+    .admin-content-wrapper {
+        padding: 20px 15px;
+    }
+
+    .admin-topbar {
+        padding: 0 15px;
+    }
+
+    .topbar-title {
+        font-size: 1.2rem;
+        margin-left: 10px;
+    }
+
+    .stat-card {
+        margin-bottom: 15px;
+    }
+
+    /* Event review card mobile fixes */
+    .review-card-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .event-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .organizer-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .organizer-avatar, .organizer-avatar-placeholder {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .review-card-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-reject, .btn-approve, .btn-details {
+        width: 100%;
+    }
 }
